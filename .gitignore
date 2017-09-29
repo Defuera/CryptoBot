@@ -1,5 +1,4 @@
 *.iml
-.gradle
 /local.properties
 /.idea/workspace.xml
 /.idea/libraries
@@ -9,3 +8,11 @@
 .idea
 .idea/*
 /out
+
+
+#Gradle files
+.gradle
+gradle-app.setting
+reader/gradle/*
+reader/gradlew
+reader/gradlew.bat
