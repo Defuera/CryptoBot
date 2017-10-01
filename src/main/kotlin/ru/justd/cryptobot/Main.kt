@@ -25,50 +25,37 @@ fun main(args: Array<String>) {
 
 private fun processUpdate(update: Update) {
     val message = update.message()
-    println("message ${message?.entities()?.get(0)?.type() ?: ""}: ${message.text()}")
+    println("message ${message?.entities()?.get(0)?.type() ?: ""}: ${message?.text() ?: "null"}")
 
     val entities = message.entities()
     if (!entities.isEmpty()) {
         entities?.forEach {
             when (it.type()) {
                 bot_command -> handleBotCommand(message)
-                mention,
-                hashtag,
-                url,
-                email,
-                bold,
-                italic,
-                code,
-                pre,
-                text_link,
-                text_mention -> println("message type not supported ${it.type()}")
                 else -> println("else message type not supported ${it.type()}")
             }
         }
-    } else {
-        if (isBotAddedToChannel(message)) {
-            sendMessage(message.chat().id(), BotResponse.ABOUT)
-            sendMessage(message.chat().id(), BotResponse.HELP)
-        } else {
-            println("message not handled: $message")
-        }
+    }
+
+    if (isBotAddedToChannel(message)) {
+        sendMessage(message.chat().id(), RequestHandler.About.responseMessage())
+        sendMessage(message.chat().id(), RequestHandler.Help.responseMessage())
     }
 }
 
+//todo is there's better way to do it?
 private fun isBotAddedToChannel(message: Message) =
         message.newChatMembers()?.find { user -> user.isBot && user.username() == "CryptAdviserBot" } != null
 
 fun handleBotCommand(message: Message) {
-    val command = message.text().replace("/", "")
-    val chatId = message.chat().id()
-
-    sendMessage(chatId, findResponseFor(command))
+    val requestHandler = RequestHandler.valueOf(message.text())
+    sendMessage(message.chat().id(), requestHandler.responseMessage())
 }
 
-fun sendMessage(chatId: Long, response: BotResponse) {
+fun sendMessage(chatId: Long, outcomingMessage: String) {
     println("send message...")
     bot.execute(
-            SendMessage(chatId, response.responseMessage),
+            SendMessage(chatId, outcomingMessage),
             object : Callback<SendMessage, SendResponse> {
                 override fun onResponse(request: SendMessage?, response: SendResponse?) {
                     println("response")
@@ -79,30 +66,4 @@ fun sendMessage(chatId: Long, response: BotResponse) {
                 }
 
             })
-}
-
-fun findResponseFor(command: String) = BotResponse.values().find { it.command == command } ?: BotResponse.UNSUPPORTED_REQUEST
-
-//fun replyTo(command: String) = BotResponse.values().find { it.command == command }?.responseMessage
-
-enum class BotResponse(val command: String?, val responseMessage: String) { //todo use sealed class to differentiate the functionality
-
-    /**
-     * Information about available commands
-     */
-    HELP("help", "no help for you beach"),
-
-    /**
-     * Update for your subscriptions
-     */
-    UPDATE("update", "your update"),
-
-    /**
-     * Information of current version of the bot
-     */
-    ABOUT("about", "v.1, to see list of supported commands type /help"), //todo retrieve version from build.gradle
-
-    UNSUPPORTED_REQUEST(null, "command not recognized");
-
-
 }
