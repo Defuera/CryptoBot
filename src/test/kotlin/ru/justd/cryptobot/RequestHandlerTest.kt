@@ -1,21 +1,37 @@
 package ru.justd.cryptobot
 
-import org.junit.jupiter.api.Assertions.*
-import org.junit.jupiter.api.Test
+import org.assertj.core.api.Assertions.assertThat
+import org.junit.Test
 import ru.justd.cryptobot.RequestHandler.Companion.findHandler
 import ru.justd.cryptobot.RequestHandler.*
 
-internal class RequestHandlerTest{
+internal class RequestHandlerTest {
+
+    //    Help, Update, About, Price, UnsupportedRequest
+    @Test
+    fun testFindHelpRequestHandler() {
+        assertThat(RequestHandler.findHandler("/help")).isEqualTo(Help)
+    }
 
     @Test
-    fun testFindPriceRequestHandler(){
-        assertTrue(findHandler("/price") == UnsupportedRequest)
-        assertTrue(findHandler("/price Bitcoin") == UnsupportedRequest)
-        assertTrue(findHandler("/price 123") == UnsupportedRequest)
+    fun testFindUpdateRequestHandler() {
+        assertThat(RequestHandler.findHandler("/update")).isEqualTo(Update)
+    }
 
-        assertTrue(findHandler("/price hui") == Price) //todo add list of supported cryptos or determine it dynamically
-        assertTrue(findHandler("/price BTC") == Price)
-        assertTrue(findHandler("/price ETH") == Price)
+    @Test
+    fun testFindAboutRequestHandler() {
+        assertThat(RequestHandler.findHandler("/about")).isEqualTo(About)
+    }
+
+    @Test
+    fun testFindPriceRequestHandler() {
+        assertThat(findHandler("/price")).isEqualTo(UnsupportedRequest)
+        assertThat(findHandler("/price Bitcoin")).isEqualTo(UnsupportedRequest)
+        assertThat(findHandler("/price 123")).isEqualTo(UnsupportedRequest)
+
+        assertThat(findHandler("/price hui")).isEqualTo(Price) //todo add list of supported cryptos or determine it dynamically
+        assertThat(findHandler("/price BTC")).isEqualTo(Price)
+        assertThat(findHandler("/price ETH")).isEqualTo(Price)
     }
 
 }

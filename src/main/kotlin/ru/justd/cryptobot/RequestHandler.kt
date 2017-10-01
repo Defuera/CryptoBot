@@ -1,7 +1,5 @@
 package ru.justd.cryptobot
 
-import kotlin.reflect.full.isSubclassOf
-
 sealed class RequestHandler(val pattern: String?) {
 
     object Help : RequestHandler("/help") {
@@ -27,16 +25,17 @@ sealed class RequestHandler(val pattern: String?) {
     abstract fun responseMessage(): String
 
     companion object {
-        private val map = RequestHandler::class.nestedClasses
-                .filter { klass -> klass.isSubclassOf(RequestHandler::class) }
-                .map { klass -> klass.objectInstance }
-                .filterIsInstance<RequestHandler>()
-                .associateBy { it.pattern }
 
-        fun valueOf(value: String) = map[value] ?: UnsupportedRequest
+        //todo find better why. Now you need to add to the list evety new Handler manually
+        private val handlers = listOf(
+                Help, Update, About, Price, UnsupportedRequest
+        )
 
-        fun values() = map.values.toTypedArray()
-
-        fun findHandler(command: String) : RequestHandler = values().find { it.pattern != null && Regex(it.pattern).matches(command) } ?: UnsupportedRequest
+        fun findHandler(command: String): RequestHandler =
+                handlers.find {
+                    it.pattern != null
+                            && Regex(it.pattern).matches(command)
+                }
+                        ?: UnsupportedRequest
     }
 }

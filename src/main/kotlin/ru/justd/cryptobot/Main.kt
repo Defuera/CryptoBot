@@ -17,7 +17,13 @@ fun main(args: Array<String>) {
     println("CryptoBot started")
 
     bot.setUpdatesListener { updates ->
-        updates.forEach { processUpdate(it) }
+        updates.forEach {
+            try {
+                processUpdate(it)
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
+        }
 
         CONFIRMED_UPDATES_ALL
     }
@@ -28,8 +34,8 @@ private fun processUpdate(update: Update) {
     println("message ${message?.entities()?.get(0)?.type() ?: ""}: ${message?.text() ?: "null"}")
 
     val entities = message.entities()
-    if (!entities.isEmpty()) {
-        entities?.forEach {
+    if (entities?.isNotEmpty() ?: false) { //todo is there's a better way
+        entities.forEach {
             when (it.type()) {
                 bot_command -> handleBotCommand(message)
                 else -> println("else message type not supported ${it.type()}")
@@ -48,7 +54,7 @@ private fun isBotAddedToChannel(message: Message) =
         message.newChatMembers()?.find { user -> user.isBot && user.username() == "CryptAdviserBot" } != null
 
 fun handleBotCommand(message: Message) {
-    val requestHandler = RequestHandler.valueOf(message.text())
+    val requestHandler = RequestHandler.findHandler(message.text())
     sendMessage(message.chat().id(), requestHandler.responseMessage())
 }
 
