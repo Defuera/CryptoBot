@@ -27,15 +27,11 @@ sealed class RequestHandler(val pattern: String?) {
     companion object {
 
         //todo find better why. Now you need to add to the list evety new Handler manually
-        private val handlers = listOf(
-                Help, Update, About, Price, UnsupportedRequest
-        )
+        private val handlers = listOf(Help, Update, About, Price, UnsupportedRequest)
 
-        fun findHandler(command: String): RequestHandler =
-                handlers.find {
-                    it.pattern != null
-                            && Regex(it.pattern).matches(command)
-                }
-                        ?: UnsupportedRequest
+        fun findHandler(command: String): RequestHandler {
+            return handlers.find { it.pattern != null && Regex(it.pattern).matches(command) } ?: UnsupportedRequest
+
+        }
     }
 }
