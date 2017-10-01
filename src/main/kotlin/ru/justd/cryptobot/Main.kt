@@ -25,51 +25,37 @@ fun main(args: Array<String>) {
 
 private fun processUpdate(update: Update) {
     val message = update.message()
-    println("message ${message?.entities()?.get(0)?.type() ?: ""}: ${message.text()}")
+    println("message ${message?.entities()?.get(0)?.type() ?: ""}: ${message?.text() ?: "null"}")
 
     val entities = message.entities()
     if (!entities.isEmpty()) {
         entities?.forEach {
             when (it.type()) {
                 bot_command -> handleBotCommand(message)
-//                mention,
-//                hashtag,
-//                url,
-//                email,
-//                bold,
-//                italic,
-//                code,
-//                pre,
-//                text_link,
-//                text_mention -> println("message type not supported ${it.type()}")
                 else -> println("else message type not supported ${it.type()}")
             }
         }
     }
-//    else {
-//        if (isBotAddedToChannel(message)) {
-//            sendMessage(message.chat().pattern(), BotResponse.ABOUT)
-//            sendMessage(message.chat().pattern(), BotResponse.HELP)
-//        } else {
-//            println("message not handled: $message")
-//        }
-//    }
+
+    if (isBotAddedToChannel(message)) {
+        sendMessage(message.chat().id(), RequestHandler.About.responseMessage())
+        sendMessage(message.chat().id(), RequestHandler.Help.responseMessage())
+    }
 }
 
+//todo is there's better way to do it?
 private fun isBotAddedToChannel(message: Message) =
         message.newChatMembers()?.find { user -> user.isBot && user.username() == "CryptAdviserBot" } != null
 
 fun handleBotCommand(message: Message) {
-    val command = message.text()
-    val chatId = message.chat().id()
-
-    sendMessage(chatId, RequestHandler.valueOf(command))
+    val requestHandler = RequestHandler.valueOf(message.text())
+    sendMessage(message.chat().id(), requestHandler.responseMessage())
 }
 
-fun sendMessage(chatId: Long, requestHandler: RequestHandler) {
+fun sendMessage(chatId: Long, outcomingMessage: String) {
     println("send message...")
     bot.execute(
-            SendMessage(chatId, requestHandler.responseMessage()),
+            SendMessage(chatId, outcomingMessage),
             object : Callback<SendMessage, SendResponse> {
                 override fun onResponse(request: SendMessage?, response: SendResponse?) {
                     println("response")
