@@ -13,6 +13,6 @@
 #Gradle files
 .gradle
 gradle-app.setting
-reader/gradle/*
-reader/gradlew
-reader/gradlew.bat
+/gradle/*
+/gradlew
+/gradlew.bat
