@@ -2,35 +2,34 @@ package ru.justd.cryptobot.handler
 
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Test
-import ru.justd.cryptobot.handler.Request.Companion.find
 
 internal class RequestHandlerTest {
 
     //    Help, Update, About, Price, UnsupportedRequest
     @Test
     fun testFindHelpRequestHandler() {
-        assertThat(Request.find("/help")).isEqualTo(Request.HELP)
+        assertThat(Request.handler("/help")).isEqualTo(Help)
     }
 
     @Test
     fun testFindUpdateRequestHandler() {
-        assertThat(Request.find("/update")).isEqualTo(Request.UPDATE)
+        assertThat(Request.handler("/update")).isEqualTo(Update)
     }
 
     @Test
     fun testFindAboutRequestHandler() {
-        assertThat(Request.find("/about")).isEqualTo(Request.ABOUT)
+        assertThat(Request.handler("/about")).isEqualTo(About)
     }
 
     @Test
     fun testFindPriceRequestHandler() {
-        assertThat(find("/price")).isEqualTo(Request.UNSUPPORTED)
-        assertThat(find("/price Bitcoin")).isEqualTo(Request.UNSUPPORTED)
-        assertThat(find("/price 123")).isEqualTo(Request.UNSUPPORTED)
+        assertThat(Request.handler("/price")).isEqualTo(Unsupported)
+        assertThat(Request.handler("/price Bitcoin")).isEqualTo(Unsupported)
+        assertThat(Request.handler("/price 123")).isEqualTo(Unsupported)
 
-        assertThat(find("/price hui")).isEqualTo(Request.PRICE) //todo add list of supported cryptos or determine it dynamically
-        assertThat(find("/price BTC")).isEqualTo(Request.PRICE)
-        assertThat(find("/price ETH")).isEqualTo(Request.PRICE)
+        assertThat(Request.handler("/price hui")).isExactlyInstanceOf(Price::class.java) //todo add list of supported cryptos or determine it dynamically
+        assertThat(Request.handler("/price BTC")).isExactlyInstanceOf(Price::class.java)
+        assertThat(Request.handler("/price ETH")).isExactlyInstanceOf(Price::class.java)
     }
 
 

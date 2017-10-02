@@ -9,6 +9,7 @@ import com.pengrad.telegrambot.model.Update
 import com.pengrad.telegrambot.request.SendMessage
 import com.pengrad.telegrambot.response.SendResponse
 import ru.justd.cryptobot.handler.Request
+import ru.justd.cryptobot.handler.RequestHandler
 import java.io.IOException
 
 val bot = TelegramBotAdapter.build(BuildConfig.BOT_TOKEN)
@@ -45,8 +46,8 @@ private fun processUpdate(update: Update) {
 
     if (isBotAddedToChannel(message)) {
         val chatId = message.chat().id()
-        sendMessage(chatId, Request.ABOUT)
-        sendMessage(chatId, Request.HELP)
+        sendMessage(chatId, Request.ABOUT.handler())
+        sendMessage(chatId, Request.HELP.handler())
     }
 }
 
@@ -55,12 +56,12 @@ private fun isBotAddedToChannel(message: Message) =
         message.newChatMembers()?.find { user -> user.isBot && user.username() == "CryptAdviserBot" } != null
 
 fun handleBotCommand(message: Message) {
-    val request = Request.find(message.text())
-    sendMessage(message.chat().id(), request)
+    val requestHandler = Request.handler(message.text())
+    sendMessage(message.chat().id(), requestHandler)
 }
 
-private fun sendMessage(chatId: Long, request: Request) {
-    sendMessage(chatId, request.handler().responseMessage())
+private fun sendMessage(chatId: Long, requestHandler: RequestHandler) {
+    sendMessage(chatId, requestHandler.responseMessage())
 }
 
 private fun sendMessage(chatId: Long, outcomingMessage: String) {
