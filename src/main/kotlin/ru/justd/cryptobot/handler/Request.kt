@@ -1,7 +1,5 @@
 package ru.justd.cryptobot.handler
 
-import java.util.regex.Pattern
-
 enum class Request(val pattern: String) {
 
     HELP("/help") {
@@ -44,7 +42,7 @@ enum class Request(val pattern: String) {
         fun handler(command: String) = find(command)?.handler() ?: Unsupported
 
         private fun find(command: String): Request? =
-                values().firstOrNull { Regex(command).matches(it.pattern) }
+                values().firstOrNull { Regex(it.pattern).matches(command) }
 
     }
 
