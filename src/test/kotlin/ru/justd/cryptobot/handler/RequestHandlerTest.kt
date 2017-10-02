@@ -1,37 +1,36 @@
-package ru.justd.cryptobot
+package ru.justd.cryptobot.handler
 
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Test
-import ru.justd.cryptobot.RequestHandler.Companion.findHandler
-import ru.justd.cryptobot.RequestHandler.*
+import ru.justd.cryptobot.handler.Request.Companion.find
 
 internal class RequestHandlerTest {
 
     //    Help, Update, About, Price, UnsupportedRequest
     @Test
     fun testFindHelpRequestHandler() {
-        assertThat(RequestHandler.findHandler("/help")).isEqualTo(Help)
+        assertThat(Request.find("/help")).isEqualTo(Request.HELP)
     }
 
     @Test
     fun testFindUpdateRequestHandler() {
-        assertThat(RequestHandler.findHandler("/update")).isEqualTo(Update)
+        assertThat(Request.find("/update")).isEqualTo(Request.UPDATE)
     }
 
     @Test
     fun testFindAboutRequestHandler() {
-        assertThat(RequestHandler.findHandler("/about")).isEqualTo(About)
+        assertThat(Request.find("/about")).isEqualTo(Request.ABOUT)
     }
 
     @Test
     fun testFindPriceRequestHandler() {
-        assertThat(findHandler("/price")).isEqualTo(UnsupportedRequest)
-        assertThat(findHandler("/price Bitcoin")).isEqualTo(UnsupportedRequest)
-        assertThat(findHandler("/price 123")).isEqualTo(UnsupportedRequest)
+        assertThat(find("/price")).isEqualTo(Request.UNSUPPORTED)
+        assertThat(find("/price Bitcoin")).isEqualTo(Request.UNSUPPORTED)
+        assertThat(find("/price 123")).isEqualTo(Request.UNSUPPORTED)
 
-        assertThat(findHandler("/price hui")).isExactlyInstanceOf(Price::class.java) //todo add list of supported cryptos or determine it dynamically
-        assertThat(findHandler("/price BTC")).isExactlyInstanceOf(Price::class.java)
-        assertThat(findHandler("/price ETH")).isExactlyInstanceOf(Price::class.java)
+        assertThat(find("/price hui")).isEqualTo(Request.PRICE) //todo add list of supported cryptos or determine it dynamically
+        assertThat(find("/price BTC")).isEqualTo(Request.PRICE)
+        assertThat(find("/price ETH")).isEqualTo(Request.PRICE)
     }
 
 
