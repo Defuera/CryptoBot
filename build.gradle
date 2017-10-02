@@ -21,10 +21,14 @@ apply plugin: 'de.fuerstenau.buildconfig'
 apply plugin: 'idea'
 
 buildConfig {
+
     Properties properties = new Properties()
     properties.load(project.rootProject.file('keystore.properties').newDataInputStream())
 
-    buildConfigField 'String', 'BOT_TOKEN', properties.getProperty("BOT_TOKEN")
+    properties.each { key, value ->
+        buildConfigField 'String', key.toString(), value.toString()
+    }
+
 }
 
 repositories {
