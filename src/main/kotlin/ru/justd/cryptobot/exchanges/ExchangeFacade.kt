@@ -4,6 +4,7 @@ import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import ru.justd.cryptobot.UserPreferences
 import ru.justd.cryptobot.exchanges.coinbase.CoinbaseApi
+import ru.justd.cryptobot.exchanges.cryptonator.CryptonatorApi
 
 class ExchangeFacade {
 
@@ -14,7 +15,8 @@ class ExchangeFacade {
             .addInterceptor(HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BODY))
             .build()
     //    private val api = GdaxApi(okHttpClient)
-    private val api = CoinbaseApi(okHttpClient)
+//    private val api = CoinbaseApi(okHttpClient)
+    private val api = CryptonatorApi(okHttpClient)
     private val preferences = UserPreferences()
 
     //endregion

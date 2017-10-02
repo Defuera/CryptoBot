@@ -45,7 +45,7 @@ internal class RequestHandlerTest {
 
     @Test
     fun testGetPriceInvalidBaseCurrency() {
-        assertThat(Price.newInstance("BCC").responseMessage()).isEqualToIgnoringCase("Invalid base currency") //todo this is only for coinbase
+        assertThat(Price.newInstance("BCC").responseMessage()).isNotNull() //todo find better way to make sure expected error is returned, taking into account, that different apis return different errors. Do we need different errors?
     }
 
     //endregion

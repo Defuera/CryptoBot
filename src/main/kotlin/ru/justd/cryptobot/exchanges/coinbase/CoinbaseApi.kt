@@ -20,8 +20,6 @@ class CoinbaseApi(private val okHttpClient: OkHttpClient) : ExchangeApi {
 
     //todo add parse data test
     override fun getRate(cryptoCurrencyCode: String, fiatCurrency: String): RateResponse {
-
-        // Format for input
         val dateParser = SimpleDateFormat("yyyy-MM-dd")
         val date: String = dateParser.format(Date())
 
