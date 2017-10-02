@@ -34,9 +34,20 @@ internal class RequestHandlerTest {
         assertThat(findHandler("/price ETH")).isExactlyInstanceOf(Price::class.java)
     }
 
+
+    //region integration tests
+
     @Test
-    fun testBtcPrice() {
-        assertThat(Price.newInstance("ETH").responseMessage()).isNotNull()
+    fun testGetPriceSuccess() {
+        assertThat(Price.newInstance("/price BTC").responseMessage()).contains("BTC")
+        assertThat(Price.newInstance("/price ETH").responseMessage()).contains("ETH")
     }
+
+    @Test
+    fun testGetPriceInvalidBaseCurrency() {
+        assertThat(Price.newInstance("BCC").responseMessage()).isEqualToIgnoringCase("Invalid base currency") //todo this is only for coinbase
+    }
+
+    //endregion
 
 }

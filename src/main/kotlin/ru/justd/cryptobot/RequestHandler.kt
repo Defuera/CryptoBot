@@ -1,6 +1,7 @@
 package ru.justd.cryptobot
 
 import ru.justd.cryptobot.exchanges.ExchangeFacade
+import ru.justd.cryptobot.exchanges.RequestFailedException
 
 sealed class RequestHandler {
 
@@ -29,8 +30,12 @@ sealed class RequestHandler {
         }
 
         override fun responseMessage(): String {
-            val rate = exchange.getRate(currencyCode)
-            return "${rate.base} price is ${rate.amount} ${rate.currency}"
+            try {
+                val rate = exchange.getRate(currencyCode)
+                return "${rate.base} price is ${rate.amount} ${rate.currency}"
+            } catch (error : RequestFailedException){
+                return error.message
+            }
         }
 
         private val exchange = ExchangeFacade() //todo inject with dagger based on user preferences?

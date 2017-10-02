@@ -5,6 +5,7 @@ import okhttp3.OkHttpClient
 import okhttp3.Request
 import ru.justd.cryptobot.exchanges.ExchangeApi
 import ru.justd.cryptobot.exchanges.RateResponse
+import ru.justd.cryptobot.exchanges.RequestFailedException
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -34,13 +35,17 @@ class CoinbaseApi(private val okHttpClient: OkHttpClient) : ExchangeApi {
 
         val bodyString = response.body()?.string()
         if (bodyString != null) {
-            val rateResponse = gson.fromJson<RateResponseEnvelope>(bodyString, RateResponseEnvelope::class.java).data
-            return rateResponse
+            val envelope = gson.fromJson<RateResponseEnvelope>(bodyString, RateResponseEnvelope::class.java)
+            if (envelope.errors?.isNotEmpty() == true) {
+                throw RequestFailedException(envelope.errors.first().message)
+            } else {
+                return envelope.data
+            }
         } else {
             throw RuntimeException("oioi") //todo
         }
     }
 
-    private data class RateResponseEnvelope(val data: RateResponse)
+    private data class RateResponseEnvelope(val data: RateResponse, val errors: Array<Error>?)
 
 }
