@@ -35,13 +35,23 @@ internal class RequestHandlerTest {
     }
 
 
-    //region integration tests
+    //region integration tests //todo move from this file
 
     @Test
     fun testGetPriceSuccess() {
-        assertThat(Price.newInstance("/price BTC").responseMessage()).contains("BTC")
-        assertThat(Price.newInstance("/price ETH").responseMessage()).contains("ETH")
+        assertThat(priceFor("BTC")).matches(patternForPair("BTC", "USD"))
+        assertThat(priceFor("ETH")).matches(patternForPair("ETH", "USD"))
     }
+
+    @Test
+    fun testGetPriceWithCuptomFiatSuccess() {
+        assertThat(Price.newInstance("/price BTC-EUR").responseMessage()).matches(patternForPair("BTC", "EUR"))
+        assertThat(priceFor("ETH")).matches(patternForPair("ETH", "USD"))
+    }
+
+    private fun priceFor(base: String) = Price.newInstance("/price $base").responseMessage()
+
+    private fun patternForPair(base: String, target: String) = Regex("$base price is [0-9.]+ $target").toPattern()
 
     @Test
     fun testGetPriceInvalidBaseCurrency() {

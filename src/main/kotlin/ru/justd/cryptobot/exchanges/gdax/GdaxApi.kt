@@ -1,0 +1,58 @@
+package ru.justd.cryptobot.exchanges.gdax
+
+import com.google.gson.Gson
+import okhttp3.OkHttpClient
+import okhttp3.Request
+import ru.justd.cryptobot.exchanges.ExchangeApi
+import ru.justd.cryptobot.exchanges.RateResponse
+import ru.justd.cryptobot.exchanges.RequestFailedException
+
+/**
+ * https://docs.gdax.com/
+ */
+class GdaxApi(private val okHttpClient: OkHttpClient) : ExchangeApi {
+
+    private val BASE_URL = "https://api.gdax.com"
+    private val gson = Gson()
+
+    /**
+     * https://docs.gdax.com/#get-product-order-book
+     */
+    override fun getRate(cryptoCurrencyCode: String, fiatCurrency: String): RateResponse {
+
+        val response = okHttpClient.newCall(
+                Request.Builder()
+                        .get()
+                        .url("$BASE_URL/products/$cryptoCurrencyCode-$fiatCurrency/book")
+                        .build()
+        ).execute()
+
+        val bodyString = response.body()?.string()
+        if (bodyString != null) {
+            val envelope = gson.fromJson<Envelope>(bodyString, Envelope::class.java)
+            if (envelope.bids != null) {
+                return RateResponse(envelope.bids[0][0].toDouble(), cryptoCurrencyCode, fiatCurrency)
+            } else {
+                throw RequestFailedException(envelope.message!!)
+            }
+        } else {
+            throw RuntimeException("oioi") //todo also to base class?
+        }
+    }
+
+    private data class Envelope(
+            /**
+             * error message
+             */
+            val message : String?,
+            val sequence: Long?,
+            /**
+             *  [ price, size, num-orders ]
+             */
+            val bids: Array<Array<String>>?,
+            /**
+             * [ price, size, num-orders ]
+             */
+            val asks: Array<Array<String>>?
+    )
+}
