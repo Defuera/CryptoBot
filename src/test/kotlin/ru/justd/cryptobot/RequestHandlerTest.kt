@@ -29,9 +29,25 @@ internal class RequestHandlerTest {
         assertThat(findHandler("/price Bitcoin")).isEqualTo(UnsupportedRequest)
         assertThat(findHandler("/price 123")).isEqualTo(UnsupportedRequest)
 
-        assertThat(findHandler("/price hui")).isEqualTo(Price) //todo add list of supported cryptos or determine it dynamically
-        assertThat(findHandler("/price BTC")).isEqualTo(Price)
-        assertThat(findHandler("/price ETH")).isEqualTo(Price)
+        assertThat(findHandler("/price hui")).isExactlyInstanceOf(Price::class.java) //todo add list of supported cryptos or determine it dynamically
+        assertThat(findHandler("/price BTC")).isExactlyInstanceOf(Price::class.java)
+        assertThat(findHandler("/price ETH")).isExactlyInstanceOf(Price::class.java)
     }
+
+
+    //region integration tests
+
+    @Test
+    fun testGetPriceSuccess() {
+        assertThat(Price.newInstance("/price BTC").responseMessage()).contains("BTC")
+        assertThat(Price.newInstance("/price ETH").responseMessage()).contains("ETH")
+    }
+
+    @Test
+    fun testGetPriceInvalidBaseCurrency() {
+        assertThat(Price.newInstance("BCC").responseMessage()).isEqualToIgnoringCase("Invalid base currency") //todo this is only for coinbase
+    }
+
+    //endregion
 
 }

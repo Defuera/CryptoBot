@@ -38,6 +38,7 @@ repositories {
 dependencies {
     compile "org.jetbrains.kotlin:kotlin-stdlib-jre8:$kotlin_version"
     compile 'com.github.pengrad:java-telegram-bot-api:3.3.0'
+    compile 'com.google.code.gson:gson:2.8.2'
 
     //tests
     testCompile 'org.assertj:assertj-core:3.8.0'
