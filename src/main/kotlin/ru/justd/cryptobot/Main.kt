@@ -10,8 +10,7 @@ import com.pengrad.telegrambot.request.SendMessage
 import com.pengrad.telegrambot.response.SendResponse
 import java.io.IOException
 
-val BOT_TOKEN = "" //todo store in local gradle file
-val bot = TelegramBotAdapter.build(BOT_TOKEN)
+val bot = TelegramBotAdapter.build(BuildConfig.BOT_TOKEN)
 
 fun main(args: Array<String>) {
     println("CryptoBot started")
@@ -34,7 +33,7 @@ private fun processUpdate(update: Update) {
     println("message ${message?.entities()?.get(0)?.type() ?: ""}: ${message?.text() ?: "null"}")
 
     val entities = message.entities()
-    if (entities?.isNotEmpty() ?: false) { //todo is there's a better way
+    if (entities?.isNotEmpty() == true) { //todo is there's a better way
         entities.forEach {
             when (it.type()) {
                 bot_command -> handleBotCommand(message)
