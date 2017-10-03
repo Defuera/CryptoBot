@@ -1,33 +1,33 @@
 package ru.justd.cryptobot.exchanges.coinbase
 
 import com.google.gson.Gson
+import khronos.Dates
+import khronos.toString
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import ru.justd.cryptobot.exchanges.ExchangeApi
 import ru.justd.cryptobot.exchanges.RateResponse
 import ru.justd.cryptobot.exchanges.RequestFailedException
-import java.text.SimpleDateFormat
-import java.util.*
+
+private const val BASE_URL = "https://api.coinbase.com/v2"
+private const val HEADER_CB_VERSION = "CB-VERSION"
+private const val FORMAT_API_DATE = "yyyy-MM-dd"
 
 /**
  * https://developers.coinbase.com/api/
  */
 class CoinbaseApi(private val okHttpClient: OkHttpClient) : ExchangeApi {
 
-    val BASE_URL = "https://api.coinbase.com/v2"
-    val HEADER_CB_VERSION = "CB-VERSION"
     val gson = Gson()
 
     //todo add parse data test
     override fun getRate(cryptoCurrencyCode: String, fiatCurrency: String): RateResponse {
-        val dateParser = SimpleDateFormat("yyyy-MM-dd")
-        val date: String = dateParser.format(Date())
 
         val response = okHttpClient.newCall(
                 Request.Builder()
                         .get()
                         .url("$BASE_URL/prices/$cryptoCurrencyCode-$fiatCurrency/spot")
-                        .header(HEADER_CB_VERSION, date)
+                        .header(HEADER_CB_VERSION, Dates.today.toString(FORMAT_API_DATE))
                         .build()
         ).execute()
 

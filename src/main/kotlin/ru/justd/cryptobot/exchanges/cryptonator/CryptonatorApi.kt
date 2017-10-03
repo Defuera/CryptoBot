@@ -8,12 +8,13 @@ import ru.justd.cryptobot.exchanges.RateResponse
 import ru.justd.cryptobot.exchanges.RequestFailedException
 import ru.justd.cryptotrader.api.cryptonator.model.TickerEnvelope
 
+
+private const val BASE_URL = "https://api.cryptonator.com/api/"
+
 /**
  * https://www.cryptonator.com/api
  */
 class CryptonatorApi(val okHttpClient: OkHttpClient) : ExchangeApi {
-
-    private val BASE_URL = "https://api.cryptonator.com/api/"
 
     val gson = Gson() //todo move to abstract parent class together with okHttpClient? But I think gson should not be injected, since it may be different configuration for every api impl.
 

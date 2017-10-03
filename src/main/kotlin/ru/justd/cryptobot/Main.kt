@@ -12,7 +12,7 @@ import ru.justd.cryptobot.handler.Request
 import ru.justd.cryptobot.handler.RequestHandler
 import java.io.IOException
 
-val bot = TelegramBotAdapter.build(BuildConfig.BOT_TOKEN)
+private val bot = TelegramBotAdapter.build(BuildConfig.BOT_TOKEN)
 
 fun main(args: Array<String>) {
     println("CryptoBot started")
