@@ -3,33 +3,33 @@ package ru.justd.cryptobot.handler
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Test
 
-internal class RequestHandlerTest {
+internal class CommandHandlerTest {
 
     //    Help, Update, About, Price, UnsupportedRequest
     @Test
     fun testFindHelpRequestHandler() {
-        assertThat(Request.handler("/help")).isEqualTo(Help)
+        assertThat(Command.findCommandHandler("/description")).isEqualTo(Help)
     }
 
     @Test
     fun testFindUpdateRequestHandler() {
-        assertThat(Request.handler("/update")).isEqualTo(Update)
+        assertThat(Command.findCommandHandler("/update")).isEqualTo(Update)
     }
 
     @Test
     fun testFindAboutRequestHandler() {
-        assertThat(Request.handler("/about")).isEqualTo(About)
+        assertThat(Command.findCommandHandler("/about")).isEqualTo(About)
     }
 
     @Test
     fun testFindPriceRequestHandler() {
-        assertThat(Request.handler("/price")).isEqualTo(Unsupported)
-        assertThat(Request.handler("/price Bitcoin")).isEqualTo(Unsupported)
-        assertThat(Request.handler("/price 123")).isEqualTo(Unsupported)
+        assertThat(Command.findCommandHandler("/price")).isEqualTo(Unsupported)
+        assertThat(Command.findCommandHandler("/price Bitcoin")).isEqualTo(Unsupported)
+        assertThat(Command.findCommandHandler("/price 123")).isEqualTo(Unsupported)
 
-        assertThat(Request.handler("/price hui")).isExactlyInstanceOf(Price::class.java) //todo add list of supported cryptos or determine it dynamically
-        assertThat(Request.handler("/price BTC")).isExactlyInstanceOf(Price::class.java)
-        assertThat(Request.handler("/price ETH")).isExactlyInstanceOf(Price::class.java)
+        assertThat(Command.findCommandHandler("/price hui")).isExactlyInstanceOf(Price::class.java) //todo add list of supported cryptos or determine it dynamically
+        assertThat(Command.findCommandHandler("/price BTC")).isExactlyInstanceOf(Price::class.java)
+        assertThat(Command.findCommandHandler("/price ETH")).isExactlyInstanceOf(Price::class.java)
     }
 
 

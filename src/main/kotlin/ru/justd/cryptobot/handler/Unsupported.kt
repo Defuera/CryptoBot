@@ -1,6 +1,6 @@
 package ru.justd.cryptobot.handler
 
-internal object Unsupported : RequestHandler {
+internal object Unsupported : CommandHandler {
 
     override fun responseMessage() = "request is not supported"
 
