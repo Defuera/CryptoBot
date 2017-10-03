@@ -10,7 +10,7 @@ import com.pengrad.telegrambot.request.SendMessage
 import com.pengrad.telegrambot.response.SendResponse
 import java.io.IOException
 
-val bot = TelegramBotAdapter.build(BuildConfig.BOT_TOKEN)
+private val bot = TelegramBotAdapter.build(BuildConfig.BOT_TOKEN)
 
 fun main(args: Array<String>) {
     println("CryptoBot started")
