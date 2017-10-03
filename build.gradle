@@ -45,6 +45,7 @@ dependencies {
     //tests
     testCompile 'org.assertj:assertj-core:3.8.0'
     testCompile("org.junit.platform:junit-platform-runner:1.0.0")
+    testCompile 'org.mockito:mockito-core:2.7.22'
 }
 
 compileKotlin {

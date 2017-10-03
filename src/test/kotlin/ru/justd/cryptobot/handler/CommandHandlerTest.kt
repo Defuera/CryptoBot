@@ -5,24 +5,23 @@ import org.junit.Test
 
 internal class CommandHandlerTest {
 
-    //    HelpCommandHandler, UpdateCommandHandler, AboutCommandHandler, PriceCommandHandler, UnsupportedRequest
     @Test
-    fun testFindHelpRequestHandler() {
+    fun testFindHelpCommandHandler() {
         assertThat(Command.findCommandHandler("/help")).isEqualTo(HelpCommandHandler)
     }
 
     @Test
-    fun testFindUpdateRequestHandler() {
+    fun testFindUpdateCommandHandler() {
         assertThat(Command.findCommandHandler("/update")).isEqualTo(UpdateCommandHandler)
     }
 
     @Test
-    fun testFindAboutRequestHandler() {
+    fun testFindAboutCommandHandler() {
         assertThat(Command.findCommandHandler("/about")).isEqualTo(AboutCommandHandler)
     }
 
     @Test
-    fun testFindPriceRequestHandler() {
+    fun testFindPriceCommandHandler() {
         assertThat(Command.findCommandHandler("/price")).isEqualTo(UnsupportedCommandHandler)
         assertThat(Command.findCommandHandler("/price Bitcoin")).isEqualTo(UnsupportedCommandHandler)
         assertThat(Command.findCommandHandler("/price 123")).isEqualTo(UnsupportedCommandHandler)
@@ -31,21 +30,5 @@ internal class CommandHandlerTest {
         assertThat(Command.findCommandHandler("/price BTC")).isExactlyInstanceOf(PriceCommandHandler::class.java)
         assertThat(Command.findCommandHandler("/price ETH")).isExactlyInstanceOf(PriceCommandHandler::class.java)
     }
-
-
-    //region integration tests
-
-    @Test
-    fun testGetPriceSuccess() {
-        assertThat(PriceCommandHandler.newInstance("/price BTC").responseMessage()).contains("BTC")
-        assertThat(PriceCommandHandler.newInstance("/price ETH").responseMessage()).contains("ETH")
-    }
-
-    @Test
-    fun testGetPriceInvalidBaseCurrency() {
-        assertThat(PriceCommandHandler.newInstance("BCC").responseMessage()).isNotNull() //todo find better way to make sure expected error is returned, taking into account, that different apis return different errors. Do we need different errors?
-    }
-
-    //endregion
 
 }

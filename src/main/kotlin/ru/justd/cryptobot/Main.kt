@@ -35,7 +35,7 @@ private fun processUpdate(update: Update) {
     println("message ${message?.entities()?.get(0)?.type() ?: ""}: ${message?.text() ?: "null"}")
 
     val entities = message.entities()
-    if (entities?.isNotEmpty() == true) { //todo is there's a better way
+    if (entities?.isNotEmpty() == true) {
         entities.forEach {
             when (it.type()) {
                 bot_command -> handleBotCommand(message)
@@ -51,7 +51,7 @@ private fun processUpdate(update: Update) {
     }
 }
 
-//todo is there's better way to do it?
+//todo is there's better way to detect, that bot just been added to a channel/group?
 private fun isBotAddedToChannel(message: Message) =
         message.newChatMembers()?.find { user -> user.isBot && user.username() == "CryptAdviserBot" } != null
 
