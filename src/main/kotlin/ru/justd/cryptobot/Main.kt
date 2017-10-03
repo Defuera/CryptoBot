@@ -8,9 +8,11 @@ import com.pengrad.telegrambot.model.MessageEntity.Type.*
 import com.pengrad.telegrambot.model.Update
 import com.pengrad.telegrambot.request.SendMessage
 import com.pengrad.telegrambot.response.SendResponse
+import ru.justd.cryptobot.handler.Command
+import ru.justd.cryptobot.handler.CommandHandler
 import java.io.IOException
 
-val bot = TelegramBotAdapter.build(BuildConfig.BOT_TOKEN)
+private val bot = TelegramBotAdapter.build(BuildConfig.BOT_TOKEN)
 
 fun main(args: Array<String>) {
     println("CryptoBot started")
@@ -43,8 +45,9 @@ private fun processUpdate(update: Update) {
     }
 
     if (isBotAddedToChannel(message)) {
-        sendMessage(message.chat().id(), RequestHandler.About.responseMessage())
-        sendMessage(message.chat().id(), RequestHandler.Help.responseMessage())
+        val chatId = message.chat().id()
+        sendMessage(chatId, Command.ABOUT.handler())
+        sendMessage(chatId, Command.HELP.handler())
     }
 }
 
@@ -53,11 +56,15 @@ private fun isBotAddedToChannel(message: Message) =
         message.newChatMembers()?.find { user -> user.isBot && user.username() == "CryptAdviserBot" } != null
 
 fun handleBotCommand(message: Message) {
-    val requestHandler = RequestHandler.findHandler(message.text())
-    sendMessage(message.chat().id(), requestHandler.responseMessage())
+    val requestHandler = Command.findCommandHandler(message.text())
+    sendMessage(message.chat().id(), requestHandler)
 }
 
-fun sendMessage(chatId: Long, outcomingMessage: String) {
+private fun sendMessage(chatId: Long, commandHandler: CommandHandler) {
+    sendMessage(chatId, commandHandler.responseMessage())
+}
+
+private fun sendMessage(chatId: Long, outcomingMessage: String) {
     println("send message...")
     bot.execute(
             SendMessage(chatId, outcomingMessage),

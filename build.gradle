@@ -1,7 +1,7 @@
 version '1.0-SNAPSHOT'
 
 buildscript {
-    ext.kotlin_version = '1.1.4-3'
+    ext.kotlin_version = '1.1.51'
 
     project.group = 'ru.justd.cryptobot'
 
@@ -33,12 +33,14 @@ buildConfig {
 
 repositories {
     mavenCentral()
+    jcenter()
 }
 
 dependencies {
     compile "org.jetbrains.kotlin:kotlin-stdlib-jre8:$kotlin_version"
     compile 'com.github.pengrad:java-telegram-bot-api:3.3.0'
     compile 'com.google.code.gson:gson:2.8.2'
+    compile 'com.github.hotchemi:khronos:0.9.0' //date extension http://hotchemi.github.io/khronos/
 
     //tests
     testCompile 'org.assertj:assertj-core:3.8.0'
