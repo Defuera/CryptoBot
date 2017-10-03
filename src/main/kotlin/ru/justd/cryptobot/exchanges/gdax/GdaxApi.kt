@@ -1,6 +1,7 @@
 package ru.justd.cryptobot.exchanges.gdax
 
 import com.google.gson.Gson
+import com.google.gson.annotations.SerializedName
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import ru.justd.cryptobot.exchanges.ExchangeApi
@@ -23,7 +24,7 @@ class GdaxApi(private val okHttpClient: OkHttpClient) : ExchangeApi {
         val response = okHttpClient.newCall(
                 Request.Builder()
                         .get()
-                        .url("$BASE_URL/products/$cryptoCurrencyCode-$fiatCurrency/book")
+                        .url(getRateUrl(cryptoCurrencyCode, fiatCurrency))
                         .build()
         ).execute()
 
@@ -33,18 +34,19 @@ class GdaxApi(private val okHttpClient: OkHttpClient) : ExchangeApi {
             if (envelope.bids != null) {
                 return RateResponse(envelope.bids[0][0].toDouble(), cryptoCurrencyCode, fiatCurrency)
             } else {
-                throw RequestFailedException(envelope.message!!)
+                throw RequestFailedException(envelope.errorMessage!!)
             }
         } else {
             throw RuntimeException("oioi") //todo also to base class?
         }
     }
 
+    private fun getRateUrl(cryptoCurrencyCode: String, fiatCurrency: String) = "$BASE_URL/products/$cryptoCurrencyCode-$fiatCurrency/book" //todo extract to exchangeApi
+
     private data class Envelope(
-            /**
-             * error message
-             */
-            val message : String?,
+
+            @SerializedName("message")
+            val errorMessage: String?,
             val sequence: Long?,
             /**
              *  [ price, size, num-orders ]
