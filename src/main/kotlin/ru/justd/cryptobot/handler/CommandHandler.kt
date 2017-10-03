@@ -1,6 +1,6 @@
 package ru.justd.cryptobot.handler
 
-interface RequestHandler {
+interface CommandHandler {
 
     fun responseMessage(): String
 
