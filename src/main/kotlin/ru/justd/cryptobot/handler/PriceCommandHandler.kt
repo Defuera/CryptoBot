@@ -1,12 +1,11 @@
 package ru.justd.cryptobot.handler
 
 import ru.justd.cryptobot.exchanges.ExchangeFacade
-import ru.justd.cryptobot.exchanges.RateResponse
 import ru.justd.cryptobot.exchanges.RequestFailedException
 
 internal class PriceCommandHandler private constructor(private val currencyCode: String) : CommandHandler {
 
-//    private val exchange = ExchangeFacade() //todo how do I get it here???????
+    lateinit var exchangeFacade : ExchangeFacade //todo this is sucky way to provide dependency here
 
     companion object {
         fun newInstance(command: String): CommandHandler {
@@ -16,7 +15,7 @@ internal class PriceCommandHandler private constructor(private val currencyCode:
 
     override fun responseMessage(): String {
         return try {
-            val rate = RateResponse(.0, "", "")//exchange.getRate(currencyCode)
+            val rate = exchangeFacade.getRate(currencyCode)
             "${rate.base} price is ${rate.amount} ${rate.currency}"
         } catch (error: RequestFailedException) {
             error.message

@@ -1,5 +1,7 @@
 package ru.justd.cryptobot.handler
 
+import ru.justd.cryptobot.exchanges.ExchangeFacade
+
 enum class Command(val pattern: String) {
 
     HELP("/help") {
@@ -39,7 +41,13 @@ enum class Command(val pattern: String) {
 
     companion object {
 
-        fun findCommandHandler(command: String) = find(command)?.handler() ?: UnsupportedCommandHandler
+        fun findCommandHandler(exchangeFacade: ExchangeFacade, command: String): CommandHandler {
+            val handler = find(command)?.handler() ?: UnsupportedCommandHandler
+            if (handler is PriceCommandHandler) {
+                handler.exchangeFacade = exchangeFacade
+            }
+            return handler
+        }
 
         private fun find(command: String): Command? =
                 values().firstOrNull { Regex(it.pattern).matches(command) }

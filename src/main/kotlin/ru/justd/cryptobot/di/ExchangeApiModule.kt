@@ -28,12 +28,12 @@ class ExchangeApiModule {
 
     @Provides
     @Singleton
-    @Named("GdaxApi")
+    @Named("CoinbaseApi")
     fun provideCoinbaseApi(okHttpClient: OkHttpClient): ExchangeApi = CoinbaseApi(okHttpClient)
 
     @Provides
     @Singleton
-    @Named("GdaxApi")
+    @Named("CryptonatorApi")
     fun provideCryptonator(okHttpClient: OkHttpClient): ExchangeApi = CryptonatorApi(okHttpClient)
 
 
