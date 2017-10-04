@@ -6,6 +6,7 @@ import com.pengrad.telegrambot.UpdatesListener.CONFIRMED_UPDATES_ALL
 import com.pengrad.telegrambot.model.Message
 import com.pengrad.telegrambot.model.MessageEntity.Type.*
 import com.pengrad.telegrambot.model.Update
+import com.pengrad.telegrambot.model.request.ParseMode
 import com.pengrad.telegrambot.request.SendMessage
 import com.pengrad.telegrambot.response.SendResponse
 import ru.justd.cryptobot.handler.Command
@@ -67,7 +68,7 @@ private fun sendMessage(chatId: Long, commandHandler: CommandHandler) {
 private fun sendMessage(chatId: Long, outcomingMessage: String) {
     println("send message...")
     bot.execute(
-            SendMessage(chatId, outcomingMessage),
+            SendMessage(chatId, outcomingMessage).parseMode(ParseMode.Markdown),
             object : Callback<SendMessage, SendResponse> {
                 override fun onResponse(request: SendMessage?, response: SendResponse?) {
                     println("response")

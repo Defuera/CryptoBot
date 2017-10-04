@@ -1,6 +1,6 @@
 package ru.justd.cryptobot.handler
 
-enum class Command(val pattern: String) {
+enum class Command(val command: String) {
 
     HELP("/help") {
 
@@ -25,11 +25,13 @@ enum class Command(val pattern: String) {
         override fun handler(): CommandHandler = AboutCommandHandler
     },
 
-    PRICE("\\/price [A-Z,a-z]{3}\\z") {
+    PRICE("/price") {
 
         override fun description(): String = "pricceless hleb"
 
-        override fun handler() = PriceCommandHandler.newInstance(pattern)
+        override fun handler() = PriceCommandHandler.newInstance(command)
+
+        override fun argsPattern() = "[A-Z,a-z]{3}\\z"
 
     };
 
@@ -37,12 +39,19 @@ enum class Command(val pattern: String) {
 
     abstract fun description(): String
 
+    internal open fun argsPattern(): String = ""
+
+    private fun matches(command: String): Boolean {
+        val pattern = "${this.command} ${argsPattern()}".trim()
+        return Regex(pattern).matches(command)
+    }
+
     companion object {
 
         fun findCommandHandler(command: String) = find(command)?.handler() ?: UnsupportedCommandHandler
 
         private fun find(command: String): Command? =
-                values().firstOrNull { Regex(it.pattern).matches(command) }
+                values().firstOrNull { it.matches(command) }
 
     }
 
