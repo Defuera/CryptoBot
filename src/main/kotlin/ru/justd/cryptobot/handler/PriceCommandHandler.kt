@@ -8,7 +8,7 @@ internal class PriceCommandHandler private constructor(private val currencyCode:
     lateinit var exchangeFacade : ExchangeFacade //todo this is sucky way to provide dependency here
 
     companion object {
-        fun newInstance(command: String): CommandHandler {
+        fun newInstance(command: String): PriceCommandHandler {
             return PriceCommandHandler(command.takeLast(3)) //todo magic number
         }
     }

@@ -31,7 +31,7 @@ enum class Command(val pattern: String) {
 
         override fun description(): String = "pricceless hleb"
 
-        override fun handler() = PriceCommandHandler.newInstance(pattern)
+        override fun handler(): CommandHandler = PriceCommandHandler.newInstance(pattern)
 
     };
 
