@@ -4,7 +4,7 @@ import com.pengrad.telegrambot.Callback
 import com.pengrad.telegrambot.TelegramBotAdapter
 import com.pengrad.telegrambot.UpdatesListener.CONFIRMED_UPDATES_ALL
 import com.pengrad.telegrambot.model.Message
-import com.pengrad.telegrambot.model.MessageEntity.Type.*
+import com.pengrad.telegrambot.model.MessageEntity.Type.bot_command
 import com.pengrad.telegrambot.model.Update
 import com.pengrad.telegrambot.request.SendMessage
 import com.pengrad.telegrambot.response.SendResponse
@@ -15,6 +15,7 @@ import java.io.IOException
 private val bot = TelegramBotAdapter.build(BuildConfig.BOT_TOKEN)
 
 fun main(args: Array<String>) {
+
     println("CryptoBot started")
 
     bot.setUpdatesListener { updates ->
@@ -56,8 +57,8 @@ private fun isBotAddedToChannel(message: Message) =
         message.newChatMembers()?.find { user -> user.isBot && user.username() == "CryptAdviserBot" } != null
 
 fun handleBotCommand(message: Message) {
-    val requestHandler = Command.findCommandHandler(message.text())
-    sendMessage(message.chat().id(), requestHandler)
+    val commandHandler = Command.findCommandHandler(message.text())
+    sendMessage(message.chat().id(), commandHandler)
 }
 
 private fun sendMessage(chatId: Long, commandHandler: CommandHandler) {

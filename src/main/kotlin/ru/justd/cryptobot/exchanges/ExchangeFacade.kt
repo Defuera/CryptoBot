@@ -1,29 +1,33 @@
 package ru.justd.cryptobot.exchanges
 
-import okhttp3.OkHttpClient
-import okhttp3.logging.HttpLoggingInterceptor
 import ru.justd.cryptobot.UserPreferences
-import ru.justd.cryptobot.exchanges.gdax.GdaxApi
+import javax.inject.Named
 
-class ExchangeFacade {
+class ExchangeFacade(
+        @Named("GdaxApi")
+        private val gdaxApi: ExchangeApi,
 
-    //todo inject
-    //region dependencies
+        @Named("CoinbaseApi")
+        private val coinbaseApi: ExchangeApi,
 
-    private val okHttpClient = OkHttpClient.Builder()
-            .addInterceptor(HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BODY))
-            .build()
+        @Named("CryptonatorApi")
+        private val cryptonatorApi: ExchangeApi,
 
-    private val api = GdaxApi(okHttpClient)
-//    private val api = CoinbaseApi(okHttpClient)
-    //    private val api = CryptonatorApi(okHttpClient)
-    private val preferences = UserPreferences()
-
-    //endregion
-
+        private val preferences: UserPreferences
+) {
 
     fun getRate(currencyCode: String): RateResponse {
-        return api.getRate(currencyCode, preferences.fiatCurrency())
+        return getApi().getRate(currencyCode, preferences.fiatCurrency())
+    }
+
+    private fun getApi(): ExchangeApi {
+        val exchangeApiCode = preferences.exchangeApi()
+        return when (exchangeApiCode) {
+            "GdaxApi" -> gdaxApi
+            "CoinbaseApi" -> coinbaseApi
+            "CryptonatorApi" -> cryptonatorApi
+            else -> throw IllegalArgumentException("No such api $exchangeApiCode")
+        }
     }
 
 }
