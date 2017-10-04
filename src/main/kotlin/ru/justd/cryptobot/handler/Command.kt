@@ -43,6 +43,7 @@ enum class Command(val command: String) {
 
     companion object {
 
+        //todo obtain locale from preferences
         val helpResource: ResourceBundle = ResourceBundle.getBundle("help", Locale.getDefault())
 
         fun findCommandHandler(command: String) = find(command)?.handler() ?: UnsupportedCommandHandler
