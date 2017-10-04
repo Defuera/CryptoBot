@@ -1,10 +1,10 @@
 package ru.justd.cryptobot.handler
 
+import java.util.*
+
 enum class Command(val command: String) {
 
     HELP("/help") {
-
-        override fun description(): String = "description hleb"
 
         override fun handler(): CommandHandler = HelpCommandHandler
 
@@ -12,22 +12,17 @@ enum class Command(val command: String) {
 
     UPDATE("/update") {
 
-        override fun description(): String = "helb update"
-
         override fun handler(): CommandHandler = UpdateCommandHandler
 
     },
 
     ABOUT("/about") {
 
-        override fun description(): String = "about hlep"
-
         override fun handler(): CommandHandler = AboutCommandHandler
+
     },
 
     PRICE("/price") {
-
-        override fun description(): String = "pricceless hleb"
 
         override fun handler() = PriceCommandHandler.newInstance(command)
 
@@ -37,16 +32,18 @@ enum class Command(val command: String) {
 
     abstract fun handler(): CommandHandler
 
-    abstract fun description(): String
+    internal fun description(): String = helpResource.getString(command)
 
-    internal open fun argsPattern(): String = ""
+    protected open fun argsPattern(): String? = null
 
     private fun matches(command: String): Boolean {
-        val pattern = "${this.command} ${argsPattern()}".trim()
+        val pattern = "${this.command} ${argsPattern() ?: ""}".trim()
         return Regex(pattern).matches(command)
     }
 
     companion object {
+
+        val helpResource: ResourceBundle = ResourceBundle.getBundle("help", Locale.getDefault())
 
         fun findCommandHandler(command: String) = find(command)?.handler() ?: UnsupportedCommandHandler
 
