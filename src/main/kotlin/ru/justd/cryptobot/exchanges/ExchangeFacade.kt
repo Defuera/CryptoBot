@@ -3,7 +3,7 @@ package ru.justd.cryptobot.exchanges
 import ru.justd.cryptobot.UserPreferences
 import javax.inject.Named
 
-open class ExchangeFacade( //todo open for tests, which sucks
+class ExchangeFacade(
         @Named("GdaxApi")
         private val gdaxApi: ExchangeApi,
 
