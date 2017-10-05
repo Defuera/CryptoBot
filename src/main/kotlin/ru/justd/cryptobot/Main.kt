@@ -35,15 +35,14 @@ private fun processUpdate(update: Update) {
     val message = update.message()
     println("message ${message?.entities()?.get(0)?.type() ?: ""}: ${message?.text() ?: "null"}")
 
-    val entities = message.entities()
-    if (entities?.isNotEmpty() == true) { //todo is there's a better way
-        entities.forEach {
-            when (it.type()) {
-                bot_command -> handleBotCommand(message)
-                else -> println("else message type not supported ${it.type()}")
+    message
+            .entities()
+            ?.forEach {
+                when (it.type()) {
+                    bot_command -> handleBotCommand(message)
+                    else -> println("else message type not supported ${it.type()}")
+                }
             }
-        }
-    }
 
     if (isBotAddedToChannel(message)) {
         val chatId = message.chat().id()
@@ -71,11 +70,11 @@ private fun sendMessage(chatId: Long, outcomingMessage: String) {
             SendMessage(chatId, outcomingMessage).parseMode(ParseMode.Markdown),
             object : Callback<SendMessage, SendResponse> {
                 override fun onResponse(request: SendMessage?, response: SendResponse?) {
-                    println("response")
+                    println("response message: ${response?.message()?.text()}")
                 }
 
                 override fun onFailure(request: SendMessage?, e: IOException?) {
-                    println("failure")
+                    println("failure: ${e?.message}")
                 }
 
             })
