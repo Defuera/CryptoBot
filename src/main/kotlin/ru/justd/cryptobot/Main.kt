@@ -6,6 +6,7 @@ import com.pengrad.telegrambot.UpdatesListener.CONFIRMED_UPDATES_ALL
 import com.pengrad.telegrambot.model.Message
 import com.pengrad.telegrambot.model.MessageEntity.Type.bot_command
 import com.pengrad.telegrambot.model.Update
+import com.pengrad.telegrambot.model.request.ParseMode
 import com.pengrad.telegrambot.request.SendMessage
 import com.pengrad.telegrambot.response.SendResponse
 import ru.justd.cryptobot.di.DaggerMainComponent
@@ -53,6 +54,14 @@ class Main {
                 }
             }
         }
+    message
+            .entities()
+            ?.forEach {
+                when (it.type()) {
+                    bot_command -> handleBotCommand(message)
+                    else -> println("else message type not supported ${it.type()}")
+                }
+            }
 
         if (isBotAddedToChannel(message)) {
             val chatId = message.chat().id()
@@ -77,14 +86,14 @@ class Main {
     private fun sendMessage(chatId: Long, outcomingMessage: String) {
         println("send message...")
         bot.execute(
-                SendMessage(chatId, outcomingMessage),
+                SendMessage(chatId, outcomingMessage).parseMode(ParseMode.Markdown),
                 object : Callback<SendMessage, SendResponse> {
                     override fun onResponse(request: SendMessage?, response: SendResponse?) {
-                        println("response")
+                        println("response message: ${response?.message()?.text()}")
                     }
 
                     override fun onFailure(request: SendMessage?, e: IOException?) {
-                        println("failure")
+                        println("failure: ${e?.message}")
                     }
 
                 })
