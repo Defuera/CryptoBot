@@ -1,7 +1,7 @@
 package ru.justd.cryptobot
 
 import com.pengrad.telegrambot.Callback
-import com.pengrad.telegrambot.TelegramBotAdapter
+import com.pengrad.telegrambot.TelegramBot
 import com.pengrad.telegrambot.UpdatesListener.CONFIRMED_UPDATES_ALL
 import com.pengrad.telegrambot.model.Message
 import com.pengrad.telegrambot.model.MessageEntity.Type.bot_command
@@ -21,14 +21,17 @@ class Main {
     @Inject
     lateinit var exchangeFacade: ExchangeFacade
 
-    private val bot = TelegramBotAdapter.build(BuildConfig.BOT_TOKEN)
-    private val component = DaggerMainComponent.builder().build()
+    @Inject
+    lateinit var telegramBot : TelegramBot
 
     fun main(args: Array<String>) {
-        component.inject(this)
+        DaggerMainComponent.builder()
+                .build()
+                .inject(this)
+
         println("CryptoBot started")
 
-        bot.setUpdatesListener { updates ->
+        telegramBot.setUpdatesListener { updates ->
             updates.forEach {
                 try {
                     processUpdate(it)
@@ -54,14 +57,14 @@ class Main {
                 }
             }
         }
-    message
-            .entities()
-            ?.forEach {
-                when (it.type()) {
-                    bot_command -> handleBotCommand(message)
-                    else -> println("else message type not supported ${it.type()}")
+        message
+                .entities()
+                ?.forEach {
+                    when (it.type()) {
+                        bot_command -> handleBotCommand(message)
+                        else -> println("else message type not supported ${it.type()}")
+                    }
                 }
-            }
 
         if (isBotAddedToChannel(message)) {
             val chatId = message.chat().id()
@@ -70,7 +73,7 @@ class Main {
         }
     }
 
-    //todo is there's better way to detect, that bot just been added to a channel/group?
+    //todo is there's better way to detect, that telegramBot just been added to a channel/group?
     private fun isBotAddedToChannel(message: Message) =
             message.newChatMembers()?.find { user -> user.isBot && user.username() == "CryptAdviserBot" } != null
 
@@ -85,7 +88,7 @@ class Main {
 
     private fun sendMessage(chatId: Long, outcomingMessage: String) {
         println("send message...")
-        bot.execute(
+        telegramBot.execute(
                 SendMessage(chatId, outcomingMessage).parseMode(ParseMode.Markdown),
                 object : Callback<SendMessage, SendResponse> {
                     override fun onResponse(request: SendMessage?, response: SendResponse?) {

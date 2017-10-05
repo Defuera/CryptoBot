@@ -1,7 +1,10 @@
 package ru.justd.cryptobot.di
 
+import com.pengrad.telegrambot.TelegramBot
+import com.pengrad.telegrambot.TelegramBotAdapter
 import dagger.Module
 import dagger.Provides
+import ru.justd.cryptobot.BuildConfig
 import ru.justd.cryptobot.UserPreferences
 import ru.justd.cryptobot.exchanges.ExchangeApi
 import ru.justd.cryptobot.exchanges.ExchangeFacade
@@ -26,4 +29,9 @@ class MainModule {
             @Named(CryptonatorApi.NAME) cryptonatorApi: ExchangeApi,
             userPreferences: UserPreferences
     ): ExchangeFacade = ExchangeFacade(gdaxApi, coinbaseApi, cryptonatorApi, userPreferences)
+
+    @Provides
+    @Singleton
+    fun provideTelegramBotAdapter(): TelegramBot = TelegramBotAdapter.buildDebug(BuildConfig.BOT_TOKEN) //todo provide debug/production bot based on BuildType
+
 }
