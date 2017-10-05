@@ -1,16 +1,19 @@
 package ru.justd.cryptobot.exchanges
 
 import ru.justd.cryptobot.UserPreferences
+import ru.justd.cryptobot.exchanges.coinbase.CoinbaseApi
+import ru.justd.cryptobot.exchanges.cryptonator.CryptonatorApi
+import ru.justd.cryptobot.exchanges.gdax.GdaxApi
 import javax.inject.Named
 
 class ExchangeFacade(
-        @Named("GdaxApi")
+        @Named(GdaxApi.NAME)
         private val gdaxApi: ExchangeApi,
 
-        @Named("CoinbaseApi")
+        @Named(CoinbaseApi.NAME)
         private val coinbaseApi: ExchangeApi,
 
-        @Named("CryptonatorApi")
+        @Named(CryptonatorApi.NAME)
         private val cryptonatorApi: ExchangeApi,
 
         private val preferences: UserPreferences

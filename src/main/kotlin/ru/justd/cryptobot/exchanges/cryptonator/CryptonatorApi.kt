@@ -16,6 +16,8 @@ private const val BASE_URL = "https://api.cryptonator.com/api/"
  */
 class CryptonatorApi(val okHttpClient: OkHttpClient) : ExchangeApi {
 
+    companion object { const val NAME = "CryptonatorApi" }
+
     val gson = Gson() //todo move to abstract parent class together with okHttpClient? But I think gson should not be injected, since it may be different configuration for every api impl.
 
     override fun getRate(cryptoCurrencyCode: String, fiatCurrency: String): RateResponse {//todo

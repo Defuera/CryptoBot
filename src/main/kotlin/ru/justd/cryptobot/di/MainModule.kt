@@ -5,6 +5,9 @@ import dagger.Provides
 import ru.justd.cryptobot.UserPreferences
 import ru.justd.cryptobot.exchanges.ExchangeApi
 import ru.justd.cryptobot.exchanges.ExchangeFacade
+import ru.justd.cryptobot.exchanges.coinbase.CoinbaseApi
+import ru.justd.cryptobot.exchanges.cryptonator.CryptonatorApi
+import ru.justd.cryptobot.exchanges.gdax.GdaxApi
 import javax.inject.Named
 import javax.inject.Singleton
 
@@ -18,9 +21,9 @@ class MainModule {
     @Provides
     @Singleton
     fun provideExchangeFacade(
-            @Named("GdaxApi") gdaxApi: ExchangeApi,
-            @Named("CoinbaseApi") coinbaseApi: ExchangeApi,
-            @Named("CryptonatorApi") cryptonatorApi: ExchangeApi,
+            @Named(GdaxApi.NAME) gdaxApi: ExchangeApi,
+            @Named(CoinbaseApi.NAME) coinbaseApi: ExchangeApi,
+            @Named(CryptonatorApi.NAME) cryptonatorApi: ExchangeApi,
             userPreferences: UserPreferences
     ): ExchangeFacade = ExchangeFacade(gdaxApi, coinbaseApi, cryptonatorApi, userPreferences)
 }
