@@ -16,7 +16,12 @@ import ru.justd.cryptobot.handler.CommandHandler
 import java.io.IOException
 import javax.inject.Inject
 
-class Main {
+
+fun main(args: Array<String>) {
+    Main().run()
+}
+
+class Main { //todo class can be removed once updated to kotlin 1.2. Untill then it's used to be able to inject dependencies
 
     @Inject
     lateinit var exchangeFacade: ExchangeFacade
@@ -24,7 +29,7 @@ class Main {
     @Inject
     lateinit var telegramBot : TelegramBot
 
-    fun main(args: Array<String>) {
+    fun run() {
         DaggerMainComponent.builder()
                 .build()
                 .inject(this)
