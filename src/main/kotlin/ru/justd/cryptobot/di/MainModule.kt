@@ -6,6 +6,7 @@ import dagger.Module
 import dagger.Provides
 import ru.justd.cryptobot.BuildConfig
 import ru.justd.cryptobot.UserPreferences
+import ru.justd.cryptobot.UserPreferencesImpl
 import ru.justd.cryptobot.exchanges.ExchangeApi
 import ru.justd.cryptobot.exchanges.ExchangeFacade
 import ru.justd.cryptobot.exchanges.ExchangeFacadeImpl
@@ -20,7 +21,7 @@ class MainModule {
 
     @Provides
     @Singleton
-    fun provideUserPreferences(): UserPreferences = UserPreferences()
+    fun provideUserPreferences(): UserPreferences = UserPreferencesImpl()
 
     @Provides
     @Singleton

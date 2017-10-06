@@ -19,12 +19,16 @@ class ExchangeFacadeImpl(
         private val preferences: UserPreferences
 ) : ExchangeFacade {
 
-    override fun getRate(currencyCode: String): RateResponse {
-        return getApi().getRate(currencyCode, preferences.fiatCurrency())
+    override fun getRate(base: String) = getRate(base, preferences.targetCurrency())
+
+    override fun getRate(base: String, target: String) = getRate(base, preferences.targetCurrency(), preferences.exchangeApi())
+
+    override fun getRate(base: String, target: String, exchangeApiCode: String): RateResponse {
+        val api = getApi(exchangeApiCode)
+        return api.getRate(base, target)
     }
 
-    private fun getApi(): ExchangeApi {
-        val exchangeApiCode = preferences.exchangeApi()
+    private fun getApi(exchangeApiCode: String): ExchangeApi {
         return when (exchangeApiCode) {
             GdaxApi.NAME -> gdaxApi
             CoinbaseApi.NAME -> coinbaseApi

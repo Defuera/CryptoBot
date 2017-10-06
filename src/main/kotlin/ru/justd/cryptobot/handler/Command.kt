@@ -1,6 +1,6 @@
 package ru.justd.cryptobot.handler
 
-import ru.justd.cryptobot.UserPreferences
+import ru.justd.cryptobot.UserPreferencesImpl
 import java.util.*
 
 enum class Command(val command: String) {
@@ -44,7 +44,7 @@ enum class Command(val command: String) {
 
     companion object {
 
-        private val preferences = UserPreferences()
+        private val preferences = UserPreferencesImpl() //todo get injectable module
         internal val helpResource: ResourceBundle = ResourceBundle.getBundle("help", preferences.locale())
 
         fun findCommandHandlerFactory(command: String) = find(command)?.factory() ?: InstantFactory(UnsupportedCommandHandler)
