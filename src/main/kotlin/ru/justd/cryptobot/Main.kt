@@ -64,14 +64,6 @@ class Main { //todo class can be removed once updated to kotlin 1.2. Untill then
                 }
             }
         }
-        message
-                .entities()
-                ?.forEach {
-                    when (it.type()) {
-                        bot_command -> handleBotCommand(message)
-                        else -> println("else message type not supported ${it.type()}")
-                    }
-                }
 
         if (isBotAddedToChannel(message)) {
             val chatId = message.chat().id()
