@@ -3,37 +3,35 @@ package ru.justd.cryptobot.handler
 import ru.justd.cryptobot.UserPreferences
 import java.util.*
 
-import ru.justd.cryptobot.exchanges.ExchangeFacade
-
 enum class Command(val command: String) {
 
     HELP("/help") {
 
-        override fun handler(): CommandHandler = HelpCommandHandler
+        override fun factory(): CommandHandlerFactory<CommandHandler> = InstantFactory(HelpCommandHandler)
 
     },
 
     UPDATE("/update") {
 
-        override fun handler(): CommandHandler = UpdateCommandHandler
+        override fun factory(): CommandHandlerFactory<CommandHandler> = InstantFactory(UpdateCommandHandler)
 
     },
 
     ABOUT("/about") {
 
-        override fun handler(): CommandHandler = AboutCommandHandler
+        override fun factory(): CommandHandlerFactory<CommandHandler> = InstantFactory(AboutCommandHandler)
 
     },
 
     PRICE("/price") {
 
-        override fun handler(): CommandHandler = PriceCommandHandler.newInstance(command)
+        override fun factory(): CommandHandlerFactory<CommandHandler> = PriceCommandHandlerFactory(command)
 
         override fun argsPattern() = "[A-Z,a-z]{3}\\z"
 
     };
 
-    abstract fun handler(): CommandHandler
+    abstract fun factory(): CommandHandlerFactory<CommandHandler>
 
     internal fun description(): String = helpResource.getString(command)
 
@@ -49,13 +47,7 @@ enum class Command(val command: String) {
         private val preferences = UserPreferences()
         internal val helpResource: ResourceBundle = ResourceBundle.getBundle("help", preferences.locale())
 
-        fun findCommandHandler(exchangeFacade: ExchangeFacade, command: String): CommandHandler {
-            val handler = find(command)?.handler() ?: UnsupportedCommandHandler
-            if (handler is PriceCommandHandler) {
-                handler.exchangeFacade = exchangeFacade
-            }
-            return handler
-        }
+        fun findCommandHandlerFactory(command: String) = find(command)?.factory() ?: InstantFactory(UnsupportedCommandHandler)
 
         private fun find(command: String): Command? =
                 values().firstOrNull { it.matches(command) }

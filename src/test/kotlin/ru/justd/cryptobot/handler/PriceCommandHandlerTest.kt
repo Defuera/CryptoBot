@@ -30,7 +30,7 @@ class PriceCommandHandlerTest {
     }
 
     @Test
-    fun testGetEthPrice() {
+    fun testGetEthPrice() { //todo test is failing
         `when`(exchangeFacade.getRate("ETH")).thenReturn(RateResponse(.0, "ETH", "USD"))
         assertThat(priceFor("ETH")).matches(patternForPair("ETH", "USD"))
     }
@@ -42,8 +42,7 @@ class PriceCommandHandlerTest {
 //    }
 
     private fun priceFor(base: String): String {
-        val priceHandler = PriceCommandHandler.newInstance("/price $base")
-        priceHandler.exchangeFacade = exchangeFacade
+        val priceHandler = PriceCommandHandler(exchangeFacade, "/price $base")
         return priceHandler.responseMessage()
     }
 

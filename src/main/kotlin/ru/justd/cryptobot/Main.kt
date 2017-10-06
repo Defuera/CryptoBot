@@ -13,6 +13,8 @@ import ru.justd.cryptobot.di.DaggerMainComponent
 import ru.justd.cryptobot.exchanges.ExchangeFacade
 import ru.justd.cryptobot.handler.Command
 import ru.justd.cryptobot.handler.CommandHandler
+import ru.justd.cryptobot.handler.InstantFactory
+import ru.justd.cryptobot.handler.PriceCommandHandlerFactory
 import java.io.IOException
 import javax.inject.Inject
 
@@ -27,7 +29,7 @@ class Main { //todo class can be removed once updated to kotlin 1.2. Untill then
     lateinit var exchangeFacade: ExchangeFacade
 
     @Inject
-    lateinit var telegramBot : TelegramBot
+    lateinit var telegramBot: TelegramBot
 
     fun run() {
         DaggerMainComponent.builder()
@@ -73,8 +75,8 @@ class Main { //todo class can be removed once updated to kotlin 1.2. Untill then
 
         if (isBotAddedToChannel(message)) {
             val chatId = message.chat().id()
-            sendMessage(chatId, Command.ABOUT.handler())
-            sendMessage(chatId, Command.HELP.handler())
+            sendMessage(chatId, Command.ABOUT.factory().create())
+            sendMessage(chatId, Command.HELP.factory().create())
         }
     }
 
@@ -83,7 +85,14 @@ class Main { //todo class can be removed once updated to kotlin 1.2. Untill then
             message.newChatMembers()?.find { user -> user.isBot && user.username() == "CryptAdviserBot" } != null
 
     fun handleBotCommand(message: Message) {
-        val commandHandler = Command.findCommandHandler(exchangeFacade, message.text())
+        val factory = Command.findCommandHandlerFactory(message.text())
+
+        val commandHandler = when (factory) {
+            is PriceCommandHandlerFactory -> factory.setExchangeFacade(exchangeFacade).create()
+            is InstantFactory<*> -> factory.create()
+            else -> throw IllegalArgumentException("Unhandled factory $factory")
+        }
+
         sendMessage(message.chat().id(), commandHandler)
     }
 
