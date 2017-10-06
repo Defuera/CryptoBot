@@ -7,6 +7,7 @@ import dagger.Provides
 import ru.justd.cryptobot.BuildConfig
 import ru.justd.cryptobot.UserPreferences
 import ru.justd.cryptobot.exchanges.ExchangeApi
+import ru.justd.cryptobot.exchanges.ExchangeFacade
 import ru.justd.cryptobot.exchanges.ExchangeFacadeImpl
 import ru.justd.cryptobot.exchanges.coinbase.CoinbaseApi
 import ru.justd.cryptobot.exchanges.cryptonator.CryptonatorApi
@@ -28,7 +29,7 @@ class MainModule {
             @Named(CoinbaseApi.NAME) coinbaseApi: ExchangeApi,
             @Named(CryptonatorApi.NAME) cryptonatorApi: ExchangeApi,
             userPreferences: UserPreferences
-    ): ExchangeFacadeImpl = ExchangeFacadeImpl(gdaxApi, coinbaseApi, cryptonatorApi, userPreferences)
+    ): ExchangeFacade = ExchangeFacadeImpl(gdaxApi, coinbaseApi, cryptonatorApi, userPreferences)
 
     @Provides
     @Singleton

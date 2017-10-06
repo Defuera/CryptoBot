@@ -1,12 +1,12 @@
 package ru.justd.cryptobot.handler
 
-import ru.justd.cryptobot.exchanges.ExchangeFacadeImpl
+import ru.justd.cryptobot.exchanges.ExchangeFacade
 
 class PriceCommandHandlerFactory(private val command: String) : CommandHandlerFactory<PriceCommandHandler> {
 
-    private lateinit var exchangeFacade: ExchangeFacadeImpl
+    private lateinit var exchangeFacade: ExchangeFacade
 
-    fun setExchangeFacade(exchangeFacade: ExchangeFacadeImpl): PriceCommandHandlerFactory {
+    fun setExchangeFacade(exchangeFacade: ExchangeFacade): PriceCommandHandlerFactory {
         this.exchangeFacade = exchangeFacade
         return this
     }

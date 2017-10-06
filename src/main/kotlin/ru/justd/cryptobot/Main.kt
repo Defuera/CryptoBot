@@ -10,7 +10,7 @@ import com.pengrad.telegrambot.model.request.ParseMode
 import com.pengrad.telegrambot.request.SendMessage
 import com.pengrad.telegrambot.response.SendResponse
 import ru.justd.cryptobot.di.DaggerMainComponent
-import ru.justd.cryptobot.exchanges.ExchangeFacadeImpl
+import ru.justd.cryptobot.exchanges.ExchangeFacade
 import ru.justd.cryptobot.handler.Command
 import ru.justd.cryptobot.handler.CommandHandler
 import ru.justd.cryptobot.handler.InstantFactory
@@ -26,7 +26,7 @@ fun main(args: Array<String>) {
 class Main { //todo class can be removed once updated to kotlin 1.2. Untill then it's used to be able to inject dependencies
 
     @Inject
-    lateinit var exchangeFacade: ExchangeFacadeImpl
+    lateinit var exchangeFacade: ExchangeFacade
 
     @Inject
     lateinit var telegramBot: TelegramBot
