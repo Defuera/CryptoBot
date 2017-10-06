@@ -10,11 +10,9 @@ import com.pengrad.telegrambot.model.request.ParseMode
 import com.pengrad.telegrambot.request.SendMessage
 import com.pengrad.telegrambot.response.SendResponse
 import ru.justd.cryptobot.di.DaggerMainComponent
+import ru.justd.cryptobot.di.MainComponent
 import ru.justd.cryptobot.exchanges.ExchangeFacade
-import ru.justd.cryptobot.handler.Command
-import ru.justd.cryptobot.handler.CommandHandler
-import ru.justd.cryptobot.handler.InstantFactory
-import ru.justd.cryptobot.handler.PriceCommandHandlerFactory
+import ru.justd.cryptobot.handler.*
 import java.io.IOException
 import javax.inject.Inject
 
@@ -25,16 +23,19 @@ fun main(args: Array<String>) {
 
 class Main { //todo class can be removed once updated to kotlin 1.2. Untill then it's used to be able to inject dependencies
 
-    @Inject
-    lateinit var exchangeFacade: ExchangeFacade
+    companion object {
+        lateinit var component: MainComponent
+    }
 
     @Inject
     lateinit var telegramBot: TelegramBot
 
+    @Inject
+    lateinit var commandHandlerFacade: CommandHandlerFacade
+
     fun run() {
-        DaggerMainComponent.builder()
-                .build()
-                .inject(this)
+        component = DaggerMainComponent.builder().build()
+        component.inject(this)
 
         println("CryptoBot started")
 
@@ -76,15 +77,9 @@ class Main { //todo class can be removed once updated to kotlin 1.2. Untill then
     private fun isBotAddedToChannel(message: Message) =
             message.newChatMembers()?.find { user -> user.isBot && user.username() == "CryptAdviserBot" } != null
 
-    fun handleBotCommand(message: Message) {
+    private fun handleBotCommand(message: Message) {
         val factory = Command.findCommandHandlerFactory(message.text())
-
-        val commandHandler = when (factory) {
-            is PriceCommandHandlerFactory -> factory.setExchangeFacade(exchangeFacade).create()
-            is InstantFactory<*> -> factory.create()
-            else -> throw IllegalArgumentException("Unhandled factory $factory")
-        }
-
+        val commandHandler = commandHandlerFacade.createCommandHandler(factory)
         sendMessage(message.chat().id(), commandHandler)
     }
 
