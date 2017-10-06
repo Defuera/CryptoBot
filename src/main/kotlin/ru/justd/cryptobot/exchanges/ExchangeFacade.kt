@@ -26,9 +26,9 @@ class ExchangeFacade(
     private fun getApi(): ExchangeApi {
         val exchangeApiCode = preferences.exchangeApi()
         return when (exchangeApiCode) {
-            "GdaxApi" -> gdaxApi
-            "CoinbaseApi" -> coinbaseApi
-            "CryptonatorApi" -> cryptonatorApi
+            GdaxApi.NAME -> gdaxApi
+            CoinbaseApi.NAME -> coinbaseApi
+            CryptonatorApi.NAME -> cryptonatorApi
             else -> throw IllegalArgumentException("No such api $exchangeApiCode")
         }
     }
