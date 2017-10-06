@@ -5,47 +5,37 @@ import org.junit.Test
 
 internal class CommandHandlerTest {
 
-    //    HelpCommandHandler, UpdateCommandHandler, AboutCommandHandler, PriceCommandHandler, UnsupportedRequest
     @Test
-    fun testFindHelpRequestHandler() {
-        assertThat(Command.findCommandHandler("/help")).isEqualTo(HelpCommandHandler)
+    fun testFindHelpCommandHandler() {
+        assertThat(findHandler("/help")).isEqualTo(HelpCommandHandler)
     }
 
     @Test
-    fun testFindUpdateRequestHandler() {
-        assertThat(Command.findCommandHandler("/update")).isEqualTo(UpdateCommandHandler)
+    fun testFindUpdateCommandHandler() {
+        assertThat(findHandler("/update")).isEqualTo(UpdateCommandHandler)
     }
 
     @Test
-    fun testFindAboutRequestHandler() {
-        assertThat(Command.findCommandHandler("/about")).isEqualTo(AboutCommandHandler)
+    fun testFindAboutCommandHandler() {
+        assertThat(findHandler("/about")).isEqualTo(AboutCommandHandler)
     }
 
     @Test
-    fun testFindPriceRequestHandler() {
-        assertThat(Command.findCommandHandler("/price")).isEqualTo(UnsupportedCommandHandler)
-        assertThat(Command.findCommandHandler("/price Bitcoin")).isEqualTo(UnsupportedCommandHandler)
-        assertThat(Command.findCommandHandler("/price 123")).isEqualTo(UnsupportedCommandHandler)
-
-        assertThat(Command.findCommandHandler("/price hui")).isExactlyInstanceOf(PriceCommandHandler::class.java) //todo add list of supported cryptos or determine it dynamically
-        assertThat(Command.findCommandHandler("/price BTC")).isExactlyInstanceOf(PriceCommandHandler::class.java)
-        assertThat(Command.findCommandHandler("/price ETH")).isExactlyInstanceOf(PriceCommandHandler::class.java)
-    }
-
-
-    //region integration tests
-
-    @Test
-    fun testGetPriceSuccess() {
-        assertThat(PriceCommandHandler.newInstance("/price BTC").responseMessage()).contains("BTC")
-        assertThat(PriceCommandHandler.newInstance("/price ETH").responseMessage()).contains("ETH")
+    fun testFindPriceCommandHandlerFailed() {
+        assertThat(findHandler("/price")).isEqualTo(UnsupportedCommandHandler)
+        assertThat(findHandler("/price Bitcoin")).isEqualTo(UnsupportedCommandHandler)
+        assertThat(findHandler("/price 123")).isEqualTo(UnsupportedCommandHandler)
     }
 
     @Test
-    fun testGetPriceInvalidBaseCurrency() {
-        assertThat(PriceCommandHandler.newInstance("BCC").responseMessage()).isNotNull() //todo find better way to make sure expected error is returned, taking into account, that different apis return different errors. Do we need different errors?
+    fun testFindPriceCommandHandlerSuccess() {
+        assertThat(findFactory("/price hui")).isExactlyInstanceOf(PriceCommandHandlerFactory::class.java) //todo add list of supported cryptos or determine it dynamically
+        assertThat(findFactory("/price BTC")).isExactlyInstanceOf(PriceCommandHandlerFactory::class.java)
+        assertThat(findFactory("/price ETH")).isExactlyInstanceOf(PriceCommandHandlerFactory::class.java)
     }
 
-    //endregion
+    private fun findFactory(command: String) = Command.findCommandHandlerFactory(command)
+
+    private fun findHandler(command: String) = findFactory(command).create()
 
 }

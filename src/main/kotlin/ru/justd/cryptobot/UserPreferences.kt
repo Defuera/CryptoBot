@@ -8,4 +8,5 @@ class UserPreferences {
 
     fun locale(): Locale = Locale.getDefault()
 
+    fun exchangeApi(): String = "CoinbaseApi"
 }
