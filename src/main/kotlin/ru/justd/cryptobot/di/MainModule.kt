@@ -13,6 +13,7 @@ import ru.justd.cryptobot.exchanges.ExchangeFacadeImpl
 import ru.justd.cryptobot.exchanges.coinbase.CoinbaseApi
 import ru.justd.cryptobot.exchanges.cryptonator.CryptonatorApi
 import ru.justd.cryptobot.exchanges.gdax.GdaxApi
+import ru.justd.cryptobot.handler.CommandHandlerFacade
 import javax.inject.Named
 import javax.inject.Singleton
 
@@ -35,5 +36,11 @@ class MainModule {
     @Provides
     @Singleton
     fun provideTelegramBotAdapter(): TelegramBot = TelegramBotAdapter.buildDebug(BuildConfig.BOT_TOKEN) //todo provide debug/production bot based on BuildType
+
+    @Provides
+    @Singleton
+    fun provideCommandHandlerFacade(
+            exchangeFacade: ExchangeFacade
+    ): CommandHandlerFacade = CommandHandlerFacade(exchangeFacade)
 
 }
