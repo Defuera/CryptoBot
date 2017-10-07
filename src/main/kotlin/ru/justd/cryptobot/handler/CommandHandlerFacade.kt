@@ -1,18 +1,10 @@
 package ru.justd.cryptobot.handler
 
-import ru.justd.cryptobot.Main
 import ru.justd.cryptobot.exchanges.ExchangeFacade
-import javax.inject.Inject
 
-class CommandHandlerFacade {
-
-    @Inject
-    lateinit var exchange: ExchangeFacade
-
-    init {
-        Main.component.inject(this)
-    }
-
+class CommandHandlerFacade(
+        private val exchange: ExchangeFacade
+) {
     fun createCommandHandler(factory: CommandHandlerFactory<*>): CommandHandler =
             when (factory) {
                 is PriceCommandHandlerFactory -> factory

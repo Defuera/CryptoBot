@@ -23,10 +23,6 @@ fun main(args: Array<String>) {
 
 class Main { //todo class can be removed once updated to kotlin 1.2. Untill then it's used to be able to inject dependencies
 
-    companion object {
-        lateinit var component: MainComponent
-    }
-
     @Inject
     lateinit var telegramBot: TelegramBot
 
@@ -34,8 +30,9 @@ class Main { //todo class can be removed once updated to kotlin 1.2. Untill then
     lateinit var commandHandlerFacade: CommandHandlerFacade
 
     fun run() {
-        component = DaggerMainComponent.builder().build()
-        component.inject(this)
+        DaggerMainComponent.builder()
+                .build()
+                .inject(this)
 
         println("CryptoBot started")
 

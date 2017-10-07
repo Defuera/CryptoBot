@@ -38,6 +38,8 @@ class MainModule {
 
     @Provides
     @Singleton
-    fun provideCommandHandlerFacade(): CommandHandlerFacade = CommandHandlerFacade()
+    fun provideCommandHandlerFacade(
+            exchangeFacade: ExchangeFacade
+    ): CommandHandlerFacade = CommandHandlerFacade(exchangeFacade)
 
 }

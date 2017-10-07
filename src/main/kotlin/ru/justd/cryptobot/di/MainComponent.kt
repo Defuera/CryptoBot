@@ -9,5 +9,4 @@ import javax.inject.Singleton
 @Component(modules = arrayOf(MainModule::class))
 interface MainComponent {
     fun inject(main: Main)
-    fun inject(commandHandlerFacade: CommandHandlerFacade)
 }
