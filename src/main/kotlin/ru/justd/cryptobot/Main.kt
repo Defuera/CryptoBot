@@ -10,8 +10,6 @@ import com.pengrad.telegrambot.model.request.ParseMode
 import com.pengrad.telegrambot.request.SendMessage
 import com.pengrad.telegrambot.response.SendResponse
 import ru.justd.cryptobot.di.DaggerMainComponent
-import ru.justd.cryptobot.di.MainComponent
-import ru.justd.cryptobot.exchanges.ExchangeFacade
 import ru.justd.cryptobot.handler.*
 import java.io.IOException
 import javax.inject.Inject
@@ -75,8 +73,7 @@ class Main { //todo class can be removed once updated to kotlin 1.2. Untill then
             message.newChatMembers()?.find { user -> user.isBot && user.username() == "CryptAdviserBot" } != null
 
     private fun handleBotCommand(message: Message) {
-        val factory = Command.findCommandHandlerFactory(message.text())
-        val commandHandler = commandHandlerFacade.createCommandHandler(factory)
+        val commandHandler = commandHandlerFacade.createCommandHandler(message.text())
         sendMessage(message.chat().id(), commandHandler)
     }
 

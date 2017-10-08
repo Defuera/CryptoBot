@@ -3,7 +3,7 @@ package ru.justd.cryptobot.handler
 import ru.justd.cryptobot.UserPreferences
 import java.util.*
 
-enum class Command(val command: String) {
+enum class Command(val literal: String) {
 
     HELP("/help") {
 
@@ -25,7 +25,7 @@ enum class Command(val command: String) {
 
     PRICE("/price") {
 
-        override fun factory(): CommandHandlerFactory<CommandHandler> = PriceCommandHandlerFactory(command)
+        override fun factory(): CommandHandlerFactory<CommandHandler> = PriceCommandHandlerFactory(literal)
 
         override fun argsPattern() = "[A-Z,a-z]{3}\\z"
 
@@ -33,25 +33,13 @@ enum class Command(val command: String) {
 
     abstract fun factory(): CommandHandlerFactory<CommandHandler>
 
-    internal fun description(): String = helpResource.getString(command)
+    internal fun description(): String = helpResource.getString(literal)
 
-    protected open fun argsPattern(): String? = null
-
-    private fun matches(command: String): Boolean {
-        val pattern = "${this.command} ${argsPattern() ?: ""}".trim()
-        return Regex(pattern).matches(command)
-    }
+    internal open fun argsPattern(): String? = null //todo move to property?
 
     companion object {
-
         private val preferences = UserPreferences()
         internal val helpResource: ResourceBundle = ResourceBundle.getBundle("help", preferences.locale())
-
-        fun findCommandHandlerFactory(command: String) = find(command)?.factory() ?: InstantFactory(UnsupportedCommandHandler)
-
-        private fun find(command: String): Command? =
-                values().firstOrNull { it.matches(command) }
-
     }
 
 }
