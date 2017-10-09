@@ -14,6 +14,7 @@ import ru.justd.cryptobot.exchanges.coinbase.CoinbaseApi
 import ru.justd.cryptobot.exchanges.cryptonator.CryptonatorApi
 import ru.justd.cryptobot.exchanges.gdax.GdaxApi
 import ru.justd.cryptobot.handler.CommandHandlerFacade
+import ru.justd.cryptobot.handler.CommandHandlerFacadeImpl
 import javax.inject.Named
 import javax.inject.Singleton
 
@@ -41,6 +42,6 @@ class MainModule {
     @Singleton
     fun provideCommandHandlerFacade(
             exchangeFacade: ExchangeFacade
-    ): CommandHandlerFacade = CommandHandlerFacade(exchangeFacade)
+    ): CommandHandlerFacade = CommandHandlerFacadeImpl(exchangeFacade)
 
 }
