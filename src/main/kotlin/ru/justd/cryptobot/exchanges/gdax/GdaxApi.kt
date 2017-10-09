@@ -6,7 +6,7 @@ import okhttp3.OkHttpClient
 import okhttp3.Request
 import ru.justd.cryptobot.exchanges.ExchangeApi
 import ru.justd.cryptobot.exchanges.RateResponse
-import ru.justd.cryptobot.exchanges.RequestFailedException
+import ru.justd.cryptobot.exchanges.exceptions.RequestFailed
 
 /**
  * https://docs.gdax.com/
@@ -21,12 +21,12 @@ class GdaxApi(private val okHttpClient: OkHttpClient) : ExchangeApi {
     /**
      * https://docs.gdax.com/#get-product-order-book
      */
-    override fun getRate(cryptoCurrencyCode: String, fiatCurrency: String): RateResponse {
+    override fun getRate(base: String, target: String): RateResponse {
 
         val response = okHttpClient.newCall(
                 Request.Builder()
                         .get()
-                        .url(getRateUrl(cryptoCurrencyCode, fiatCurrency))
+                        .url(getRateUrl(base, target))
                         .build()
         ).execute()
 
@@ -34,9 +34,9 @@ class GdaxApi(private val okHttpClient: OkHttpClient) : ExchangeApi {
         if (bodyString != null) {
             val envelope = gson.fromJson<Envelope>(bodyString, Envelope::class.java)
             if (envelope.bids != null) {
-                return RateResponse(envelope.bids[0][0].toDouble(), cryptoCurrencyCode, fiatCurrency)
+                return RateResponse(envelope.bids[0][0].toDouble(), base, target)
             } else {
-                throw RequestFailedException(envelope.errorMessage!!)
+                throw RequestFailed(envelope.errorMessage!!)
             }
         } else {
             throw RuntimeException("oioi") //todo also to base class?

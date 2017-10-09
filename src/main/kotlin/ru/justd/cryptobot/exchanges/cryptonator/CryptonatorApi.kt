@@ -5,7 +5,7 @@ import okhttp3.OkHttpClient
 import okhttp3.Request
 import ru.justd.cryptobot.exchanges.ExchangeApi
 import ru.justd.cryptobot.exchanges.RateResponse
-import ru.justd.cryptobot.exchanges.RequestFailedException
+import ru.justd.cryptobot.exchanges.exceptions.RequestFailed
 import ru.justd.cryptotrader.api.cryptonator.model.TickerEnvelope
 
 
@@ -20,12 +20,12 @@ class CryptonatorApi(val okHttpClient: OkHttpClient) : ExchangeApi {
 
     val gson = Gson() //todo move to abstract parent class together with okHttpClient? But I think gson should not be injected, since it may be different configuration for every api impl.
 
-    override fun getRate(cryptoCurrencyCode: String, fiatCurrency: String): RateResponse {//todo
+    override fun getRate(base: String, target: String): RateResponse {//todo
 
         val response = okHttpClient.newCall(
                 Request.Builder()
                         .get()
-                        .url("$BASE_URL/ticker/$cryptoCurrencyCode-$fiatCurrency")
+                        .url("$BASE_URL/ticker/$base-$target")
                         .build()
         ).execute()
 
@@ -36,7 +36,7 @@ class CryptonatorApi(val okHttpClient: OkHttpClient) : ExchangeApi {
                 val ticker = envelope.ticker!!
                 return RateResponse(ticker.price, ticker.base, ticker.target)
             } else {
-                throw RequestFailedException(envelope.error)
+                throw RequestFailed(envelope.error)
             }
         } else {
             throw RuntimeException("oioi") //todo also to base class?

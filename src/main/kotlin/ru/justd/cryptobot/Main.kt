@@ -84,7 +84,7 @@ class Main { //todo class can be removed once updated to kotlin 1.2. Untill then
     private fun sendMessage(chatId: Long, outcomingMessage: String) {
         println("send message...")
         telegramBot.execute(
-                SendMessage(chatId, outcomingMessage).parseMode(ParseMode.Markdown),
+                SendMessage(chatId, "Dens test: $outcomingMessage").parseMode(ParseMode.Markdown),
                 object : Callback<SendMessage, SendResponse> {
                     override fun onResponse(request: SendMessage?, response: SendResponse?) {
                         println("response message: ${response?.message()?.text()}")

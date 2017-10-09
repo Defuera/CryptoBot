@@ -1,5 +1,6 @@
 package ru.justd.cryptobot.exchanges
 
+import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
 import org.mockito.Mock
@@ -9,6 +10,7 @@ import org.mockito.MockitoAnnotations
 import ru.justd.cryptobot.UserPreferences
 import ru.justd.cryptobot.exchanges.coinbase.CoinbaseApi
 import ru.justd.cryptobot.exchanges.cryptonator.CryptonatorApi
+import ru.justd.cryptobot.exchanges.exceptions.ExchangeNotSupported
 import ru.justd.cryptobot.exchanges.gdax.GdaxApi
 
 internal class ExchangeFacadeImplTest {
@@ -58,6 +60,18 @@ internal class ExchangeFacadeImplTest {
         testInstance.getRate(base, target, CryptonatorApi.NAME)
 
         verify(cryptonatorApi, times(1)).getRate(base, target)
+    }
+
+    @Test
+    fun testInvalidExchange() {
+        val base = "BASE"
+        val target = "TARGET"
+        try{
+            testInstance.getRate(base, target, "Invalid")
+        } catch (exception : Exception){
+            assertThat(exception).isExactlyInstanceOf(ExchangeNotSupported::class.java)
+        }
+
     }
 
 }

@@ -27,15 +27,11 @@ enum class Command(val scheme: String) {
 
         override fun factory(): CommandHandlerFactory<CommandHandler> = PriceCommandHandlerFactory()
 
-        override fun argsPattern() = "[A-Z,a-z]{3}\\z"
-
     };
 
     abstract fun factory(): CommandHandlerFactory<CommandHandler>
 
     internal fun description(): String = helpResource.getString(scheme)
-
-    internal open fun argsPattern(): String? = null //todo move to property?
 
     companion object {
         private val preferences = UserPreferencesImpl()
