@@ -44,10 +44,9 @@ internal class CommandHandlerFacadeImplTest {
     }
 
     @Test
-    fun testFindPriceCommandHandlerSuccess() {
-        assertThat(testInstance.createCommandHandler("/price hui")).isExactlyInstanceOf(PriceCommandHandler::class.java) //todo add list of supported cryptos or determine it dynamically
-        assertThat(testInstance.createCommandHandler("/price BTC")).isExactlyInstanceOf(PriceCommandHandler::class.java)
-        assertThat(testInstance.createCommandHandler("/price ETH")).isExactlyInstanceOf(PriceCommandHandler::class.java)
+    fun testFindPriceCommandHandlerWithSpecifiedBase() {
+        val handler = testInstance.createCommandHandler("/price BTC") as PriceCommandHandler
+        assertThat(handler.getCurrencyCode()).isEqualTo("BTC")
     }
 
 }

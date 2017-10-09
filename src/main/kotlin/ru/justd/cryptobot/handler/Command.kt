@@ -25,7 +25,7 @@ enum class Command(val scheme: String) {
 
     PRICE("/price") {
 
-        override fun factory(): CommandHandlerFactory<CommandHandler> = PriceCommandHandlerFactory(scheme)
+        override fun factory(): CommandHandlerFactory<CommandHandler> = PriceCommandHandlerFactory()
 
         override fun argsPattern() = "[A-Z,a-z]{3}\\z"
 

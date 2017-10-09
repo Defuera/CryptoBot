@@ -17,4 +17,9 @@ class PriceCommandHandler(
         }
     }
 
+    //todo find the way to hide method, should be used for test purposes only
+    fun getCurrencyCode() : String{
+        return currencyCode
+    }
+
 }
