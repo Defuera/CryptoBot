@@ -2,11 +2,14 @@ package ru.justd.cryptobot
 
 import java.util.*
 
-class UserPreferences {
+interface UserPreferences {
 
-    fun fiatCurrency(): String = "USD"
+    fun baseCurrency(): String
 
-    fun locale(): Locale = Locale.getDefault()
+    fun targetCurrency(): String
 
-    fun exchangeApi(): String = "CoinbaseApi"
+    fun exchangeApi(): String
+
+    fun locale(): Locale
+
 }

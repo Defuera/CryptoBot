@@ -6,6 +6,7 @@ import dagger.Module
 import dagger.Provides
 import ru.justd.cryptobot.BuildConfig
 import ru.justd.cryptobot.UserPreferences
+import ru.justd.cryptobot.UserPreferencesImpl
 import ru.justd.cryptobot.exchanges.ExchangeApi
 import ru.justd.cryptobot.exchanges.ExchangeFacade
 import ru.justd.cryptobot.exchanges.ExchangeFacadeImpl
@@ -22,7 +23,7 @@ class MainModule {
 
     @Provides
     @Singleton
-    fun provideUserPreferences(): UserPreferences = UserPreferences()
+    fun provideUserPreferences(): UserPreferences = UserPreferencesImpl()
 
     @Provides
     @Singleton
@@ -35,7 +36,7 @@ class MainModule {
 
     @Provides
     @Singleton
-    fun provideTelegramBotAdapter(): TelegramBot = TelegramBotAdapter.buildDebug(BuildConfig.BOT_TOKEN) //todo provide debug/production bot based on BuildType
+    fun provideTelegramBotAdapter(): TelegramBot = TelegramBotAdapter.build(BuildConfig.BOT_TOKEN) //todo provide debug/production bot based on BuildType
 
     @Provides
     @Singleton
