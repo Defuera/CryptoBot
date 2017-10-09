@@ -23,9 +23,9 @@ class CommandHandlerFacadeImpl( //todo it seems like this is an object (kotlin s
 
     private fun find(incomingMessage: String): Command? = Command.values().firstOrNull { matches(it, incomingMessage) }
 
-    private fun matches(command : Command, command1: String): Boolean {
-        val pattern = "${command.literal} ${command.argsPattern() ?: ""}".trim()
-        return Regex(pattern).matches(command1)
+    private fun matches(command : Command, message: String): Boolean {
+        val pattern = "${command.scheme} ${command.argsPattern() ?: ""}".trim()
+        return Regex(pattern).matches(message)
     }
 
 }

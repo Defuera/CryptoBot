@@ -5,7 +5,7 @@ internal object HelpCommandHandler : CommandHandler {
     override fun responseMessage(): String =
             Command
                     .values()
-                    .map { "*${it.literal}* - ${it.description()}" }
+                    .map { "*${it.scheme}* - ${it.description()}" }
                     .toList()
                     .joinToString("\n\n")
 

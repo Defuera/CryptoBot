@@ -3,7 +3,7 @@ package ru.justd.cryptobot.handler
 import ru.justd.cryptobot.UserPreferences
 import java.util.*
 
-enum class Command(val literal: String) {
+enum class Command(val scheme: String) {
 
     HELP("/help") {
 
@@ -25,7 +25,7 @@ enum class Command(val literal: String) {
 
     PRICE("/price") {
 
-        override fun factory(): CommandHandlerFactory<CommandHandler> = PriceCommandHandlerFactory(literal)
+        override fun factory(): CommandHandlerFactory<CommandHandler> = PriceCommandHandlerFactory(scheme)
 
         override fun argsPattern() = "[A-Z,a-z]{3}\\z"
 
@@ -33,7 +33,7 @@ enum class Command(val literal: String) {
 
     abstract fun factory(): CommandHandlerFactory<CommandHandler>
 
-    internal fun description(): String = helpResource.getString(literal)
+    internal fun description(): String = helpResource.getString(scheme)
 
     internal open fun argsPattern(): String? = null //todo move to property?
 
