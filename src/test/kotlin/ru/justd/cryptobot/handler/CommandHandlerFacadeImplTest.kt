@@ -4,10 +4,8 @@ import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
 import org.mockito.Mock
-import org.mockito.Mockito.`when`
 import org.mockito.MockitoAnnotations
 import ru.justd.cryptobot.exchanges.ExchangeFacade
-import ru.justd.cryptobot.exchanges.exceptions.ExchangeNotSupported
 
 internal class CommandHandlerFacadeImplTest {
 
@@ -38,45 +36,20 @@ internal class CommandHandlerFacadeImplTest {
         assertThat(testInstance.createCommandHandler("/about")).isEqualTo(AboutCommandHandler)
     }
 
-
-    //region test find price handler with arguments
-
     @Test
     fun testFindPriceCommandHandlerWithSpecifiedBase() {
-        val handler = testInstance.createCommandHandler("/price BTC") as PriceCommandHandler
-        assertThat(handler.getBaseCode()).isEqualTo("BTC")
+        assertThat(testInstance.createCommandHandler("/price BTC")).isExactlyInstanceOf(PriceCommandHandler::class.java)
     }
 
     @Test
-    fun testFindPriceCommandHandlerWithSpecifiedBaseAnsTarget() {
-        val handler = testInstance.createCommandHandler("/price BTC USD") as PriceCommandHandler
-        assertThat(handler.getBaseCode()).isEqualTo("BTC")
-        assertThat(handler.getTargetCode()).isEqualTo("USD")
+    fun testFindPriceCommandHandlerWithSpecifiedBaseAndTarget() {
+        assertThat(testInstance.createCommandHandler("/price BTC")).isExactlyInstanceOf(PriceCommandHandler::class.java)
     }
 
     @Test
-    fun testFindPriceCommandHandlerWithSpecifiedBaseAnsTargetAndExchange() {
-        val handler = testInstance.createCommandHandler("/price BTC USD Coinbase") as PriceCommandHandler
-        assertThat(handler.getBaseCode()).isEqualTo("BTC")
-        assertThat(handler.getTargetCode()).isEqualTo("USD")
-        assertThat(handler.getExchange()).isEqualTo("Coinbase")
+    fun testFindPriceCommandHandlerWithSpecifiedBaseAndTargetAndExchange() {
+        assertThat(testInstance.createCommandHandler("/price BTC Coinbase")).isExactlyInstanceOf(PriceCommandHandler::class.java)
     }
 
-    @Test
-    fun testFindPriceCommandHandlerInvalidExchange() {
-        //setup
-        val invalidExchange = "Invalid"
-        `when`(exchangeFacade.getRate("BTC", "USD", invalidExchange)).thenThrow(ExchangeNotSupported(invalidExchange))
-
-        //action
-        val message = testInstance
-                .createCommandHandler("/price BTC USD $invalidExchange")
-                .responseMessage()
-
-        //assert
-        assertThat(message).isEqualTo("$invalidExchange exchange not supported")
-    }
-
-    //endregion
 
 }

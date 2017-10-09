@@ -14,24 +14,12 @@ class PriceCommandHandler constructor(
     override fun responseMessage(): String {
         return try {
             val rate = exchangeFacade.getRate(base, target, exchange)
-            "${rate.base} price is ${rate.amount} ${rate.currency}"
+            "${rate.base} price is ${rate.amount} ${rate.target}"
         } catch (error: ExchangeNotSupported) {
             "${error.exchange} exchange not supported" //todo log to be aware what exchanges customers are waiting the most, localize
         } catch (error: RequestFailed) {
             error.message
         }
     }
-
-
-    //region for tests only
-    //todo find the way to hide these methods
-
-    fun getBaseCode() = base
-
-    fun getTargetCode() = target
-
-    fun getExchange() = exchange
-
-    //endregion
 
 }
