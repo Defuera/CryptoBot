@@ -11,7 +11,10 @@ class CommandHandlerFacadeImpl( //todo it seems like this is an object (kotlin s
 
         return when (factory) {
             is PriceCommandHandlerFactory -> factory
-                    .apply { exchangeFacade = exchange }
+                    .apply {
+                        exchangeFacade = exchange
+                        message = incomingMessage
+                    }
                     .create()
             is InstantFactory<*> -> factory.create()
             else -> throw IllegalArgumentException("Unhandled factory $factory")
