@@ -18,7 +18,7 @@ private const val FORMAT_API_DATE = "yyyy-MM-dd"
  */
 class CoinbaseApi(private val okHttpClient: OkHttpClient) : ExchangeApi {
 
-    companion object { const val NAME = "CoinbaseApi" }
+    companion object { const val NAME = "COINBASE" }
 
     val gson = Gson()
 

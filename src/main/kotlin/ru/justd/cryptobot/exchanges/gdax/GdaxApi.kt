@@ -13,7 +13,7 @@ import ru.justd.cryptobot.exchanges.exceptions.RequestFailed
  */
 class GdaxApi(private val okHttpClient: OkHttpClient) : ExchangeApi {
 
-    companion object { const val NAME = "Gdax" }
+    companion object { const val NAME = "GDAX" }
 
     private val BASE_URL = "https://api.gdax.com"
     private val gson = Gson()

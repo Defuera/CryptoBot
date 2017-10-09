@@ -13,6 +13,7 @@ class PriceCommandHandlerFactory : CommandHandlerFactory<PriceCommandHandler> {
     lateinit var message: String
 
     override fun create(): PriceCommandHandler { //todo for some reason here's a warning if PriceCommandHandler is internal
+        println("PriceCommandHandlerFactory#create $message")
         return PriceCommandHandler(
                 exchangeFacade,
                 retrieveArg(ARG_INDEX_BASE),

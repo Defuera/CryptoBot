@@ -27,7 +27,7 @@ class CommandHandlerFacadeImpl( //todo it seems like this is an object (kotlin s
     private fun find(incomingMessage: String): Command? = Command.values().firstOrNull { matches(it, incomingMessage) }
 
     private fun matches(command : Command, message: String): Boolean {
-        return message.split(" ")[0] == command.scheme
+        return message.split(" ")[0].toLowerCase() == command.scheme
     }
 
 }

@@ -36,7 +36,7 @@ class MainModule {
 
     @Provides
     @Singleton
-    fun provideTelegramBotAdapter(): TelegramBot = TelegramBotAdapter.buildDebug(BuildConfig.BOT_TOKEN) //todo provide debug/production bot based on BuildType
+    fun provideTelegramBotAdapter(): TelegramBot = TelegramBotAdapter.build(BuildConfig.BOT_TOKEN) //todo provide debug/production bot based on BuildType
 
     @Provides
     @Singleton

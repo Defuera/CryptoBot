@@ -12,9 +12,11 @@ class PriceCommandHandler constructor(
 ) : CommandHandler {
 
     override fun responseMessage(): String {
+        println("PriceCommandHandler#responseMessage $base $target $exchange")
         return try {
             val rate = exchangeFacade.getRate(base, target, exchange)
-            "${rate.base} price is ${rate.amount} ${rate.target}"
+            val exchangeInfo = if (exchange == null) "" else "(via $exchange)"
+            "${rate.base} price is ${rate.amount} ${rate.target} $exchangeInfo" //todo localize
         } catch (error: ExchangeNotSupported) {
             "${error.exchange} exchange not supported" //todo log to be aware what exchanges customers are waiting the most, localize
         } catch (error: RequestFailed) {

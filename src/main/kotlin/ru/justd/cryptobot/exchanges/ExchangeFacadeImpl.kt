@@ -31,7 +31,7 @@ class ExchangeFacadeImpl(
 
     @Throws(ExchangeNotSupported::class)
     private fun getApi(exchangeApiCode: String): ExchangeApi {
-        return when (exchangeApiCode) {
+        return when (exchangeApiCode.toUpperCase()) {
             GdaxApi.NAME -> gdaxApi
             CoinbaseApi.NAME -> coinbaseApi
             CryptonatorApi.NAME -> cryptonatorApi
