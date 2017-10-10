@@ -72,7 +72,7 @@ class Main { //todo class can be removed once updated to kotlin 1.2. Untill then
     private fun isBotAddedToChannel(message: Message) =
             message.newChatMembers()?.find { user -> user.isBot && user.username() == "CryptAdviserBot" } != null
 
-    private fun handleBotCommand(message: Message) {
+    private fun handleBotCommand(message: Message) { //todo cover with integration test
         val commandHandler = commandHandlerFacade.createCommandHandler(message.text())
         sendMessage(message.chat().id(), commandHandler)
     }
@@ -81,10 +81,10 @@ class Main { //todo class can be removed once updated to kotlin 1.2. Untill then
         sendMessage(chatId, commandHandler.responseMessage())
     }
 
-    private fun sendMessage(chatId: Long, outcomingMessage: String) {
+    private fun sendMessage(chatId: Long, outgoingMessage: String) {
         println("send message...")
         telegramBot.execute(
-                SendMessage(chatId, outcomingMessage).parseMode(ParseMode.Markdown),
+                SendMessage(chatId, outgoingMessage).parseMode(ParseMode.Markdown),
                 object : Callback<SendMessage, SendResponse> {
                     override fun onResponse(request: SendMessage?, response: SendResponse?) {
                         println("response message: ${response?.message()?.text()}")

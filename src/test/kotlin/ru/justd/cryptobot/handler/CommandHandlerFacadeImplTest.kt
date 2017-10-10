@@ -9,13 +9,13 @@ import ru.justd.cryptobot.exchanges.ExchangeFacade
 
 internal class CommandHandlerFacadeImplTest {
 
-    lateinit var testInstance : CommandHandlerFacade
+    lateinit var testInstance: CommandHandlerFacade
 
     @Mock
     lateinit var exchangeFacade: ExchangeFacade
 
     @Before
-    fun setup(){
+    fun setup() {
         MockitoAnnotations.initMocks(this)
         testInstance = CommandHandlerFacadeImpl(exchangeFacade)
     }
@@ -37,16 +37,19 @@ internal class CommandHandlerFacadeImplTest {
     }
 
     @Test
-    fun testFindPriceCommandHandlerFailed() {
-        assertThat(testInstance.createCommandHandler("/price")).isEqualTo(UnsupportedCommandHandler)
-        assertThat(testInstance.createCommandHandler("/price Bitcoin")).isEqualTo(UnsupportedCommandHandler)
-        assertThat(testInstance.createCommandHandler("/price 123")).isEqualTo(UnsupportedCommandHandler)
+    fun testFindPriceCommandHandlerWithSpecifiedBase() {
+        assertThat(testInstance.createCommandHandler("/price BTC")).isExactlyInstanceOf(PriceCommandHandler::class.java)
     }
 
     @Test
-    fun testFindPriceCommandHandlerWithSpecifiedBase() {
-        val handler = testInstance.createCommandHandler("/price BTC") as PriceCommandHandler
-        assertThat(handler.getCurrencyCode()).isEqualTo("BTC")
+    fun testFindPriceCommandHandlerWithSpecifiedBaseAndTarget() {
+        assertThat(testInstance.createCommandHandler("/price BTC")).isExactlyInstanceOf(PriceCommandHandler::class.java)
     }
+
+    @Test
+    fun testFindPriceCommandHandlerWithSpecifiedBaseAndTargetAndExchange() {
+        assertThat(testInstance.createCommandHandler("/price BTC Coinbase")).isExactlyInstanceOf(PriceCommandHandler::class.java)
+    }
+
 
 }
