@@ -10,7 +10,10 @@ import com.pengrad.telegrambot.model.request.ParseMode
 import com.pengrad.telegrambot.request.SendMessage
 import com.pengrad.telegrambot.response.SendResponse
 import ru.justd.cryptobot.di.DaggerMainComponent
-import ru.justd.cryptobot.handler.*
+import ru.justd.cryptobot.handler.Command
+import ru.justd.cryptobot.handler.CommandHandler
+import ru.justd.cryptobot.handler.CommandHandlerFacade
+import ru.justd.cryptobot.handler.kill.KillCommandHandler
 import ru.justd.cryptobot.handler.kill.ShutdownException
 import java.io.IOException
 import java.util.*
@@ -118,7 +121,7 @@ class Main { //todo class can be removed once updated to kotlin 1.2. Untill then
             "*$INSTANCE_ID*\n\n$message"
 
     private fun killInstance(chatId: Long) {
-        sendMessage(chatId, "I was glad to serve you! Farewell!") { _, _ ->
+        sendMessage(chatId, KillCommandHandler.FAREWELL_MESSAGE) { _, _ ->
             telegramBot.removeGetUpdatesListener()
             System.exit(0)
         }

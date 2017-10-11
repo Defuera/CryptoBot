@@ -34,9 +34,6 @@ enum class Command(val scheme: String) {
 
         override fun factory(): CommandHandlerFactory<CommandHandler> = KillCommandHandlerFactory()
 
-        override val argsPattern: String
-            get() = "[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}"
-
     };
 
     abstract fun factory(): CommandHandlerFactory<CommandHandler>
@@ -46,8 +43,6 @@ enum class Command(val scheme: String) {
     } catch (e: MissingResourceException) {
         ""
     }
-
-    internal open val argsPattern: String? = null
 
     companion object {
         private val preferences = UserPreferencesImpl()
