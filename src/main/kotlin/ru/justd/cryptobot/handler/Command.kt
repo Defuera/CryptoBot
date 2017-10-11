@@ -5,13 +5,6 @@ import ru.justd.cryptobot.handler.factory.SubscribeFactory
 import ru.justd.cryptobot.handler.kill.KillCommandHandlerFactory
 import java.util.*
 
-<<<<<<< HEAD
-import ru.justd.cryptobot.handler.factory.SubscribeFactory
-=======
-import ru.justd.cryptobot.handler.kill.KillCommandHandlerFactory
->>>>>>> ad438182a7a28d2657db9acc54caffca994f5ed9
-import java.util.*
-
 internal enum class Command(val scheme: String) {
 
     HELP("/help") {
