@@ -1,6 +1,7 @@
 package ru.justd.cryptobot.handler
 
 import ru.justd.cryptobot.UserPreferencesImpl
+import ru.justd.cryptobot.handler.kill.KillCommandHandlerFactory
 import java.util.*
 
 enum class Command(val scheme: String) {
@@ -27,11 +28,29 @@ enum class Command(val scheme: String) {
 
         override fun factory(): CommandHandlerFactory<CommandHandler> = PriceCommandHandlerFactory()
 
+        override val argsPattern: String
+            get() = "[A-Z,a-z]{3}\\z"
+
+    },
+
+    KILL("/kill") {
+
+        override fun factory(): CommandHandlerFactory<CommandHandler> = KillCommandHandlerFactory()
+
+        override val argsPattern: String
+            get() = "[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}"
+
     };
 
     abstract fun factory(): CommandHandlerFactory<CommandHandler>
 
-    internal fun description(): String = helpResource.getString(scheme)
+    internal fun description(): String? = try {
+        helpResource.getString(scheme)
+    } catch (e: MissingResourceException) {
+        ""
+    }
+
+    internal open val argsPattern: String? = null
 
     companion object {
         private val preferences = UserPreferencesImpl()

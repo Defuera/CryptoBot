@@ -11,7 +11,9 @@ import com.pengrad.telegrambot.request.SendMessage
 import com.pengrad.telegrambot.response.SendResponse
 import ru.justd.cryptobot.di.DaggerMainComponent
 import ru.justd.cryptobot.handler.*
+import ru.justd.cryptobot.handler.kill.ShutdownException
 import java.io.IOException
+import java.util.*
 import javax.inject.Inject
 
 
@@ -20,6 +22,12 @@ fun main(args: Array<String>) {
 }
 
 class Main { //todo class can be removed once updated to kotlin 1.2. Untill then it's used to be able to inject dependencies
+
+    companion object {
+
+        val INSTANCE_ID = UUID.randomUUID().toString()
+
+    }
 
     @Inject
     lateinit var telegramBot: TelegramBot
@@ -38,8 +46,12 @@ class Main { //todo class can be removed once updated to kotlin 1.2. Untill then
             updates.forEach {
                 try {
                     processUpdate(it)
-                } catch (e: Exception) {
-                    e.printStackTrace()
+                } catch (e: Throwable) {
+                    if (e is ShutdownException) {
+                        killInstance(it.message().chat().id())
+                    } else {
+                        e.printStackTrace()
+                    }
                 }
             }
 
@@ -78,16 +90,23 @@ class Main { //todo class can be removed once updated to kotlin 1.2. Untill then
     }
 
     private fun sendMessage(chatId: Long, commandHandler: CommandHandler) {
-        sendMessage(chatId, commandHandler.responseMessage())
+        sendMessage(chatId, commandHandler.responseMessage()) { _, response ->
+            println("response message: ${response?.message()?.text()}")
+        }
     }
 
-    private fun sendMessage(chatId: Long, outgoingMessage: String) {
+    private fun sendMessage(
+            chatId: Long,
+            outgoingMessage: String,
+            onSuccess: (request: SendMessage?, response: SendResponse?) -> Unit
+    ) {
         println("send message...")
         telegramBot.execute(
-                SendMessage(chatId, outgoingMessage).parseMode(ParseMode.Markdown),
+                SendMessage(chatId, createOutgoingMessage(outgoingMessage)).parseMode(ParseMode.Markdown),
                 object : Callback<SendMessage, SendResponse> {
+
                     override fun onResponse(request: SendMessage?, response: SendResponse?) {
-                        println("response message: ${response?.message()?.text()}")
+                       onSuccess.invoke(request, response)
                     }
 
                     override fun onFailure(request: SendMessage?, e: IOException?) {
@@ -96,4 +115,15 @@ class Main { //todo class can be removed once updated to kotlin 1.2. Untill then
 
                 })
     }
+
+    private fun createOutgoingMessage(message: String) =
+            "*$INSTANCE_ID*\n\n$message"
+
+    private fun killInstance(chatId: Long) {
+        sendMessage(chatId, "I was glad to serve you! Farewell!") { _, _ ->
+            telegramBot.removeGetUpdatesListener()
+            System.exit(0)
+        }
+    }
+
 }
