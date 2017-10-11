@@ -21,7 +21,7 @@ class PriceCommandHandler constructor(
             "${error.exchange} exchange not supported" //todo log to be aware what exchanges customers are waiting the most, localize
         } catch (error: RequestFailed) {
             error.message
-        }
+        }.trim()
     }
 
 }
