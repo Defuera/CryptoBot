@@ -15,7 +15,11 @@ import ru.justd.cryptobot.exchanges.exceptions.ExchangeNotSupported
 @RunWith(MockitoJUnitRunner::class)
 class PriceCommandHandlerTest {
 
-    private val floatRegex = "[+-]?([0-9]*[.])?[0-9]+"
+    companion object {
+
+        private const val FLOAT_REGEX = "[+-]?([0-9]*[.])?[0-9]+"
+
+    }
 
     @Mock
     lateinit var exchangeFacade: ExchangeFacade
@@ -52,7 +56,7 @@ class PriceCommandHandlerTest {
         assertThat(message).matches(patternForPair(base, target))
     }
 
-    private fun patternForPair(base: String, target: String) = Regex("$base price is $floatRegex $target").toPattern()
+    private fun patternForPair(base: String, target: String) = Regex("$base price is $FLOAT_REGEX $target").toPattern()
 
 
     @Test

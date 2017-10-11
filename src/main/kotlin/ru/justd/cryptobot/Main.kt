@@ -46,12 +46,10 @@ class Main { //todo class can be removed once updated to kotlin 1.2. Untill then
             updates.forEach {
                 try {
                     processUpdate(it)
+                } catch (e: ShutdownException) {
+                    killInstance(it.message().chat().id())
                 } catch (e: Throwable) {
-                    if (e is ShutdownException) {
-                        killInstance(it.message().chat().id())
-                    } else {
-                        e.printStackTrace()
-                    }
+                    e.printStackTrace()
                 }
             }
 
@@ -106,7 +104,7 @@ class Main { //todo class can be removed once updated to kotlin 1.2. Untill then
                 object : Callback<SendMessage, SendResponse> {
 
                     override fun onResponse(request: SendMessage?, response: SendResponse?) {
-                       onSuccess.invoke(request, response)
+                        onSuccess.invoke(request, response)
                     }
 
                     override fun onFailure(request: SendMessage?, e: IOException?) {
