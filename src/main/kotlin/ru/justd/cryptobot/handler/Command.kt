@@ -28,9 +28,6 @@ enum class Command(val scheme: String) {
 
         override fun factory(): CommandHandlerFactory<CommandHandler> = PriceCommandHandlerFactory()
 
-        override val argsPattern: String
-            get() = "[A-Z,a-z]{3}\\z"
-
     },
 
     KILL("/kill") {

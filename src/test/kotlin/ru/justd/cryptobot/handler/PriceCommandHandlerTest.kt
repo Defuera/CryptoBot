@@ -11,9 +11,12 @@ import org.mockito.junit.MockitoJUnitRunner
 import ru.justd.cryptobot.exchanges.ExchangeFacade
 import ru.justd.cryptobot.exchanges.RateResponse
 import ru.justd.cryptobot.exchanges.exceptions.ExchangeNotSupported
+import java.util.regex.Pattern
 
 @RunWith(MockitoJUnitRunner::class)
 class PriceCommandHandlerTest {
+
+    private val floatRegex = "[+-]?([0-9]*[.])?[0-9]+"
 
     @Mock
     lateinit var exchangeFacade: ExchangeFacade
@@ -50,7 +53,7 @@ class PriceCommandHandlerTest {
         assertThat(message).matches(patternForPair(base, target))
     }
 
-    private fun patternForPair(base: String, target: String) = Regex("$base price is [0-9.]+ $target").toPattern()
+    private fun patternForPair(base: String, target: String) = Regex("$base price is $floatRegex $target").toPattern()
 
 
     @Test
