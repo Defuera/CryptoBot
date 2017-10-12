@@ -45,6 +45,8 @@ sourceSets {
 }
 
 def daggerVersion = "2.11"
+
+//production dependencies
 dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jre8:$kotlin_version"
     implementation 'com.github.pengrad:java-telegram-bot-api:3.3.0'
@@ -54,11 +56,15 @@ dependencies {
     //dagger
     implementation "com.google.dagger:dagger:$daggerVersion"
     kapt "com.google.dagger:dagger-compiler:$daggerVersion"
+}
 
-    //tests
+//test dependencies //todo divide to unit and integrational dependencies?
+dependencies {
     testImplementation 'org.assertj:assertj-core:3.8.0'
     testImplementation("org.junit.platform:junit-platform-runner:1.0.0")
     testImplementation 'org.mockito:mockito-core:2.7.22'
+    testImplementation "com.google.dagger:dagger:$daggerVersion"
+//    testKapt "com.google.dagger:dagger-compiler:$daggerVersion"
 }
 
 compileKotlin {
