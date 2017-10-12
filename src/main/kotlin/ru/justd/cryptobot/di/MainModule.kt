@@ -15,6 +15,8 @@ import ru.justd.cryptobot.exchanges.cryptonator.CryptonatorApi
 import ru.justd.cryptobot.exchanges.gdax.GdaxApi
 import ru.justd.cryptobot.handler.CommandHandlerFacade
 import ru.justd.cryptobot.handler.CommandHandlerFacadeImpl
+import ru.justd.cryptobot.messenger.MessageReceiver
+import ru.justd.cryptobot.messenger.MessageSender
 import javax.inject.Named
 import javax.inject.Singleton
 
@@ -43,5 +45,17 @@ class MainModule {
     fun provideCommandHandlerFacade(
             exchangeFacade: ExchangeFacade
     ): CommandHandlerFacade = CommandHandlerFacadeImpl(exchangeFacade)
+
+    @Provides
+    @Singleton
+    fun provideMessageReceiver(
+            commandHandlerFacade: CommandHandlerFacade
+    ): MessageReceiver = MessageReceiver(commandHandlerFacade)
+
+    @Provides
+    @Singleton
+    fun provideMessageSender(
+            telegramBot: TelegramBot
+    ): MessageSender = MessageSender(telegramBot)
 
 }
