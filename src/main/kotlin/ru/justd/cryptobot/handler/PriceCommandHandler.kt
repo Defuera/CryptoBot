@@ -3,6 +3,7 @@ package ru.justd.cryptobot.handler
 import ru.justd.cryptobot.exchanges.ExchangeFacade
 import ru.justd.cryptobot.exchanges.exceptions.ExchangeNotSupported
 import ru.justd.cryptobot.exchanges.exceptions.RequestFailed
+import ru.justd.cryptobot.messenger.model.OutgoingMessage
 
 class PriceCommandHandler constructor(
         private val exchangeFacade: ExchangeFacade,
@@ -11,9 +12,10 @@ class PriceCommandHandler constructor(
         private val exchange: String?
 ) : CommandHandler {
 
-    override fun responseMessage(): String {
+    override fun responseMessage(): OutgoingMessage {
         println("PriceCommandHandler#responseMessage $base $target $exchange")
-        return try {
+
+        val message = try {
             val rate = exchangeFacade.getRate(base, target, exchange)
             val exchangeInfo = if (exchange == null) "" else "(via $exchange)"
             "${rate.base} price is ${rate.amount} ${rate.target} $exchangeInfo" //todo localize
@@ -22,6 +24,8 @@ class PriceCommandHandler constructor(
         } catch (error: RequestFailed) {
             error.message
         }.trim()
+
+        return OutgoingMessage(message)
     }
 
 }

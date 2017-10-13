@@ -1,6 +1,7 @@
 package ru.justd.cryptobot.handler.kill
 
 import ru.justd.cryptobot.handler.CommandHandler
+import ru.justd.cryptobot.messenger.model.OutgoingMessage
 
 class KillCommandHandler(
         private val kill: Boolean
@@ -17,6 +18,6 @@ class KillCommandHandler(
             if (kill)
                 throw ShutdownException()
             else
-                SURVIVOR_MESSAGE
+                OutgoingMessage(SURVIVOR_MESSAGE)
 
 }

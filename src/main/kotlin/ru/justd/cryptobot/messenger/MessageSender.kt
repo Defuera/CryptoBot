@@ -7,6 +7,7 @@ import com.pengrad.telegrambot.request.SendMessage
 import com.pengrad.telegrambot.response.SendResponse
 import ru.justd.cryptobot.Main
 import ru.justd.cryptobot.handler.CommandHandler
+import ru.justd.cryptobot.messenger.model.OutgoingMessage
 import java.io.IOException
 
 class MessageSender(
@@ -21,26 +22,33 @@ class MessageSender(
 
     fun sendMessage(
             chatId: Long,
-            outgoingMessage: String,
+            outgoingMessage: OutgoingMessage,
             onSuccess: (request: SendMessage?, response: SendResponse?) -> Unit
     ) {
         println("send message...")
-        telegramBot.execute(
-                SendMessage(chatId, createOutgoingMessage(outgoingMessage)).parseMode(ParseMode.Markdown),
-                object : Callback<SendMessage, SendResponse> {
 
-                    override fun onResponse(request: SendMessage?, response: SendResponse?) {
-                        onSuccess.invoke(request, response)
-                    }
+        val sendMessageRequest = createSendMessageRequest(chatId, outgoingMessage)
 
-                    override fun onFailure(request: SendMessage?, e: IOException?) {
-                        println("failure: ${e?.message}")
-                    }
+        val callback = object : Callback<SendMessage, SendResponse> {
 
-                })
+            override fun onResponse(request: SendMessage?, response: SendResponse?) {
+                onSuccess.invoke(request, response)
+            }
+
+            override fun onFailure(request: SendMessage?, e: IOException?) {
+                println("failure: ${e?.message}")
+            }
+
+        }
+
+        telegramBot.execute(sendMessageRequest, callback)
     }
 
-    private fun createOutgoingMessage(message: String) =
+    private fun createSendMessageRequest(chatId: Long, message: OutgoingMessage) =
+            SendMessage(chatId, formatMessageText(message.text))
+                    .parseMode(ParseMode.Markdown)
+
+    private fun formatMessageText(message: String) =
             "*${Main.INSTANCE_ID}*\n_thread: ${Thread.currentThread().name}_\n\n$message"
 
 }
