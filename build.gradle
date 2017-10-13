@@ -31,6 +31,8 @@ buildConfig {
         buildConfigField 'String', key.toString(), value.toString()
     }
 
+    buildConfigField 'String', 'INSTANCE_ID', UUID.randomUUID().toString()
+
 }
 
 repositories {
@@ -38,13 +40,13 @@ repositories {
     jcenter()
 }
 
-kapt { generateStubs = true }
-
 sourceSets {
-    main.java.srcDirs += [file("$buildDir/generated/source/kapt/main")]
+    main.kotlin.srcDirs += "$buildDir/generated/source/kapt/main"
 }
 
 def daggerVersion = "2.11"
+
+//production dependencies
 dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jre8:$kotlin_version"
     implementation 'com.github.pengrad:java-telegram-bot-api:3.3.0'
@@ -54,17 +56,13 @@ dependencies {
     //dagger
     implementation "com.google.dagger:dagger:$daggerVersion"
     kapt "com.google.dagger:dagger-compiler:$daggerVersion"
+}
 
-    //tests
+//test dependencies //todo divide to unit and integration test dependencies?
+dependencies {
     testImplementation 'org.assertj:assertj-core:3.8.0'
     testImplementation("org.junit.platform:junit-platform-runner:1.0.0")
     testImplementation 'org.mockito:mockito-core:2.7.22'
-}
-
-compileKotlin {
-    kotlinOptions.jvmTarget = "1.8"
-}
-
-compileTestKotlin {
-    kotlinOptions.jvmTarget = "1.8"
+    testImplementation "com.google.dagger:dagger:$daggerVersion"
+    kaptTest "com.google.dagger:dagger-compiler:$daggerVersion"
 }

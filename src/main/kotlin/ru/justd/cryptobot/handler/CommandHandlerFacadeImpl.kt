@@ -1,6 +1,7 @@
 package ru.justd.cryptobot.handler
 
 import ru.justd.cryptobot.exchanges.ExchangeFacade
+import ru.justd.cryptobot.handler.factory.SubscribeFactory
 import ru.justd.cryptobot.handler.kill.KillCommandHandlerFactory
 
 class CommandHandlerFacadeImpl( //todo it seems like this is an object (kotlin singleton), the only problem it cannot be statically initialized, since it get dynamically created dependency. But all the functions are static.. hmm..
@@ -20,6 +21,7 @@ class CommandHandlerFacadeImpl( //todo it seems like this is an object (kotlin s
             is KillCommandHandlerFactory -> factory
                     .apply { message = incomingMessage }
                     .create()
+            is SubscribeFactory -> SubscribeHandler()
             is InstantFactory<*> -> factory.create()
             else -> throw IllegalArgumentException("Unhandled factory $factory")
         }

@@ -10,8 +10,8 @@ import com.pengrad.telegrambot.model.request.ParseMode
 import com.pengrad.telegrambot.request.SendMessage
 import com.pengrad.telegrambot.response.SendResponse
 import ru.justd.cryptobot.di.DaggerMainComponent
+import ru.justd.cryptobot.di.MainComponent
 import ru.justd.cryptobot.handler.Command
-import ru.justd.cryptobot.handler.CommandHandler
 import ru.justd.cryptobot.handler.CommandHandlerFacade
 import ru.justd.cryptobot.handler.kill.KillCommandHandler
 import ru.justd.cryptobot.handler.kill.ShutdownException
@@ -24,13 +24,9 @@ fun main(args: Array<String>) {
     Main().run()
 }
 
-class Main { //todo class can be removed once updated to kotlin 1.2. Untill then it's used to be able to inject dependencies
-
-    companion object {
-
-        val INSTANCE_ID = UUID.randomUUID().toString()
-
-    }
+//todo class can be removed once updated to kotlin 1.2. Untill then it's used to be able to inject dependencies
+//open for tests
+open class Main {
 
     @Inject
     lateinit var telegramBot: TelegramBot
@@ -39,9 +35,8 @@ class Main { //todo class can be removed once updated to kotlin 1.2. Untill then
     lateinit var commandHandlerFacade: CommandHandlerFacade
 
     fun run() {
-        DaggerMainComponent.builder()
-                .build()
-                .inject(this)
+        val mainComponent = createComponent()
+        mainComponent.inject(this)
 
         println("CryptoBot started")
 
@@ -60,38 +55,45 @@ class Main { //todo class can be removed once updated to kotlin 1.2. Untill then
         }
     }
 
+    //open for tests
+    open fun createComponent(): MainComponent = DaggerMainComponent.builder().build()
+
     private fun processUpdate(update: Update) {
         val message = update.message()
         println("message ${message?.entities()?.get(0)?.type() ?: ""}: ${message?.text() ?: "null"}")
 
+        val chatId = message.chat().id()
         val entities = message.entities()
         if (entities?.isNotEmpty() == true) {
             entities.forEach {
                 when (it.type()) {
-                    bot_command -> handleBotCommand(message)
+                    bot_command -> sendMessage(chatId, handleBotCommand(message.text()))
                     else -> println("else message type not supported ${it.type()}")
                 }
             }
         }
 
         if (isBotAddedToChannel(message)) {
-            val chatId = message.chat().id()
-            sendMessage(chatId, Command.ABOUT.factory().create())
-            sendMessage(chatId, Command.HELP.factory().create())
+            sendMessage(chatId, toMessage(Command.ABOUT))
+            sendMessage(chatId, toMessage(Command.HELP))
         }
     }
+
+    private fun toMessage(command: Command) = command.factory().create().responseMessage()
 
     //todo is there's better way to detect, that telegramBot just been added to a channel/group?
     private fun isBotAddedToChannel(message: Message) =
             message.newChatMembers()?.find { user -> user.isBot && user.username() == "CryptAdviserBot" } != null
 
-    private fun handleBotCommand(message: Message) { //todo cover with integration test
-        val commandHandler = commandHandlerFacade.createCommandHandler(message.text())
-        sendMessage(message.chat().id(), commandHandler)
+    //todo visible for testing purposes only
+    fun handleBotCommand(message: String): String {
+        return commandHandlerFacade
+                .createCommandHandler(message)
+                .responseMessage()
     }
 
-    private fun sendMessage(chatId: Long, commandHandler: CommandHandler) {
-        sendMessage(chatId, commandHandler.responseMessage()) { _, response ->
+    private fun sendMessage(chatId: Long, outgoingMessage: String) {
+        sendMessage(chatId, outgoingMessage) { _, response ->
             println("response message: ${response?.message()?.text()}")
         }
     }
@@ -118,7 +120,7 @@ class Main { //todo class can be removed once updated to kotlin 1.2. Untill then
     }
 
     private fun createOutgoingMessage(message: String) =
-            "*$INSTANCE_ID*\n\n$message"
+            "*${BuildConfig.INSTANCE_ID}*\n\n$message"
 
     private fun killInstance(chatId: Long) {
         sendMessage(chatId, KillCommandHandler.FAREWELL_MESSAGE) { _, _ ->
