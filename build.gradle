@@ -31,6 +31,7 @@ buildConfig {
         buildConfigField 'String', key.toString(), value.toString()
     }
 
+    buildConfigField 'String', 'INSTANCE_ID', UUID.randomUUID().toString()
 }
 
 repositories {
