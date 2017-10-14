@@ -1,7 +1,7 @@
 package ru.justd.cryptobot.handler
 
 import ru.justd.cryptobot.UserPreferencesImpl
-import ru.justd.cryptobot.handler.factory.SubscribeFactory
+import ru.justd.cryptobot.handler.subscribe.SubscribeFactory
 import ru.justd.cryptobot.handler.kill.KillCommandHandlerFactory
 import java.util.*
 

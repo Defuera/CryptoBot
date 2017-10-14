@@ -22,7 +22,7 @@ class MainModule {
     @Singleton
     fun provideCommandHandlerFacade(
             exchangeFacade: ExchangeFacade,
-            userPreferences: UserPreferences
+            userPreferences : UserPreferences
     ): CommandHandlerFacade = CommandHandlerFacadeImpl(exchangeFacade, userPreferences)
 
 }

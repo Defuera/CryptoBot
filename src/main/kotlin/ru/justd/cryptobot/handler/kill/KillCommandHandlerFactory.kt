@@ -6,6 +6,8 @@ import ru.justd.cryptobot.handler.CommandHandlerFactory
 
 class KillCommandHandlerFactory : CommandHandlerFactory<KillCommandHandler> {
 
+    lateinit var instanceId: String
+
     lateinit var message: String
 
     override fun create(): KillCommandHandler =

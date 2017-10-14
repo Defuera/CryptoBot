@@ -1,29 +1,36 @@
 package ru.justd.cryptobot.handler
 
+import ru.justd.cryptobot.UserPreferences
 import ru.justd.cryptobot.exchanges.ExchangeFacade
-import ru.justd.cryptobot.handler.factory.SubscribeFactory
+import ru.justd.cryptobot.handler.subscribe.SubscribeFactory
 import ru.justd.cryptobot.handler.kill.KillCommandHandlerFactory
 
 class CommandHandlerFacadeImpl( //todo it seems like this is an object (kotlin singleton), the only problem it cannot be statically initialized, since it get dynamically created dependency. But all the functions are static.. hmm..
-        private val exchange: ExchangeFacade
+        private val exchange: ExchangeFacade,
+        private val userPreferences: UserPreferences
 ) : CommandHandlerFacade {
 
-    override fun createCommandHandler(incomingMessage: String): CommandHandler {
-        val factory = findCommandHandlerFactory(incomingMessage)
+    override fun createCommandHandler(requestMessage: String): CommandHandler {
+        val factory = findCommandHandlerFactory(requestMessage)
 
         return when (factory) {
             is PriceCommandHandlerFactory -> factory
                     .apply {
                         exchangeFacade = exchange
-                        message = incomingMessage
+                        message = requestMessage
                     }
                     .create()
             is KillCommandHandlerFactory -> factory
-                    .apply { message = incomingMessage }
+                    .apply { message = requestMessage }
                     .create()
-            is SubscribeFactory -> SubscribeHandler()
+            is SubscribeFactory -> factory
+                    .apply {
+                        message = requestMessage
+                        this.preferences = userPreferences
+                    }
+                    .create()
             is InstantFactory<*> -> factory.create()
-            else -> throw IllegalArgumentException("Unhandled factory $factory")
+            else -> throw IllegalArgumentException("Unhandled subscribe $factory")
         }
 
     }
@@ -32,7 +39,7 @@ class CommandHandlerFacadeImpl( //todo it seems like this is an object (kotlin s
 
     private fun find(incomingMessage: String): Command? = Command.values().firstOrNull { matches(it, incomingMessage) }
 
-    private fun matches(command : Command, message: String): Boolean {
+    private fun matches(command: Command, message: String): Boolean {
         return message.split(" ")[0].toLowerCase() == command.scheme
     }
 

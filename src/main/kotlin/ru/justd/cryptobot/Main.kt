@@ -10,9 +10,7 @@ import com.pengrad.telegrambot.model.request.ParseMode
 import com.pengrad.telegrambot.request.SendMessage
 import com.pengrad.telegrambot.response.SendResponse
 import ru.justd.cryptobot.di.DaggerMainComponent
-import ru.justd.cryptobot.di.MainComponent
 import ru.justd.cryptobot.handler.Command
-import ru.justd.cryptobot.handler.CommandHandler
 import ru.justd.cryptobot.handler.CommandHandlerFacade
 import ru.justd.cryptobot.handler.kill.KillCommandHandler
 import ru.justd.cryptobot.handler.kill.ShutdownException
@@ -21,12 +19,11 @@ import javax.inject.Inject
 
 
 fun main(args: Array<String>) {
-    Main().run()
+    TelegramCryptAdviser().run()
 }
 
-//todo class can be removed once updated to kotlin 1.2. Untill then it's used to be able to inject dependencies
-//open for tests
-open class Main {
+//todo class can be removed once updated to kotlin 1.2. Until then it's used to be able to inject dependencies
+class TelegramCryptAdviser : CryptAdviser {
 
     @Inject
     lateinit var telegramBot: TelegramBot
@@ -34,11 +31,14 @@ open class Main {
     @Inject
     lateinit var commandHandlerFacade: CommandHandlerFacade
 
-    fun run() {
-        val mainComponent = createComponent()
+    init {
+        val mainComponent = DaggerMainComponent.builder().build()
         mainComponent.inject(this)
+    }
 
-        println("CryptoBot started")
+
+    fun run() {
+        println("CryptoBot started 2")
 
         telegramBot.setUpdatesListener { updates ->
             updates.forEach {
@@ -55,9 +55,6 @@ open class Main {
         }
     }
 
-    //open for tests
-    open fun createComponent(): MainComponent = DaggerMainComponent.builder().build()
-
     private fun processUpdate(update: Update) {
         val message = update.message()
         println("message ${message?.entities()?.get(0)?.type() ?: ""}: ${message?.text() ?: "null"}")
@@ -67,7 +64,7 @@ open class Main {
         if (entities?.isNotEmpty() == true) {
             entities.forEach {
                 when (it.type()) {
-                    bot_command -> sendMessage(chatId, handleBotCommand(message.text()))
+                    bot_command -> sendMessage(chatId, handleCommand(message.text()))
                     else -> println("else message type not supported ${it.type()}")
                 }
             }
@@ -85,12 +82,22 @@ open class Main {
     private fun isBotAddedToChannel(message: Message) =
             message.newChatMembers()?.find { user -> user.isBot && user.username() == "CryptAdviserBot" } != null
 
-    //todo visible for testing purposes only
-    fun handleBotCommand(message: String): String {
+
+    //region CryptAdviser
+
+    override fun handleCommand(requestMessage: String): String {
+        println("commandHandlerFacade $commandHandlerFacade")
         return commandHandlerFacade
-                .createCommandHandler(message)
+                .createCommandHandler(requestMessage)
                 .responseMessage()
     }
+
+    override fun publishUpdate() {
+        //todo
+    }
+
+    //endregion
+
 
     private fun sendMessage(chatId: Long, outgoingMessage: String) {
         sendMessage(chatId, outgoingMessage) { _, response ->
