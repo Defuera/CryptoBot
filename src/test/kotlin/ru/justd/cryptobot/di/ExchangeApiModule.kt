@@ -1,6 +1,5 @@
 package ru.justd.cryptobot.di
 
-import com.pengrad.telegrambot.TelegramBot
 import dagger.Module
 import dagger.Provides
 import okhttp3.OkHttpClient
@@ -12,7 +11,6 @@ import ru.justd.cryptobot.exchanges.ExchangeFacade
 import ru.justd.cryptobot.exchanges.coinbase.CoinbaseApi
 import ru.justd.cryptobot.exchanges.cryptonator.CryptonatorApi
 import ru.justd.cryptobot.exchanges.gdax.GdaxApi
-import ru.justd.cryptobot.handler.CommandHandlerFacade
 import javax.inject.Named
 import javax.inject.Singleton
 
@@ -20,10 +18,6 @@ import javax.inject.Singleton
 class ExchangeApiModule {
 
     companion object {
-
-        val telegramBot = Mockito.mock(TelegramBot::class.java)
-
-        val commandHandlerFacade = Mockito.mock(CommandHandlerFacade::class.java)
 
         val exchangeFacade = Mockito.mock(ExchangeFacade::class.java)
 
@@ -58,6 +52,6 @@ class ExchangeApiModule {
             @Named(CoinbaseApi.NAME) coinbaseApi: ExchangeApi,
             @Named(CryptonatorApi.NAME) cryptonatorApi: ExchangeApi,
             userPreferences: UserPreferences
-    ) =  exchangeFacade
+    ) = exchangeFacade
 
 }
