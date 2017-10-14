@@ -44,14 +44,6 @@ sourceSets {
         java.srcDirs += [file("$buildDir/generated/source/kapt/main")]
     }
 
-    integTest {
-        java.srcDir file('src/integTest/java')
-        java.srcDirs += [file("$buildDir/generated/source/kapt/main")]
-        resources.srcDir file('src/integTest/resources')
-        compileClasspath += sourceSets.test.compileClasspath
-        runtimeClasspath += sourceSets.test.runtimeClasspath
-    }
-
 }
 
 
@@ -78,20 +70,6 @@ dependencies {
     testImplementation "com.google.dagger:dagger:$daggerVersion"
     kaptTest "com.google.dagger:dagger-compiler:$daggerVersion"
 }
-
-//integTest
-dependencies {
-    //dagger
-    integTestImplementation "com.google.dagger:dagger:$daggerVersion"
-    kaptIntegTest "com.google.dagger:dagger-compiler:$daggerVersion"
-
-    //tests
-    integTestImplementation 'org.assertj:assertj-core:3.8.0'
-    integTestImplementation("org.junit.platform:junit-platform-runner:1.0.0")
-    integTestImplementation 'org.mockito:mockito-core:2.7.22'
-}
-
-
 
 compileKotlin {
     kotlinOptions.jvmTarget = "1.8"
