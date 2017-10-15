@@ -1,10 +1,11 @@
 package ru.justd.cryptobot.handler
 
 import ru.justd.cryptobot.UserPreferencesImpl
+import ru.justd.cryptobot.handler.subscribe.SubscribeFactory
 import ru.justd.cryptobot.handler.kill.KillCommandHandlerFactory
 import java.util.*
 
-enum class Command(val scheme: String) {
+internal enum class Command(val scheme: String) {
 
     HELP("/help") {
 
@@ -24,9 +25,32 @@ enum class Command(val scheme: String) {
 
     },
 
+    /**
+     * Allows user to retrieve cryptos price from supported exchanges.
+     *
+     * **Usage:** /price BASE TARGET EXCHANGE_CODE
+     * 1. BASE - requierd, crypto currency (BTC, ETH, LTC are supported by most exchanges)
+     * 1. TARGET - optional, fiat currency (most of exchanges support USD, EUR, GBP)
+     * 1. EXCHANGE_CODE - optional, as for now Gdax, Coinbase and Cryptonator exchanges are supported
+     */
     PRICE("/price") {
 
         override fun factory(): CommandHandlerFactory<CommandHandler> = PriceCommandHandlerFactory()
+
+    },
+
+    /**
+     * Provides scheduled updates every x minutes on preconfigured [PRICE] request
+     *
+     * * **Usage:** /subscribe BASE TARGET EXCHANGE_CODE every FREQUENCY_MIN
+     * 1. BASE, TARGET, EXCHANGE_CODE - see [price](Command##Price) //todo link to price command in docs
+     * 1. FREQUENCY_MIN - how often you want to receive updates in minutes.
+     *
+     * You can have multiple subscriptions
+     */
+    SUBSCRIBE("/subscribe") {
+
+        override fun factory(): CommandHandlerFactory<CommandHandler> = SubscribeFactory()
 
     },
 
