@@ -4,14 +4,14 @@ import org.assertj.core.api.Assertions.assertThat
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.junit.MockitoJUnitRunner
-import ru.justd.cryptobot.BuildConfig
+import ru.justd.cryptobot.TelegramCryptAdviser.Companion.INSTANCE_ID
 
 @RunWith(MockitoJUnitRunner::class)
 class KillCommandHandlerFactoryTest {
 
     @Test(expected = ShutdownException::class)
     fun testKillThisInstance() {
-        tryToKillInstanceWithIdAndGetResponse(BuildConfig.INSTANCE_ID)
+        tryToKillInstanceWithIdAndGetResponse(INSTANCE_ID)
     }
 
     @Test

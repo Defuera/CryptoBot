@@ -15,6 +15,7 @@ import ru.justd.cryptobot.handler.CommandHandlerFacade
 import ru.justd.cryptobot.handler.kill.KillCommandHandler
 import ru.justd.cryptobot.handler.kill.ShutdownException
 import java.io.IOException
+import java.util.*
 import javax.inject.Inject
 
 
@@ -24,6 +25,12 @@ fun main(args: Array<String>) {
 
 //todo class can be removed once updated to kotlin 1.2. Until then it's used to be able to inject dependencies
 class TelegramCryptAdviser : CryptAdviser {
+
+    companion object {
+
+        val INSTANCE_ID = UUID.randomUUID().toString()
+
+    }
 
     @Inject
     lateinit var telegramBot: TelegramBot
@@ -127,7 +134,7 @@ class TelegramCryptAdviser : CryptAdviser {
     }
 
     private fun createOutgoingMessage(message: String) =
-            "*${BuildConfig.INSTANCE_ID}*\n\n$message"
+            "*$INSTANCE_ID*\n\n$message"
 
     private fun killInstance(chatId: Long) {
         sendMessage(chatId, KillCommandHandler.FAREWELL_MESSAGE) { _, _ ->
