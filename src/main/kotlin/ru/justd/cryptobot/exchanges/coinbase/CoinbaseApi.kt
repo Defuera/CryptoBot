@@ -1,11 +1,10 @@
 package ru.justd.cryptobot.exchanges.coinbase
 
-import com.google.gson.Gson
 import khronos.Dates
 import khronos.toString
 import okhttp3.OkHttpClient
 import okhttp3.Request
-import ru.justd.cryptobot.exchanges.ExchangeApi
+import ru.justd.cryptobot.exchanges.PollingExchange
 import ru.justd.cryptobot.exchanges.RateResponse
 import ru.justd.cryptobot.exchanges.exceptions.RequestFailed
 
@@ -16,33 +15,25 @@ private const val FORMAT_API_DATE = "yyyy-MM-dd"
 /**
  * https://developers.coinbase.com/api/
  */
-class CoinbaseApi(private val okHttpClient: OkHttpClient) : ExchangeApi {
+class CoinbaseApi(okHttpClient: OkHttpClient) : PollingExchange(okHttpClient) {
 
     companion object { const val NAME = "COINBASE" }
 
-    val gson = Gson()
+    override fun getRateUrl(base: String, target: String) = "$BASE_URL/prices/$base-$target/spot"
 
-    //todo add parse data test
-    override fun getRate(base: String, target: String): RateResponse {
+    override fun requestBuilder(base: String, target: String): Request.Builder {
+        return super
+                .requestBuilder(base, target)
+                .header(HEADER_CB_VERSION, Dates.today.toString(FORMAT_API_DATE))
+    }
 
-        val response = okHttpClient.newCall(
-                Request.Builder()
-                        .get()
-                        .url("$BASE_URL/prices/$base-$target/spot")
-                        .header(HEADER_CB_VERSION, Dates.today.toString(FORMAT_API_DATE))
-                        .build()
-        ).execute()
-
-        val bodyString = response.body()?.string()
-        if (bodyString != null) {
-            val envelope = gson.fromJson<RateResponseEnvelope>(bodyString, RateResponseEnvelope::class.java)
-            if (envelope.errors?.isNotEmpty() == true) {
-                throw RequestFailed(envelope.errors.first().message)
-            } else {
-                return envelope.data
-            }
+    @Throws(RequestFailed::class)
+    override fun parseResponseBody(bodyString: String, base: String, target: String): RateResponse {
+        val envelope = gson.fromJson<RateResponseEnvelope>(bodyString, RateResponseEnvelope::class.java)
+        if (envelope.errors?.isNotEmpty() == true) {
+            throw RequestFailed(envelope.errors.first().message)
         } else {
-            throw RuntimeException("oioi") //todo
+            return envelope.data
         }
     }
 

@@ -27,12 +27,15 @@ internal class ExchangeFacadeImplTest {
     lateinit var cryptonatorApi: ExchangeApi
 
     @Mock
+    lateinit var bitfinexApi: ExchangeApi
+
+    @Mock
     lateinit var preferences: UserPreferences
 
     @Before
     fun setup() {
         MockitoAnnotations.initMocks(this)
-        testInstance = ExchangeFacadeImpl(gdaxApi, coinbaseApi, cryptonatorApi, preferences)
+        testInstance = ExchangeFacadeImpl(gdaxApi, coinbaseApi, cryptonatorApi, bitfinexApi, preferences)
     }
 
     @Test
@@ -66,9 +69,9 @@ internal class ExchangeFacadeImplTest {
     fun testInvalidExchange() {
         val base = "BASE"
         val target = "TARGET"
-        try{
+        try {
             testInstance.getRate(base, target, "Invalid")
-        } catch (exception : Exception){
+        } catch (exception: Exception) {
             assertThat(exception).isExactlyInstanceOf(ExchangeNotSupported::class.java)
         }
 
