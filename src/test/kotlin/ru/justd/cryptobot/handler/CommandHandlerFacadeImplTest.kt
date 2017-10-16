@@ -5,6 +5,7 @@ import org.junit.Before
 import org.junit.Test
 import org.mockito.Mock
 import org.mockito.MockitoAnnotations
+import ru.justd.cryptobot.UserPreferences
 import ru.justd.cryptobot.exchanges.ExchangeFacade
 import ru.justd.cryptobot.handler.update.UpdateCommandHandler
 
@@ -15,10 +16,13 @@ internal class CommandHandlerFacadeImplTest {
     @Mock
     lateinit var exchangeFacade: ExchangeFacade
 
+    @Mock
+    lateinit var userPreferences: UserPreferences
+
     @Before
     fun setup() {
         MockitoAnnotations.initMocks(this)
-        testInstance = CommandHandlerFacadeImpl(exchangeFacade)
+        testInstance = CommandHandlerFacadeImpl(exchangeFacade, userPreferences)
     }
 
 

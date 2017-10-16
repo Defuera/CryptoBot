@@ -1,6 +1,7 @@
 package ru.justd.cryptobot.exchanges
 
 import ru.justd.cryptobot.UserPreferences
+import ru.justd.cryptobot.exchanges.bitfinex.BitfinexApi
 import ru.justd.cryptobot.exchanges.coinbase.CoinbaseApi
 import ru.justd.cryptobot.exchanges.cryptonator.CryptonatorApi
 import ru.justd.cryptobot.exchanges.exceptions.ExchangeNotSupported
@@ -16,6 +17,9 @@ class ExchangeFacadeImpl(
 
         @Named(CryptonatorApi.NAME)
         private val cryptonatorApi: ExchangeApi,
+
+        @Named(BitfinexApi.NAME)
+        private val bitfinexApi: ExchangeApi,
 
         private val preferences: UserPreferences
 ) : ExchangeFacade {
@@ -35,6 +39,7 @@ class ExchangeFacadeImpl(
             GdaxApi.NAME -> gdaxApi
             CoinbaseApi.NAME -> coinbaseApi
             CryptonatorApi.NAME -> cryptonatorApi
+            BitfinexApi.NAME -> bitfinexApi
             else -> throw ExchangeNotSupported(exchangeApiCode)
         }
     }

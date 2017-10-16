@@ -5,7 +5,7 @@ import com.pengrad.telegrambot.TelegramBot
 import com.pengrad.telegrambot.model.request.*
 import com.pengrad.telegrambot.request.SendMessage
 import com.pengrad.telegrambot.response.SendResponse
-import ru.justd.cryptobot.Main
+import ru.justd.cryptobot.TelegramCryptAdviser
 import ru.justd.cryptobot.handler.CommandHandler
 import ru.justd.cryptobot.messenger.model.Responses
 import ru.justd.cryptobot.messenger.model.OutgoingMessage
@@ -69,6 +69,6 @@ class MessageSender(
             )
 
     private fun formatMessageText(message: String) =
-            "*${Main.INSTANCE_ID}*\n_thread: ${Thread.currentThread().name}_\n\n$message"
+            "*${TelegramCryptAdviser.INSTANCE_ID}*\n_thread: ${Thread.currentThread().name}_\n\n$message"
 
 }

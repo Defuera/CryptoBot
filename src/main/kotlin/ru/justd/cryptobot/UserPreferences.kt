@@ -1,5 +1,6 @@
 package ru.justd.cryptobot
 
+import ru.justd.cryptobot.handler.subscribe.StorageException
 import java.util.*
 
 interface UserPreferences {
@@ -11,5 +12,8 @@ interface UserPreferences {
     fun exchangeApi(): String
 
     fun locale(): Locale
+
+    @Throws(StorageException::class)
+    fun storeSubscription(base: String?, target: String?, exchange: String?)
 
 }

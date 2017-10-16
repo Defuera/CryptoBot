@@ -1,21 +1,10 @@
 package ru.justd.cryptobot
 
-import com.pengrad.telegrambot.Callback
 import com.pengrad.telegrambot.TelegramBot
-import com.pengrad.telegrambot.UpdatesListener
 import com.pengrad.telegrambot.UpdatesListener.CONFIRMED_UPDATES_ALL
-import com.pengrad.telegrambot.model.Message
-import com.pengrad.telegrambot.model.MessageEntity.Type.bot_command
 import com.pengrad.telegrambot.model.Update
-import com.pengrad.telegrambot.model.request.ParseMode
-import com.pengrad.telegrambot.request.SendMessage
-import com.pengrad.telegrambot.response.SendResponse
 import kotlinx.coroutines.experimental.launch
 import ru.justd.cryptobot.di.DaggerMainComponent
-import ru.justd.cryptobot.di.MainModule
-import ru.justd.cryptobot.handler.Command
-import ru.justd.cryptobot.handler.CommandHandler
-import ru.justd.cryptobot.handler.CommandHandlerFacade
 import ru.justd.cryptobot.handler.kill.KillCommandHandler
 import ru.justd.cryptobot.handler.kill.ShutdownException
 import ru.justd.cryptobot.messenger.MessageReceiver
@@ -26,10 +15,11 @@ import javax.inject.Inject
 
 
 fun main(args: Array<String>) {
-    Main().run()
+    TelegramCryptAdviser().run()
 }
 
-class Main { //todo class can be removed once updated to kotlin 1.2. Untill then it's used to be able to inject dependencies
+//todo class can be removed once updated to kotlin 1.2. Until then it's used to be able to inject dependencies
+class TelegramCryptAdviser {
 
     companion object {
         val INSTANCE_ID = UUID.randomUUID().toString()
@@ -43,6 +33,12 @@ class Main { //todo class can be removed once updated to kotlin 1.2. Untill then
 
     @Inject
     lateinit var messageSender: MessageSender
+
+    init {
+        val mainComponent = DaggerMainComponent.builder().build()
+        mainComponent.inject(this)
+    }
+
 
     fun run() {
         inject()

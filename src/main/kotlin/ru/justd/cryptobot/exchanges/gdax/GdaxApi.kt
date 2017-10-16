@@ -1,49 +1,35 @@
 package ru.justd.cryptobot.exchanges.gdax
 
-import com.google.gson.Gson
 import com.google.gson.annotations.SerializedName
 import okhttp3.OkHttpClient
-import okhttp3.Request
-import ru.justd.cryptobot.exchanges.ExchangeApi
+import ru.justd.cryptobot.exchanges.PollingExchange
 import ru.justd.cryptobot.exchanges.RateResponse
 import ru.justd.cryptobot.exchanges.exceptions.RequestFailed
 
 /**
  * https://docs.gdax.com/
  */
-class GdaxApi(private val okHttpClient: OkHttpClient) : ExchangeApi {
+class GdaxApi(okHttpClient: OkHttpClient) : PollingExchange(okHttpClient) {
 
     companion object { const val NAME = "GDAX" }
 
     private val BASE_URL = "https://api.gdax.com"
-    private val gson = Gson()
 
     /**
      * https://docs.gdax.com/#get-product-order-book
      */
-    override fun getRate(base: String, target: String): RateResponse {
 
-        val response = okHttpClient.newCall(
-                Request.Builder()
-                        .get()
-                        .url(getRateUrl(base, target))
-                        .build()
-        ).execute()
+    override fun getRateUrl(base: String, target: String) = "$BASE_URL/products/$base-$target/book" //todo extract to exchangeApi
 
-        val bodyString = response.body()?.string()
-        if (bodyString != null) {
-            val envelope = gson.fromJson<Envelope>(bodyString, Envelope::class.java)
-            if (envelope.bids != null) {
-                return RateResponse(envelope.bids[0][0].toDouble(), base, target)
-            } else {
-                throw RequestFailed(envelope.errorMessage!!)
-            }
+    @Throws(RequestFailed::class)
+    override fun parseResponseBody(bodyString: String, base: String, target: String): RateResponse {
+        val envelope = gson.fromJson<Envelope>(bodyString, Envelope::class.java)
+        if (envelope.bids != null) {
+            return RateResponse(envelope.bids[0][0].toDouble(), base, target)
         } else {
-            throw RuntimeException("oioi") //todo also to base class?
+            throw RequestFailed(envelope.errorMessage!!)
         }
     }
-
-    private fun getRateUrl(cryptoCurrencyCode: String, fiatCurrency: String) = "$BASE_URL/products/$cryptoCurrencyCode-$fiatCurrency/book" //todo extract to exchangeApi
 
     private data class Envelope(
 

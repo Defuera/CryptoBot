@@ -4,10 +4,10 @@ import dagger.Module
 import dagger.Provides
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
+import org.mockito.Mockito
 import ru.justd.cryptobot.UserPreferences
 import ru.justd.cryptobot.exchanges.ExchangeApi
 import ru.justd.cryptobot.exchanges.ExchangeFacade
-import ru.justd.cryptobot.exchanges.ExchangeFacadeImpl
 import ru.justd.cryptobot.exchanges.bitfinex.BitfinexApi
 import ru.justd.cryptobot.exchanges.coinbase.CoinbaseApi
 import ru.justd.cryptobot.exchanges.cryptonator.CryptonatorApi
@@ -17,6 +17,12 @@ import javax.inject.Singleton
 
 @Module
 class ExchangeApiModule {
+
+    companion object {
+
+        val exchangeFacade = Mockito.mock(ExchangeFacade::class.java)
+
+    }
 
     @Provides
     @Singleton
@@ -53,12 +59,6 @@ class ExchangeApiModule {
             @Named(CryptonatorApi.NAME) cryptonatorApi: ExchangeApi,
             @Named(BitfinexApi.NAME) bitfinexApi: ExchangeApi,
             userPreferences: UserPreferences
-    ): ExchangeFacade = ExchangeFacadeImpl(
-            gdaxApi,
-            coinbaseApi,
-            cryptonatorApi,
-            bitfinexApi,
-            userPreferences
-    )
+    ) = exchangeFacade
 
 }
