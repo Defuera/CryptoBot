@@ -7,7 +7,7 @@ import org.mockito.Mock
 import org.mockito.Mockito.times
 import org.mockito.Mockito.verify
 import org.mockito.MockitoAnnotations
-import ru.justd.cryptobot.UserPreferences
+import ru.justd.cryptobot.persistance.UserPreferences
 import ru.justd.cryptobot.exchanges.coinbase.CoinbaseApi
 import ru.justd.cryptobot.exchanges.cryptonator.CryptonatorApi
 import ru.justd.cryptobot.exchanges.exceptions.ExchangeNotSupported

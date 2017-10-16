@@ -17,12 +17,12 @@ internal class SubscribeTest {
         val target = "USD"
         val exchange = GdaxApi.NAME
 
-        doNothing().`when`(userPrefMock).storeSubscription(base, target, exchange)
+        doNothing().`when`(userPrefMock).setSubscription(base, target, exchange)
         val testAdviser = TelegramCryptAdviser()
         testAdviser.run()
 
         //action
-        val response = testAdviser.handleCommand("/subscribe $base $target $exchange")
+        val response = testAdviser.handleCommand("/subscribe $base $target $exchange", message.text())
 
         //test
         assertThat(response).isEqualTo("subscription created")

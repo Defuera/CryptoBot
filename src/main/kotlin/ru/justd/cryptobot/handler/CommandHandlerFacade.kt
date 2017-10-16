@@ -2,6 +2,6 @@ package ru.justd.cryptobot.handler
 
 interface CommandHandlerFacade {
 
-    fun createCommandHandler(requestMessage: String): CommandHandler
+    fun createCommandHandler(chatId: String, requestMessage: String): CommandHandler
 
 }

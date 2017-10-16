@@ -5,7 +5,7 @@ import dagger.Provides
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import org.mockito.Mockito
-import ru.justd.cryptobot.UserPreferences
+import ru.justd.cryptobot.persistance.UserPreferences
 import ru.justd.cryptobot.exchanges.ExchangeApi
 import ru.justd.cryptobot.exchanges.ExchangeFacade
 import ru.justd.cryptobot.exchanges.bitfinex.BitfinexApi

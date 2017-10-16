@@ -5,7 +5,7 @@ import org.junit.Before
 import org.junit.Test
 import org.mockito.Mock
 import org.mockito.MockitoAnnotations
-import ru.justd.cryptobot.UserPreferences
+import ru.justd.cryptobot.persistance.UserPreferences
 import ru.justd.cryptobot.exchanges.ExchangeFacade
 
 internal class CommandHandlerFacadeImplTest {

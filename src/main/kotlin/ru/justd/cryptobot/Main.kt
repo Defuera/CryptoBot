@@ -54,7 +54,7 @@ class TelegramCryptAdviser : CryptAdviser {
                 } catch (e: ShutdownException) {
                     killInstance(it.message().chat().id())
                 } catch (e: Throwable) {
-                    e.printStackTrace()
+                    e.printStackTrace() //todo log
                 }
             }
 
@@ -71,7 +71,7 @@ class TelegramCryptAdviser : CryptAdviser {
         if (entities?.isNotEmpty() == true) {
             entities.forEach {
                 when (it.type()) {
-                    bot_command -> sendMessage(chatId, handleCommand(message.text()))
+                    bot_command -> sendMessage(chatId, handleCommand(chatId.toString(), message.text()))
                     else -> println("else message type not supported ${it.type()}")
                 }
             }
@@ -92,10 +92,10 @@ class TelegramCryptAdviser : CryptAdviser {
 
     //region CryptAdviser
 
-    override fun handleCommand(requestMessage: String): String {
+    override fun handleCommand(userId: String, requestMessage: String): String {
         println("commandHandlerFacade $commandHandlerFacade")
         return commandHandlerFacade
-                .createCommandHandler(requestMessage)
+                .createCommandHandler(userId, requestMessage)
                 .responseMessage()
     }
 
