@@ -2,6 +2,7 @@ package ru.justd.cryptobot.handler
 
 import ru.justd.cryptobot.UserPreferencesImpl
 import ru.justd.cryptobot.handler.kill.KillCommandHandlerFactory
+import ru.justd.cryptobot.handler.update.UpdateCommandHandler
 import java.util.*
 
 enum class Command(val scheme: String) {

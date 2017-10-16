@@ -2,11 +2,12 @@ package ru.justd.cryptobot.messenger
 
 import com.pengrad.telegrambot.Callback
 import com.pengrad.telegrambot.TelegramBot
-import com.pengrad.telegrambot.model.request.ParseMode
+import com.pengrad.telegrambot.model.request.*
 import com.pengrad.telegrambot.request.SendMessage
 import com.pengrad.telegrambot.response.SendResponse
 import ru.justd.cryptobot.Main
 import ru.justd.cryptobot.handler.CommandHandler
+import ru.justd.cryptobot.messenger.model.Responses
 import ru.justd.cryptobot.messenger.model.OutgoingMessage
 import java.io.IOException
 
@@ -44,9 +45,28 @@ class MessageSender(
         telegramBot.execute(sendMessageRequest, callback)
     }
 
-    private fun createSendMessageRequest(chatId: Long, message: OutgoingMessage) =
-            SendMessage(chatId, formatMessageText(message.text))
-                    .parseMode(ParseMode.Markdown)
+    private fun createSendMessageRequest(chatId: Long, message: OutgoingMessage): SendMessage {
+        val request = SendMessage(chatId, formatMessageText(message.text))
+
+        val keyboard = message.responses
+        if (keyboard != null) {
+            val telegramKeyboard = mapToTelegramKeyboard(keyboard)
+            request.replyMarkup(telegramKeyboard)
+        }
+
+        return request.parseMode(ParseMode.Markdown)
+    }
+
+    private fun mapToTelegramKeyboard(keyboard: Responses<*>): Keyboard =
+            InlineKeyboardMarkup(
+                    keyboard
+                            .items
+                            .map {
+                                    InlineKeyboardButton(it.toString())
+                                            .callbackData("some shitty data")
+                            }
+                            .toTypedArray()
+            )
 
     private fun formatMessageText(message: String) =
             "*${Main.INSTANCE_ID}*\n_thread: ${Thread.currentThread().name}_\n\n$message"

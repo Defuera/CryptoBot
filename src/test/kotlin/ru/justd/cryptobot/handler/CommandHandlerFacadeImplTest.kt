@@ -6,6 +6,7 @@ import org.junit.Test
 import org.mockito.Mock
 import org.mockito.MockitoAnnotations
 import ru.justd.cryptobot.exchanges.ExchangeFacade
+import ru.justd.cryptobot.handler.update.UpdateCommandHandler
 
 internal class CommandHandlerFacadeImplTest {
 
