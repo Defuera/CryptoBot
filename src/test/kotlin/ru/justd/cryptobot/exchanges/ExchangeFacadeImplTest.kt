@@ -7,11 +7,11 @@ import org.mockito.Mock
 import org.mockito.Mockito.times
 import org.mockito.Mockito.verify
 import org.mockito.MockitoAnnotations
-import ru.justd.cryptobot.persistance.UserPreferences
 import ru.justd.cryptobot.exchanges.coinbase.CoinbaseApi
 import ru.justd.cryptobot.exchanges.cryptonator.CryptonatorApi
 import ru.justd.cryptobot.exchanges.exceptions.ExchangeNotSupported
 import ru.justd.cryptobot.exchanges.gdax.GdaxApi
+import ru.justd.cryptobot.persistance.Storage
 
 internal class ExchangeFacadeImplTest {
 
@@ -30,12 +30,12 @@ internal class ExchangeFacadeImplTest {
     lateinit var bitfinexApi: ExchangeApi
 
     @Mock
-    lateinit var preferences: UserPreferences
+    lateinit var storage: Storage
 
     @Before
     fun setup() {
         MockitoAnnotations.initMocks(this)
-        testInstance = ExchangeFacadeImpl(gdaxApi, coinbaseApi, cryptonatorApi, bitfinexApi, preferences)
+        testInstance = ExchangeFacadeImpl(gdaxApi, coinbaseApi, cryptonatorApi, bitfinexApi, storage)
     }
 
     @Test

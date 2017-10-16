@@ -5,8 +5,8 @@ import org.junit.Before
 import org.junit.Test
 import org.mockito.Mock
 import org.mockito.MockitoAnnotations
-import ru.justd.cryptobot.persistance.UserPreferences
 import ru.justd.cryptobot.exchanges.ExchangeFacade
+import ru.justd.cryptobot.persistance.Storage
 
 internal class CommandHandlerFacadeImplTest {
 
@@ -16,43 +16,43 @@ internal class CommandHandlerFacadeImplTest {
     lateinit var exchangeFacade: ExchangeFacade
 
     @Mock
-    lateinit var userPreferences: UserPreferences
+    lateinit var storage: Storage
 
     @Before
     fun setup() {
         MockitoAnnotations.initMocks(this)
-        testInstance = CommandHandlerFacadeImpl(exchangeFacade, userPreferences)
+        testInstance = CommandHandlerFacadeImpl(exchangeFacade, storage)
     }
 
 
     @Test
     fun testFindHelpCommandHandler() {
-        assertThat(testInstance.createCommandHandler("/help")).isEqualTo(HelpCommandHandler)
+        assertThat(testInstance.createCommandHandler("userId", "/help")).isEqualTo(HelpCommandHandler)
     }
 
     @Test
     fun testFindUpdateCommandHandler() {
-        assertThat(testInstance.createCommandHandler("/update")).isEqualTo(UpdateCommandHandler)
+        assertThat(testInstance.createCommandHandler("userId",  "/update")).isEqualTo(UpdateCommandHandler)
     }
 
     @Test
     fun testFindAboutCommandHandler() {
-        assertThat(testInstance.createCommandHandler("/about")).isEqualTo(AboutCommandHandler)
+        assertThat(testInstance.createCommandHandler("userId",  "/about")).isEqualTo(AboutCommandHandler)
     }
 
     @Test
     fun testFindPriceCommandHandlerWithSpecifiedBase() {
-        assertThat(testInstance.createCommandHandler("/price BTC")).isExactlyInstanceOf(PriceCommandHandler::class.java)
+        assertThat(testInstance.createCommandHandler("userId",  "/price BTC")).isExactlyInstanceOf(PriceCommandHandler::class.java)
     }
 
     @Test
     fun testFindPriceCommandHandlerWithSpecifiedBaseAndTarget() {
-        assertThat(testInstance.createCommandHandler("/price BTC")).isExactlyInstanceOf(PriceCommandHandler::class.java)
+        assertThat(testInstance.createCommandHandler("userId",  "/price BTC")).isExactlyInstanceOf(PriceCommandHandler::class.java)
     }
 
     @Test
     fun testFindPriceCommandHandlerWithSpecifiedBaseAndTargetAndExchange() {
-        assertThat(testInstance.createCommandHandler("/price BTC Coinbase")).isExactlyInstanceOf(PriceCommandHandler::class.java)
+        assertThat(testInstance.createCommandHandler("userId",  "/price BTC Coinbase")).isExactlyInstanceOf(PriceCommandHandler::class.java)
     }
 
 
