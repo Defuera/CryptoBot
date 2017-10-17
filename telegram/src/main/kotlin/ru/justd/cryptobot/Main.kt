@@ -9,8 +9,7 @@ import ru.justd.cryptobot.handler.kill.KillCommandHandler
 import ru.justd.cryptobot.handler.kill.ShutdownException
 import ru.justd.cryptobot.messenger.MessageReceiver
 import ru.justd.cryptobot.messenger.MessageSender
-import ru.justd.cryptobot.messenger.model.OutgoingMessage
-import java.util.*
+import ru.justd.cryptobot.messaging.model.OutgoingMessage
 import javax.inject.Inject
 
 

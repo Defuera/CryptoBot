@@ -1,8 +1,8 @@
 package ru.justd.cryptobot.handler.update
 
 import ru.justd.cryptobot.handler.CommandHandler
-import ru.justd.cryptobot.messenger.model.OutgoingMessage
-import ru.justd.cryptobot.messenger.model.Responses
+import ru.justd.cryptobot.messaging.model.OutgoingMessage
+import ru.justd.cryptobot.messaging.model.Responses
 
 
 internal object UpdateCommandHandler : CommandHandler {
