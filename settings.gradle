@@ -1,2 +1,1 @@
-rootProject.name = 'CryptoBot'
-
+include ':core', ':telegram'
