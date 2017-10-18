@@ -1,7 +1,16 @@
 package ru.justd.cryptobot.handler.update
 
-enum class UpdateCase {
-    LOCALE,
-    SOMETHING_IMPORTANT
+import ru.justd.cryptobot.messaging.model.ResponseCase
+
+enum class UpdateCase: ResponseCase {
+
+    LOCALE {
+        override fun title(): String = "locale"
+    },
+
+    SOMETHING_IMPORTANT {
+        override fun title(): String = "something more"
+    }
+
 }
 

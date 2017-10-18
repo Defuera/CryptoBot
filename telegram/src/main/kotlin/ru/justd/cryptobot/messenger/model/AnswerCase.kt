@@ -1,4 +1,5 @@
 package ru.justd.cryptobot.messenger.model
 
-class AnswerCase {
-}
+data class AnswerCase(
+        val text: String
+)

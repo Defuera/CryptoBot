@@ -6,9 +6,11 @@ import com.pengrad.telegrambot.model.request.*
 import com.pengrad.telegrambot.request.SendMessage
 import com.pengrad.telegrambot.response.SendResponse
 import ru.justd.cryptobot.Bullshit
+import ru.justd.cryptobot.adapter.MessageAdapter
 import ru.justd.cryptobot.handler.CommandHandler
-import ru.justd.cryptobot.messaging.model.Responses
 import ru.justd.cryptobot.messaging.model.OutgoingMessage
+import ru.justd.cryptobot.messenger.model.AnswerCase
+import ru.justd.cryptobot.messenger.model.Message
 import java.io.IOException
 
 class MessageSender(
@@ -28,7 +30,10 @@ class MessageSender(
     ) {
         println("send message...")
 
-        val sendMessageRequest = createSendMessageRequest(chatId, outgoingMessage)
+        val sendMessageRequest = createSendMessageRequest(
+                chatId,
+                MessageAdapter().map(outgoingMessage)
+        )
 
         val callback = object : Callback<SendMessage, SendResponse> {
 
@@ -45,10 +50,10 @@ class MessageSender(
         telegramBot.execute(sendMessageRequest, callback)
     }
 
-    private fun createSendMessageRequest(chatId: Long, message: OutgoingMessage): SendMessage {
+    private fun createSendMessageRequest(chatId: Long, message: Message): SendMessage {
         val request = SendMessage(chatId, formatMessageText(message.text))
 
-        val keyboard = message.responses
+        val keyboard = message.answers
         if (keyboard != null) {
             val telegramKeyboard = mapToTelegramKeyboard(keyboard)
             request.replyMarkup(telegramKeyboard)
@@ -57,13 +62,13 @@ class MessageSender(
         return request.parseMode(ParseMode.Markdown)
     }
 
-    private fun mapToTelegramKeyboard(keyboard: Responses<*>): Keyboard =
+    private fun mapToTelegramKeyboard(keyboard: Array<Array<AnswerCase>>): Keyboard =
             InlineKeyboardMarkup(
-                    keyboard
-                            .items
+                    *keyboard
                             .map {
-                                    InlineKeyboardButton(it.toString())
-                                            .callbackData("some shitty data")
+                                it.map {
+                                    InlineKeyboardButton(it.text).callbackData("some shitty data")
+                                }.toTypedArray()
                             }
                             .toTypedArray()
             )
