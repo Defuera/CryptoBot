@@ -29,6 +29,10 @@ class MainModule {
 
     @Provides
     @Singleton
-    fun providePublisher(storage: Storage): Publisher = PublisherImpl(storage)
+    fun providePublisher(
+            telegramBot: TelegramBot, //todo Messenger should be here instead
+            exchangeFacade: ExchangeFacade,
+            storage: Storage
+    ): Publisher = PublisherImpl(telegramBot, exchangeFacade, storage)
 
 }

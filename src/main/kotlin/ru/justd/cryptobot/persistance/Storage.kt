@@ -20,9 +20,12 @@ interface Storage { //todo add removeSubscription
 
     fun setLocale(id: String, locale: Locale)
 
-    fun getSubscription(id: String): Subscription?
+    fun getSubscriptions(id: String): List<Subscription>?
 
-    fun getSubscriptions(): List<Subscription>
+    fun getSubscriptionsByChatId(): Map<String, List<Subscription>>
 
-    fun setSubscription(id: String, newSubscription: Subscription)
+    fun addSubscription(id: String, newSubscription: Subscription)
+
+    fun subscribeToUpdates(observer : (UserPreferences) -> Unit)
+
 }

@@ -9,6 +9,8 @@ class StorageImpl : Storage {
 
     val storageStub = HashMap<String, UserPreferences>()
 
+    val observers = MutableList<((UserPreferences) -> Unit)?>(0, { null }) //todo rxify
+
     private val DEFAULT_BASE = "BTC"
 
     private val DEFAULT_TARGET = "USD"
@@ -38,29 +40,51 @@ class StorageImpl : Storage {
     override fun setLocale(id: String, locale: Locale) {//todo
     }
 
-    override fun getSubscription(id: String) = storageStub[id]?.subscription
+    override fun getSubscriptions(id: String) = storageStub[id]?.subscriptions
 
-    override fun getSubscriptions(): List<Subscription> {
-        return storageStub.map { it.value.subscription }
+    override fun getSubscriptionsByChatId(): Map<String, List<Subscription>> {
+        return storageStub
+                .filterValues { it.subscriptions.isNotEmpty() }
+                .mapValues { it.value.subscriptions }
     }
 
     @Throws(StorageException::class)
-    override fun setSubscription(id: String, newSubscription: Subscription) {
+    override fun addSubscription(id: String, newSubscription: Subscription) {
         val key = "id"
-        storageStub.put(
-                key,
-                storageStub[key]
-                        ?.copy(subscription = newSubscription)
-                        ?:
-                        UserPreferences(
-                                getBaseCurrency(id),
-                                getTargetCurrency(id),
-                                getExchangeApi(id),
-                                getLocale(id),
-                                newSubscription
-                        )
+        val userPreferences = storageStub[key]
+        val newPreference = addSubscriptionToExistingPreference(userPreferences, newSubscription)
+                ?: createPreference(id, newSubscription)
+
+        storageStub.put(key, newPreference)
+
+        observers.forEach { it?.invoke(newPreference) }
+    }
+
+    private fun addSubscriptionToExistingPreference(userPreferences: UserPreferences?, newSubscription: Subscription): UserPreferences? {
+        if (userPreferences == null) {
+            return null
+        }
+
+        val existingSubscriptions = userPreferences.subscriptions
+
+        val newSubscriptionsList = existingSubscriptions + newSubscription
+
+        return userPreferences.copy(subscriptions = newSubscriptionsList)
+
+    }
+
+    private fun createPreference(id: String, newSubscription: Subscription): UserPreferences {
+        return UserPreferences(
+                getBaseCurrency(id),
+                getTargetCurrency(id),
+                getExchangeApi(id),
+                getLocale(id),
+                listOf(newSubscription)
         )
     }
 
+    override fun subscribeToUpdates(observer: (UserPreferences) -> Unit) {
+        observers.add(observer)
+    }
 
 }

@@ -6,6 +6,7 @@ import org.junit.Test
 import org.mockito.Mock
 import org.mockito.MockitoAnnotations
 import ru.justd.cryptobot.exchanges.ExchangeFacade
+import ru.justd.cryptobot.handler.subscribe.SubscribeHandler
 import ru.justd.cryptobot.persistance.Storage
 
 internal class CommandHandlerFacadeImplTest {
@@ -52,7 +53,24 @@ internal class CommandHandlerFacadeImplTest {
 
     @Test
     fun testFindPriceCommandHandlerWithSpecifiedBaseAndTargetAndExchange() {
-        assertThat(testInstance.createCommandHandler("userId",  "/price BTC Coinbase")).isExactlyInstanceOf(PriceCommandHandler::class.java)
+        val commandHandler = testInstance.createCommandHandler("userId", "/price BTC USD Coinbase")
+        assertThat(commandHandler).isExactlyInstanceOf(PriceCommandHandler::class.java)
+
+        val priceHandler = commandHandler as PriceCommandHandler
+        assertThat(priceHandler.base).isEqualTo("BTC")
+        assertThat(priceHandler.target).isEqualTo("USD")
+        assertThat(priceHandler.exchange).isEqualTo("Coinbase")
+    }
+
+    @Test
+    fun `test find subscribe handler providing base`() {
+        val commandHandler = testInstance.createCommandHandler("userId", "/subscribe BTC USD Coinbase")
+        assertThat(commandHandler).isExactlyInstanceOf(SubscribeHandler::class.java)
+
+        val priceHandler = commandHandler as SubscribeHandler
+        assertThat(priceHandler.base).isEqualTo("BTC")
+        assertThat(priceHandler.target).isEqualTo("USD")
+        assertThat(priceHandler.exchange).isEqualTo("Coinbase")
     }
 
 

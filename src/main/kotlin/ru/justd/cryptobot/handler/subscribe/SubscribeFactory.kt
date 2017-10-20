@@ -2,6 +2,7 @@ package ru.justd.cryptobot.handler.subscribe
 
 import ru.justd.cryptobot.handler.Command
 import ru.justd.cryptobot.handler.CommandHandlerFactory
+import ru.justd.cryptobot.handler.exceptions.InvalidCommand
 import ru.justd.cryptobot.persistance.Storage
 
 private const val ARG_INDEX_BASE = 0
@@ -14,20 +15,22 @@ class SubscribeFactory : CommandHandlerFactory<SubscribeHandler> {
     lateinit var message: String
     lateinit var id: String
 
+    @Throws(InvalidCommand::class)
     override fun create(): SubscribeHandler {
         println("SubscribeHandler#create $message")
-        return SubscribeHandler(
-                id,
-                storage,
-                retrieveArg(ARG_INDEX_BASE),
-                retrieveArg(ARG_INDEX_TARGET),
-                retrieveArg(ARG_INDEX_EXCHANGE)
-        )
+
+        val base = retrieveArg(ARG_INDEX_BASE)
+        val target = retrieveArg(ARG_INDEX_TARGET)
+        if (base == null || target == null){
+            throw InvalidCommand("/subscribe must be followed by BASE")
+        }
+
+        return SubscribeHandler(id, storage, base, target, retrieveArg(ARG_INDEX_EXCHANGE))
     }
 
     private fun retrieveArg(index: Int): String? { //todo this is the same as PriceFactory
         val args = message
-                .replace(Command.PRICE.scheme, "")
+                .replace(Command.SUBSCRIBE.scheme, "")
                 .trim()
                 .split(" ")
 
