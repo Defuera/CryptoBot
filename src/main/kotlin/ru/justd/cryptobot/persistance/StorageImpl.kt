@@ -1,17 +1,20 @@
 package ru.justd.cryptobot.persistance
 
+import io.reactivex.Observable
+import io.reactivex.subjects.BehaviorSubject
 import ru.justd.cryptobot.exchanges.gdax.GdaxApi
 import ru.justd.cryptobot.handler.subscribe.StorageException
+import ru.justd.cryptobot.publisher.Update
 import java.util.*
 
-class StorageImpl constructor(val storageDataSource : HashMap<String, UserPreferences>): Storage {
+class StorageImpl constructor(val storageDataSource: HashMap<String, UserPreferences>) : Storage {
 
     private val DEFAULT_BASE = "BTC"
     private val DEFAULT_TARGET = "USD"
     private val DEFAULT_EXCHAGE = GdaxApi.NAME
     private val DEFAULT_LOCALE = Locale.getDefault() //todo
 
-    val observers = MutableList<((UserPreferences) -> Unit)?>(0, { null }) //todo rxify
+    private val updateSubject = BehaviorSubject.create<Update>()
 
     override fun getBaseCurrency(id: String) = storageDataSource[id]?.base ?: DEFAULT_BASE
 
@@ -48,8 +51,7 @@ class StorageImpl constructor(val storageDataSource : HashMap<String, UserPrefer
                 ?: createPreference(userId, newSubscription)
 
         storageDataSource.put(userId, newPreference)
-
-        observers.forEach { it?.invoke(newPreference) }
+        updateSubject.onNext(Update(userId, newPreference))
     }
 
     private fun addSubscriptionToExistingPreference(userPreferences: UserPreferences?, newSubscription: Subscription): UserPreferences? {
@@ -75,8 +77,6 @@ class StorageImpl constructor(val storageDataSource : HashMap<String, UserPrefer
         )
     }
 
-    override fun subscribeToUpdates(observer: (UserPreferences) -> Unit) {
-        observers.add(observer)
-    }
+    override fun observeUpdates(): Observable<Update> = this.updateSubject
 
 }

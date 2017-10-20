@@ -17,7 +17,6 @@ internal class StorageImplTest {
     private val EXCHANGE_GDAX = GdaxApi.NAME
     private val EXCHANGE_CRYPTONATOR = CryptonatorApi.NAME
 
-
     val testInstance = StorageImpl(HashMap())
 
     @Test

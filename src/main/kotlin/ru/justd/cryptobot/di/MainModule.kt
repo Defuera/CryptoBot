@@ -5,8 +5,8 @@ import com.pengrad.telegrambot.TelegramBotAdapter
 import dagger.Module
 import dagger.Provides
 import ru.justd.cryptobot.BuildConfig
-import ru.justd.cryptobot.Publisher
-import ru.justd.cryptobot.PublisherImpl
+import ru.justd.cryptobot.publisher.Publisher
+import ru.justd.cryptobot.publisher.PublisherImpl
 import ru.justd.cryptobot.exchanges.ExchangeFacade
 import ru.justd.cryptobot.handler.CommandHandlerFacade
 import ru.justd.cryptobot.handler.CommandHandlerFacadeImpl

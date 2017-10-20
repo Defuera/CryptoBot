@@ -1,44 +1,46 @@
-package ru.justd.cryptobot
+package ru.justd.cryptobot.publisher
 
 import com.pengrad.telegrambot.TelegramBot
 import com.pengrad.telegrambot.model.request.ParseMode
 import com.pengrad.telegrambot.request.SendMessage
+import ru.justd.cryptobot.TelegramCryptAdviser
 import ru.justd.cryptobot.exchanges.ExchangeFacade
 import ru.justd.cryptobot.exchanges.RateResponse
 import ru.justd.cryptobot.exchanges.exceptions.ExchangeNotSupported
 import ru.justd.cryptobot.exchanges.exceptions.RequestFailed
 import ru.justd.cryptobot.persistance.Storage
+import ru.justd.cryptobot.persistance.Subscription
 
 class PublisherImpl(
         private val telegramBot: TelegramBot,
         private val exchangeFacade: ExchangeFacade,
-        private val storage: Storage
+        storage: Storage
 ) : Publisher {
 
-    //todo onUserPreferencesUpdate should be restarted
     init {
-        run()
-        storage.subscribeToUpdates { userPreferences -> run() } //todo
+        val observeUpdates = storage.observeUpdates()
+        observeUpdates
+                .subscribe(
+                        { update ->
+                            val preferences = update.userPreferences
+                            preferences.subscriptions.forEach {
+                                initWorker(update.userId, it)
+                            }
+                        }
+                )
     }
 
-    private fun run() {
-
-        val subscriptionsByChatId = storage.getSubscriptionsByChatId()
-        subscriptionsByChatId.forEach { chatId, subscriptions ->
-            val subscription = subscriptions[0] //todo learn to make batch calls
-            Thread(Runnable {
-                print("new thread started")
-                val response = exchangeFacade.getRate(subscription.base, subscription.target, subscription.exchange)
-                publishUpdate(chatId, response)
-                Thread.sleep(5 * 1000)
-            }).start()
-
-        }
-
+    private fun initWorker(channelId: String, subscription: Subscription) {
+        Thread(Runnable {
+            print("new thread started")
+            val response = exchangeFacade.getRate(subscription.base, subscription.target, subscription.exchange)
+            publishUpdate(channelId, response)
+            Thread.sleep(subscription.periodicityMins)
+        }).start()
     }
 
-    fun publishUpdate(chatId: String, rate: RateResponse) {
-        sendMessage(chatId.toLong(), createMessage(rate))
+    private fun publishUpdate(channelId: String, rate: RateResponse) {
+        sendMessage(channelId.toLong(), createMessage(rate))
     }
 
     private fun createMessage(rate: RateResponse): String { //todo this is copied from PriceHandler

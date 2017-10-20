@@ -14,6 +14,7 @@ import ru.justd.cryptobot.handler.Command
 import ru.justd.cryptobot.handler.CommandHandlerFacade
 import ru.justd.cryptobot.handler.kill.KillCommandHandler
 import ru.justd.cryptobot.handler.kill.ShutdownException
+import ru.justd.cryptobot.publisher.Publisher
 import java.io.IOException
 import java.util.*
 import javax.inject.Inject
