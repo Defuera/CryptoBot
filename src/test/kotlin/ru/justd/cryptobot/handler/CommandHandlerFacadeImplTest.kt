@@ -25,7 +25,6 @@ internal class CommandHandlerFacadeImplTest {
         testInstance = CommandHandlerFacadeImpl(exchangeFacade, storage)
     }
 
-
     @Test
     fun testFindHelpCommandHandler() {
         assertThat(testInstance.createCommandHandler("userId", "/help")).isEqualTo(HelpCommandHandler)
