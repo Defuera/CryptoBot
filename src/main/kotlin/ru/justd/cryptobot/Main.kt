@@ -40,15 +40,10 @@ class TelegramCryptAdviser : CryptAdviser {
     @Inject
     lateinit var commandHandlerFacade: CommandHandlerFacade
 
-    @Inject
-    lateinit var publisher: Publisher
-
     init {
         val mainComponent = DaggerMainComponent.builder().build()
         mainComponent.inject(this)
-        println("publisher $publisher")
     }
-
 
     fun run() {
         println("CryptoBot started 2")

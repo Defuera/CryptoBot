@@ -56,7 +56,7 @@ internal class PublisherImplTest {
                         "target",
                         "exchange",
                         Locale.CANADA,
-                        listOf(Subscription(base, target, exchange, 0))
+                        listOf(Subscription(base, target, exchange, 200))
                 )
         ))
 
