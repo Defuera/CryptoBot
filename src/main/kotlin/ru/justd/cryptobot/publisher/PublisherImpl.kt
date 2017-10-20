@@ -35,7 +35,8 @@ class PublisherImpl(
             print("new thread started")
             val response = exchangeFacade.getRate(subscription.base, subscription.target, subscription.exchange)
             publishUpdate(channelId, response)
-            Thread.sleep(subscription.periodicityMins)
+            Thread.sleep(subscription.periodicityMins * 1000 * 60)
+            initWorker(channelId, subscription)
         }).start()
     }
 

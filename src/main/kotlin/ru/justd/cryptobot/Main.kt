@@ -12,6 +12,7 @@ import com.pengrad.telegrambot.response.SendResponse
 import ru.justd.cryptobot.di.DaggerMainComponent
 import ru.justd.cryptobot.handler.Command
 import ru.justd.cryptobot.handler.CommandHandlerFacade
+import ru.justd.cryptobot.handler.exceptions.InvalidCommand
 import ru.justd.cryptobot.handler.kill.KillCommandHandler
 import ru.justd.cryptobot.handler.kill.ShutdownException
 import ru.justd.cryptobot.publisher.Publisher
@@ -99,9 +100,13 @@ class TelegramCryptAdviser : CryptAdviser {
 
     override fun handleCommand(userId: String, requestMessage: String): String {
         println("commandHandlerFacade $commandHandlerFacade")
-        return commandHandlerFacade
-                .createCommandHandler(userId, requestMessage)
-                .responseMessage()
+        return try {
+            commandHandlerFacade
+                    .createCommandHandler(userId, requestMessage)
+                    .responseMessage()
+        } catch (ex : InvalidCommand){
+            ex.message
+        }
     }
 
     override fun publishUpdate() {

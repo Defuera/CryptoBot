@@ -22,7 +22,7 @@ class SubscribeFactory : CommandHandlerFactory<SubscribeHandler> {
         val base = retrieveArg(ARG_INDEX_BASE)
         val target = retrieveArg(ARG_INDEX_TARGET)
         if (base == null || target == null){
-            throw InvalidCommand("/subscribe must be followed by BASE")
+            throw InvalidCommand("Invalid format, please try `/subscribe BASE TARGER {EXCHANGE}`")
         }
 
         return SubscribeHandler(id, storage, base, target, retrieveArg(ARG_INDEX_EXCHANGE))

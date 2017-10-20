@@ -45,7 +45,7 @@ class StorageImpl constructor(val storageDataSource: HashMap<String, UserPrefere
     }
 
     @Throws(StorageException::class)
-    override fun addSubscription(userId: String, newSubscription: Subscription) {
+    override fun addSubscription(userId: String, newSubscription: Subscription) { //todo check if already exists, if so - modify
         val userPreferences = storageDataSource[userId]
         val newPreference = addSubscriptionToExistingPreference(userPreferences, newSubscription)
                 ?: createPreference(userId, newSubscription)
