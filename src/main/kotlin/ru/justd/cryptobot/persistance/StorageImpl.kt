@@ -37,13 +37,7 @@ class StorageImpl constructor(val storageDataSource: HashMap<String, UserPrefere
     }
 
     override fun getSubscriptions(id: String): List<Subscription>? = storageDataSource[id]?.subscriptions
-
-    override fun getSubscriptionsByChatId(): Map<String, List<Subscription>> {
-        return storageDataSource
-                .filterValues { it.subscriptions.isNotEmpty() }
-                .mapValues { it.value.subscriptions }
-    }
-
+    
     @Throws(StorageException::class)
     override fun addSubscription(userId: String, newSubscription: Subscription) { //todo check if already exists, if so - modify
         val userPreferences = storageDataSource[userId]

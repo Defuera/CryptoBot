@@ -57,7 +57,7 @@ internal class SubscribeTest {
     }
 
     @Test
-    fun `test subscribe btc usd gdax`() {
+    fun `test subscribe btc usd gdax`() { //todo not working because of asynchronousy
         //action
         val response = testInstance.handleCommand(userId, "/subscribe $BASE_LTC $TARGET_GBP $EXCHANGE_GDAX")
 

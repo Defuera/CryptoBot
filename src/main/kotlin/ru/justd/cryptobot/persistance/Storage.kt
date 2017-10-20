@@ -24,8 +24,6 @@ interface Storage { //todo add removeSubscription
 
     fun getSubscriptions(id: String): List<Subscription>?
 
-    fun getSubscriptionsByChatId(): Map<String, List<Subscription>>
-
     fun addSubscription(id: String, newSubscription: Subscription)
 
     fun observeUpdates(): Observable<Update>

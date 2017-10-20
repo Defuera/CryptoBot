@@ -1,4 +1,6 @@
 package ru.justd.cryptobot.publisher
 
-interface Publisher {
-}
+/**
+ * Publish updates for users created subscriptions
+ */
+interface Publisher
