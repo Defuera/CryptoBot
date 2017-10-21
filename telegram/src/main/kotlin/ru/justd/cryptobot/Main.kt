@@ -32,6 +32,7 @@ class TelegramCryptAdviser {
     lateinit var messageSender: MessageSender
 
     fun run() {
+        println("TelegramCryptAdviser started, id: ${Bullshit.INSTANCE_ID}")
         inject()
         initMessageSender()
         initMessageReceiver()

@@ -1,6 +1,7 @@
 package ru.justd.cryptobot.handler
 
 import ru.justd.cryptobot.exchanges.ExchangeFacade
+import ru.justd.cryptobot.handler.exceptions.InvalidCommand
 import ru.justd.cryptobot.handler.subscribe.SubscribeFactory
 import ru.justd.cryptobot.handler.kill.KillCommandHandlerFactory
 import ru.justd.cryptobot.persistance.Storage
@@ -10,6 +11,7 @@ class CommandHandlerFacadeImpl( //todo it seems like this is an object (kotlin s
         private val store: Storage
 ) : CommandHandlerFacade {
 
+    @Throws(InvalidCommand::class)
     override fun createCommandHandler(channelId: String, requestMessage: String): CommandHandler {
         val factory = findCommandHandlerFactory(requestMessage)
 

@@ -7,25 +7,25 @@ import java.util.*
 
 interface Storage { //todo add removeSubscription
 
-    fun getBaseCurrency(id: String): String
+    fun getBaseCurrency(channelId: String): String
 
-    fun setBaseCurrency(id: String, base: String)
+    fun setBaseCurrency(channelId: String, base: String)
 
-    fun getTargetCurrency(id: String): String
+    fun getTargetCurrency(channelId: String): String
 
-    fun setTargetCurrency(id: String, base: String)
+    fun setTargetCurrency(channelId: String, base: String)
 
-    fun getExchangeApi(id: String): String
+    fun getExchangeApi(channelId: String): String
 
-    fun setExchangeApi(id: String, exchangeApiName: String)
+    fun setExchangeApi(channelId: String, exchangeApiName: String)
 
-    fun getLocale(id: String): Locale
+    fun getLocale(channelId: String): Locale
 
-    fun setLocale(id: String, locale: Locale)
+    fun setLocale(channelId: String, locale: Locale)
 
-    fun getSubscriptions(id: String): List<Subscription>?
+    fun getSubscriptions(channelId: String): List<Subscription>?
 
-    fun addSubscription(id: String, newSubscription: Subscription)
+    fun addSubscription(channelId: String, newSubscription: Subscription)
 
     fun observeUpdates(): Observable<Update>
 

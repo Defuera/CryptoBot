@@ -7,6 +7,7 @@ import com.pengrad.telegrambot.model.Update
 import ru.justd.cryptobot.handler.Command
 import ru.justd.cryptobot.handler.CommandHandler
 import ru.justd.cryptobot.handler.CommandHandlerFacade
+import ru.justd.cryptobot.handler.exceptions.InvalidCommand
 
 class MessageReceiver(
         private val commandHandlerFacade: CommandHandlerFacade
@@ -54,8 +55,13 @@ class MessageReceiver(
 
     private fun handleBotCommand(message: Message) { //todo cover with integration test
         val chatId = message.chat().id()
-        val handler = commandHandlerFacade.createCommandHandler(chatId.toString(), message.text())
-        onProcessListener?.invoke(chatId, handler)
+        try {
+            val handler = commandHandlerFacade.createCommandHandler(chatId.toString(), message.text())
+            onProcessListener?.invoke(chatId, handler)
+        } catch (ex : InvalidCommand){
+//            onProcessListener?.invoke(chatId, handler)
+            //todo send error message
+        }
     }
 
     //todo is there's better way to detect, that telegramBot just been added to a channel/group?
