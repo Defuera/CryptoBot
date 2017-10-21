@@ -4,6 +4,7 @@ import org.assertj.core.api.Assertions.assertThat
 import org.junit.Test
 import ru.justd.cryptobot.exchanges.cryptonator.CryptonatorApi
 import ru.justd.cryptobot.exchanges.gdax.GdaxApi
+import ru.justd.cryptobot.handler.subscribe.Subscription
 
 
 internal class StorageImplTest {

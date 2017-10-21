@@ -1,6 +1,7 @@
 package ru.justd.cryptobot.persistance
 
 import io.reactivex.Observable
+import ru.justd.cryptobot.handler.subscribe.Subscription
 import ru.justd.cryptobot.publisher.Update
 import java.util.*
 

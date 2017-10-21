@@ -53,8 +53,9 @@ class MessageReceiver(
     }
 
     private fun handleBotCommand(message: Message) { //todo cover with integration test
-        val handler = commandHandlerFacade.createCommandHandler(message.text())
-        onProcessListener?.invoke(message.chat().id(), handler)
+        val chatId = message.chat().id()
+        val handler = commandHandlerFacade.createCommandHandler(chatId.toString(), message.text())
+        onProcessListener?.invoke(chatId, handler)
     }
 
     //todo is there's better way to detect, that telegramBot just been added to a channel/group?

@@ -4,6 +4,7 @@ import io.reactivex.Observable
 import io.reactivex.subjects.BehaviorSubject
 import ru.justd.cryptobot.exchanges.gdax.GdaxApi
 import ru.justd.cryptobot.handler.subscribe.StorageException
+import ru.justd.cryptobot.handler.subscribe.Subscription
 import ru.justd.cryptobot.publisher.Update
 import java.util.*
 
@@ -37,15 +38,15 @@ class StorageImpl constructor(val storageDataSource: HashMap<String, UserPrefere
     }
 
     override fun getSubscriptions(id: String): List<Subscription>? = storageDataSource[id]?.subscriptions
-    
-    @Throws(StorageException::class)
-    override fun addSubscription(userId: String, newSubscription: Subscription) { //todo check if already exists, if so - modify
-        val userPreferences = storageDataSource[userId]
-        val newPreference = addSubscriptionToExistingPreference(userPreferences, newSubscription)
-                ?: createPreference(userId, newSubscription)
 
-        storageDataSource.put(userId, newPreference)
-        updateSubject.onNext(Update(userId, newPreference))
+    @Throws(StorageException::class)
+    override fun addSubscription(channelId: String, newSubscription: Subscription) { //todo check if already exists, if so - modify
+        val userPreferences = storageDataSource[channelId]
+        val newPreference = addSubscriptionToExistingPreference(userPreferences, newSubscription)
+                ?: createPreference(channelId, newSubscription)
+
+        storageDataSource.put(channelId, newPreference)
+        updateSubject.onNext(Update(channelId, newPreference))
     }
 
     private fun addSubscriptionToExistingPreference(userPreferences: UserPreferences?, newSubscription: Subscription): UserPreferences? {

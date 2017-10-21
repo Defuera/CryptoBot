@@ -5,11 +5,13 @@ import com.pengrad.telegrambot.UpdatesListener.CONFIRMED_UPDATES_ALL
 import com.pengrad.telegrambot.model.Update
 import kotlinx.coroutines.experimental.launch
 import ru.justd.cryptobot.di.DaggerMainComponent
+import ru.justd.cryptobot.di.MainModule
 import ru.justd.cryptobot.handler.kill.KillCommandHandler
 import ru.justd.cryptobot.handler.kill.ShutdownException
+import ru.justd.cryptobot.messanger.model.OutgoingMessage
 import ru.justd.cryptobot.messenger.MessageReceiver
 import ru.justd.cryptobot.messenger.MessageSender
-import ru.justd.cryptobot.messaging.model.OutgoingMessage
+import ru.justd.cryptobot.messenger.MessengerImpl
 import javax.inject.Inject
 
 
@@ -29,12 +31,6 @@ class TelegramCryptAdviser {
     @Inject
     lateinit var messageSender: MessageSender
 
-    init {
-        val mainComponent = DaggerMainComponent.builder().build()
-        mainComponent.inject(this)
-    }
-
-
     fun run() {
         inject()
         initMessageSender()
@@ -42,10 +38,15 @@ class TelegramCryptAdviser {
     }
 
     private fun inject() {
+        val messenger = MessengerImpl()
         DaggerMainComponent
                 .builder()
+                .mainModule(MainModule(messenger))
                 .build()
                 .inject(this)
+
+        messenger.messageSender = messageSender
+        messenger.messageReceiver = messageReceiver
     }
 
     private fun initMessageSender() {

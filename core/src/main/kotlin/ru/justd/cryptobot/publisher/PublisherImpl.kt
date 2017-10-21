@@ -1,18 +1,16 @@
 package ru.justd.cryptobot.publisher
 
-import com.pengrad.telegrambot.TelegramBot
-import com.pengrad.telegrambot.model.request.ParseMode
-import com.pengrad.telegrambot.request.SendMessage
-import ru.justd.cryptobot.TelegramCryptAdviser
+
 import ru.justd.cryptobot.exchanges.ExchangeFacade
 import ru.justd.cryptobot.exchanges.RateResponse
 import ru.justd.cryptobot.exchanges.exceptions.ExchangeNotSupported
 import ru.justd.cryptobot.exchanges.exceptions.RequestFailed
+import ru.justd.cryptobot.messanger.Messenger
 import ru.justd.cryptobot.persistance.Storage
-import ru.justd.cryptobot.persistance.Subscription
+import ru.justd.cryptobot.handler.subscribe.Subscription
 
 class PublisherImpl(
-        private val telegramBot: TelegramBot,
+        private val messenger: Messenger,
         private val exchangeFacade: ExchangeFacade,
         storage: Storage
 ) : Publisher {
@@ -41,7 +39,7 @@ class PublisherImpl(
     }
 
     private fun publishUpdate(channelId: String, rate: RateResponse) {
-        sendMessage(channelId.toLong(), createMessage(rate))
+        sendMessage(channelId, createMessage(rate))
     }
 
     private fun createMessage(rate: RateResponse): String { //todo this is copied from PriceHandler
@@ -56,14 +54,8 @@ class PublisherImpl(
     }
 
 
-    private fun sendMessage(chatId: Long, outgoingMessage: String) {
-        println("send message...")
-        telegramBot.execute(SendMessage(chatId, createOutgoingMessage(outgoingMessage)).parseMode(ParseMode.Markdown))
+    private fun sendMessage(channelId: String, outgoingMessage: String) {
+        messenger.sendMessage(channelId, outgoingMessage)
     }
-
-
-    private fun createOutgoingMessage(message: String) =
-            "*${TelegramCryptAdviser.INSTANCE_ID}*\n\n$message"
-
 
 }

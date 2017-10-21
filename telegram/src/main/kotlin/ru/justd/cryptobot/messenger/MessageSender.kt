@@ -2,13 +2,16 @@ package ru.justd.cryptobot.messenger
 
 import com.pengrad.telegrambot.Callback
 import com.pengrad.telegrambot.TelegramBot
-import com.pengrad.telegrambot.model.request.*
+import com.pengrad.telegrambot.model.request.InlineKeyboardButton
+import com.pengrad.telegrambot.model.request.InlineKeyboardMarkup
+import com.pengrad.telegrambot.model.request.Keyboard
+import com.pengrad.telegrambot.model.request.ParseMode
 import com.pengrad.telegrambot.request.SendMessage
 import com.pengrad.telegrambot.response.SendResponse
 import ru.justd.cryptobot.Bullshit
 import ru.justd.cryptobot.adapter.MessageAdapter
 import ru.justd.cryptobot.handler.CommandHandler
-import ru.justd.cryptobot.messaging.model.OutgoingMessage
+import ru.justd.cryptobot.messanger.model.OutgoingMessage
 import ru.justd.cryptobot.messenger.model.AnswerCase
 import ru.justd.cryptobot.messenger.model.Message
 import java.io.IOException

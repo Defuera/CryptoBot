@@ -1,9 +1,9 @@
 package ru.justd.cryptobot.di
 
+import com.nhaarman.mockito_kotlin.mock
 import dagger.Module
 import dagger.Provides
 import okhttp3.OkHttpClient
-import okhttp3.logging.HttpLoggingInterceptor
 import org.mockito.Mockito
 import ru.justd.cryptobot.exchanges.ExchangeApi
 import ru.justd.cryptobot.exchanges.ExchangeFacade
@@ -26,30 +26,27 @@ class ExchangeApiModule {
 
     @Provides
     @Singleton
-    fun provideOkHttpClient(): OkHttpClient =
-            OkHttpClient.Builder()
-                    .addInterceptor(HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BODY))
-                    .build()
+    fun provideOkHttpClient() = mock<OkHttpClient>()
 
     @Provides
     @Singleton
     @Named(GdaxApi.NAME)
-    fun provideGdaxApi(okHttpClient: OkHttpClient): ExchangeApi = GdaxApi(okHttpClient)
+    fun provideGdaxApi(okHttpClient: OkHttpClient) = mock<ExchangeApi>()
 
     @Provides
     @Singleton
     @Named(CoinbaseApi.NAME)
-    fun provideCoinbaseApi(okHttpClient: OkHttpClient): ExchangeApi = CoinbaseApi(okHttpClient)
+    fun provideCoinbaseApi(okHttpClient: OkHttpClient) = mock<ExchangeApi>()
 
     @Provides
     @Singleton
     @Named(CryptonatorApi.NAME)
-    fun provideCryptonator(okHttpClient: OkHttpClient): ExchangeApi = CryptonatorApi(okHttpClient)
+    fun provideCryptonator(okHttpClient: OkHttpClient) = mock<ExchangeApi>()
 
     @Provides
     @Singleton
     @Named(BitfinexApi.NAME)
-    fun provideBitfinexApi(okHttpClient: OkHttpClient): ExchangeApi = BitfinexApi(okHttpClient)
+    fun provideBitfinexApi(okHttpClient: OkHttpClient) = mock<ExchangeApi>()
 
     @Provides
     @Singleton

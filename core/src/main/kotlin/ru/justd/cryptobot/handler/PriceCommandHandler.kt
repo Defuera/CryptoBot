@@ -3,7 +3,7 @@ package ru.justd.cryptobot.handler
 import ru.justd.cryptobot.exchanges.ExchangeFacade
 import ru.justd.cryptobot.exchanges.exceptions.ExchangeNotSupported
 import ru.justd.cryptobot.exchanges.exceptions.RequestFailed
-import ru.justd.cryptobot.messaging.model.OutgoingMessage
+import ru.justd.cryptobot.messanger.model.OutgoingMessage
 
 class PriceCommandHandler constructor(
         private val exchangeFacade: ExchangeFacade,

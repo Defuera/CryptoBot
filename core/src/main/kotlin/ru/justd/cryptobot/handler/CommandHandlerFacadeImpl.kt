@@ -10,7 +10,7 @@ class CommandHandlerFacadeImpl( //todo it seems like this is an object (kotlin s
         private val store: Storage
 ) : CommandHandlerFacade {
 
-    override fun createCommandHandler(userId: String, requestMessage: String): CommandHandler {
+    override fun createCommandHandler(channelId: String, requestMessage: String): CommandHandler {
         val factory = findCommandHandlerFactory(requestMessage)
 
         return when (factory) {
@@ -27,7 +27,7 @@ class CommandHandlerFacadeImpl( //todo it seems like this is an object (kotlin s
                     .apply {
                         message = requestMessage
                         this.storage = store
-                        this.id = userId
+                        this.id = channelId
                     }
                     .create()
             is InstantFactory<*> -> factory.create()

@@ -1,5 +1,6 @@
 package ru.justd.cryptobot.persistance
 
+import ru.justd.cryptobot.handler.subscribe.Subscription
 import java.util.*
 
 data class UserPreferences constructor(

@@ -1,4 +1,4 @@
-package ru.justd.cryptobot.persistance
+package ru.justd.cryptobot.handler.subscribe
 
 data class Subscription (
         val base: String,

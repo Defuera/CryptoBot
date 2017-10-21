@@ -1,8 +1,8 @@
 package ru.justd.cryptobot.adapter
 
 import ru.justd.cryptobot.handler.update.UpdateCase
-import ru.justd.cryptobot.messaging.model.OutgoingMessage
-import ru.justd.cryptobot.messaging.model.ResponseCase
+import ru.justd.cryptobot.messanger.model.OutgoingMessage
+import ru.justd.cryptobot.messanger.model.ResponseCase
 import ru.justd.cryptobot.messenger.model.AnswerCase
 import ru.justd.cryptobot.messenger.model.Message
 import ru.justd.cryptobot.messenger.model.UpdateCaseMapper
