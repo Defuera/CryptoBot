@@ -6,7 +6,6 @@ import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.Mock
-import org.mockito.Mockito.whenever
 import org.mockito.MockitoAnnotations
 import org.mockito.junit.MockitoJUnitRunner
 import ru.justd.cryptobot.exchanges.ExchangeFacade
@@ -41,7 +40,7 @@ class PriceCommandHandlerTest {
         val message = PriceCommandHandler(exchangeFacade, base, null, null).responseMessage()
 
         //assert
-        assertThat(message).matches(patternForPair(base, "USD"))
+        assertThat(message.text).matches(patternForPair(base, "USD"))
     }
 
     @Test
@@ -55,7 +54,7 @@ class PriceCommandHandlerTest {
         val message = PriceCommandHandler(exchangeFacade, base, target, null).responseMessage()
 
         //assert
-        assertThat(message).matches(patternForPair(base, target))
+        assertThat(message.text).matches(patternForPair(base, target))
     }
 
     private fun patternForPair(base: String, target: String) = Regex("$base price is $FLOAT_REGEX $target").toPattern()
@@ -73,7 +72,7 @@ class PriceCommandHandlerTest {
         val message = PriceCommandHandler(exchangeFacade, base, target, invalidExchange).responseMessage()
 
         //assert
-        assertThat(message).isEqualTo("$invalidExchange exchange not supported")
+        assertThat(message.text).isEqualTo("$invalidExchange exchange not supported")
     }
 
 }
