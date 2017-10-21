@@ -1,6 +1,6 @@
 package ru.justd.cryptobot.handler
 
-import ru.justd.cryptobot.messanger.model.OutgoingMessage
+import ru.justd.cryptobot.messenger.model.OutgoingMessage
 
 internal object HelpCommandHandler : CommandHandler {
 

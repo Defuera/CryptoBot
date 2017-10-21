@@ -1,6 +1,6 @@
 package ru.justd.cryptobot.handler.update
 
-import ru.justd.cryptobot.messanger.model.ResponseCase
+import ru.justd.cryptobot.messenger.model.ResponseCase
 
 enum class UpdateCase: ResponseCase {
 

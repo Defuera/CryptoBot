@@ -8,7 +8,7 @@ import ru.justd.cryptobot.BuildConfig
 import ru.justd.cryptobot.exchanges.ExchangeFacade
 import ru.justd.cryptobot.handler.CommandHandlerFacade
 import ru.justd.cryptobot.handler.CommandHandlerFacadeImpl
-import ru.justd.cryptobot.messanger.Messenger
+import ru.justd.cryptobot.messenger.Messenger
 import ru.justd.cryptobot.messenger.MessageReceiver
 import ru.justd.cryptobot.messenger.MessageSender
 import ru.justd.cryptobot.persistance.Storage

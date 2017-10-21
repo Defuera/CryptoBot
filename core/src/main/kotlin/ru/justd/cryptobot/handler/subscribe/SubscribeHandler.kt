@@ -1,7 +1,7 @@
 package ru.justd.cryptobot.handler.subscribe
 
 import ru.justd.cryptobot.handler.CommandHandler
-import ru.justd.cryptobot.messanger.model.OutgoingMessage
+import ru.justd.cryptobot.messenger.model.OutgoingMessage
 import ru.justd.cryptobot.persistance.Storage
 
 

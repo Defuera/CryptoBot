@@ -11,7 +11,7 @@ import com.pengrad.telegrambot.response.SendResponse
 import ru.justd.cryptobot.Bullshit
 import ru.justd.cryptobot.adapter.MessageAdapter
 import ru.justd.cryptobot.handler.CommandHandler
-import ru.justd.cryptobot.messanger.model.OutgoingMessage
+import ru.justd.cryptobot.messenger.model.OutgoingMessage
 import ru.justd.cryptobot.messenger.model.AnswerCase
 import ru.justd.cryptobot.messenger.model.Message
 import java.io.IOException

@@ -8,7 +8,7 @@ import ru.justd.cryptobot.di.DaggerMainComponent
 import ru.justd.cryptobot.di.MainModule
 import ru.justd.cryptobot.handler.kill.KillCommandHandler
 import ru.justd.cryptobot.handler.kill.ShutdownException
-import ru.justd.cryptobot.messanger.model.OutgoingMessage
+import ru.justd.cryptobot.messenger.model.OutgoingMessage
 import ru.justd.cryptobot.messenger.MessageReceiver
 import ru.justd.cryptobot.messenger.MessageSender
 import ru.justd.cryptobot.messenger.MessengerImpl

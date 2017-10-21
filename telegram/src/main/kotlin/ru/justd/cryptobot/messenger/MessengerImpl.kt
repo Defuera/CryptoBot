@@ -1,7 +1,6 @@
 package ru.justd.cryptobot.messenger
 
-import ru.justd.cryptobot.messanger.Messenger
-import ru.justd.cryptobot.messanger.model.OutgoingMessage
+import ru.justd.cryptobot.messenger.model.OutgoingMessage
 
 class MessengerImpl : Messenger {
     lateinit var messageReceiver: MessageReceiver
