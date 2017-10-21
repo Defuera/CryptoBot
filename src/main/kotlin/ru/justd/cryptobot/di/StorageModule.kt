@@ -4,6 +4,7 @@ import dagger.Module
 import dagger.Provides
 import ru.justd.cryptobot.persistance.Storage
 import ru.justd.cryptobot.persistance.StorageImpl
+import ru.justd.cryptobot.persistance.UserPreferences
 import javax.inject.Singleton
 
 @Module
@@ -11,6 +12,6 @@ class StorageModule {
 
     @Provides
     @Singleton
-    fun provideUserPreferences(): Storage = StorageImpl()
+    fun provideUserPreferences(): Storage = StorageImpl(HashMap())
 
 }

@@ -1,5 +1,7 @@
 package ru.justd.cryptobot.persistance
 
+import io.reactivex.Observable
+import ru.justd.cryptobot.publisher.Update
 import java.util.*
 
 interface Storage { //todo add removeSubscription
@@ -20,9 +22,10 @@ interface Storage { //todo add removeSubscription
 
     fun setLocale(id: String, locale: Locale)
 
-    fun getSubscription(id: String): Subscription?
+    fun getSubscriptions(id: String): List<Subscription>?
 
-    fun getSubscriptions(): List<Subscription>
+    fun addSubscription(id: String, newSubscription: Subscription)
 
-    fun setSubscription(id: String, newSubscription: Subscription)
+    fun observeUpdates(): Observable<Update>
+
 }
