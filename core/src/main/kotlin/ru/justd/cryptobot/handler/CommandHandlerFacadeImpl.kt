@@ -35,12 +35,12 @@ class CommandHandlerFacadeImpl( //todo it seems like this is an object (kotlin s
                     }
                     .create()
             is InstantFactory<*> -> factory.create()
-            else -> throw IllegalArgumentException("Unhandled subscribe $factory")
+            else -> throw IllegalArgumentException("Unhandled factory $factory")
         }
 
     }
 
-    private fun findCommandHandlerFactory(incomingMessage: String) = find(incomingMessage)?.factory() ?: InstantFactory(UnsupportedCommandHandler)
+    private fun findCommandHandlerFactory(incomingMessage: String) = find(incomingMessage)?.factory() ?: InstantFactory(UnsupportedCommandHandler) //todo remove UnsupportedCommandHandler, instead throw InvalidCommand Exception
 
     private fun find(incomingMessage: String): Command? = Command.values().firstOrNull { matches(it, incomingMessage) }
 

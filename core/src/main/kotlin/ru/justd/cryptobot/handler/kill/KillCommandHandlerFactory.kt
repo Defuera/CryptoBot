@@ -4,7 +4,7 @@ import ru.justd.cryptobot.Bullshit
 import ru.justd.cryptobot.handler.Command
 import ru.justd.cryptobot.handler.CommandHandlerFactory
 
-class KillCommandHandlerFactory : CommandHandlerFactory<KillCommandHandler> {
+class KillCommandHandlerFactory : CommandHandlerFactory<KillCommandHandler> { //todo move to telegram module
 
     lateinit var message: String
 
