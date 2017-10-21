@@ -44,7 +44,6 @@ class PublisherImpl(
 
     private fun createMessage(rate: RateResponse): String { //todo this is copied from PriceHandler
         return try {
-            //            val rate = exchangeFacade.getRate(base, target, exchange)
             "${rate.base} price is ${rate.amount} ${rate.target}"
         } catch (error: ExchangeNotSupported) {
             "${error.exchange} exchange not supported" //todo log to be aware what exchanges customers are waiting the most, localize
@@ -52,7 +51,6 @@ class PublisherImpl(
             error.message
         }.trim()
     }
-
 
     private fun sendMessage(channelId: String, outgoingMessage: String) {
         messenger.sendMessage(channelId, outgoingMessage)
