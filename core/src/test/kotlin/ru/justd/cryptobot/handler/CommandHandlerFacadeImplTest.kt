@@ -6,6 +6,9 @@ import org.junit.Test
 import org.mockito.Mock
 import org.mockito.MockitoAnnotations
 import ru.justd.cryptobot.exchanges.ExchangeFacade
+import ru.justd.cryptobot.handler.about.AboutCommandHandler
+import ru.justd.cryptobot.handler.help.HelpCommandHandler
+import ru.justd.cryptobot.handler.price.PriceCommandHandler
 import ru.justd.cryptobot.handler.update.UpdateCommandHandler
 import ru.justd.cryptobot.handler.subscribe.SubscribeHandler
 import ru.justd.cryptobot.persistance.Storage

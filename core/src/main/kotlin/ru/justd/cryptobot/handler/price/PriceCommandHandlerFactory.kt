@@ -1,6 +1,8 @@
-package ru.justd.cryptobot.handler
+package ru.justd.cryptobot.handler.price
 
 import ru.justd.cryptobot.exchanges.ExchangeFacade
+import ru.justd.cryptobot.handler.Command
+import ru.justd.cryptobot.handler.CommandHandlerFactory
 
 private const val ARG_INDEX_BASE = 0
 private const val ARG_INDEX_TARGET = 1

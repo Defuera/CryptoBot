@@ -1,6 +1,9 @@
 package ru.justd.cryptobot.handler
 
+import ru.justd.cryptobot.handler.about.AboutCommandHandler
+import ru.justd.cryptobot.handler.help.HelpCommandHandler
 import ru.justd.cryptobot.handler.kill.KillCommandHandlerFactory
+import ru.justd.cryptobot.handler.price.PriceCommandHandlerFactory
 import ru.justd.cryptobot.handler.update.UpdateCommandHandler
 import ru.justd.cryptobot.handler.subscribe.SubscribeFactory
 import java.util.*
