@@ -11,7 +11,7 @@ interface CryptAdviser {
      * If request cannot be handled error message will be returned, otherwise correspondent message
      * will be returnt as a response.
      */
-    fun handleCommand(requestMessage: String): String
+    fun handleCommand(userId: String, requestMessage: String): String
 
     fun publishUpdate()
 }

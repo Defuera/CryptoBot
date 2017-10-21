@@ -7,9 +7,9 @@ import ru.justd.cryptobot.messaging.model.OutgoingMessage
 
 class PriceCommandHandler constructor(
         private val exchangeFacade: ExchangeFacade,
-        private val base: String?,
-        private val target: String?,
-        private val exchange: String?
+        val base: String?,
+        val target: String?,
+        val exchange: String?
 ) : CommandHandler {
 
     override fun responseMessage(): OutgoingMessage {
