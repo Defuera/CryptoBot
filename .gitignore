@@ -9,6 +9,10 @@
 .idea
 .idea/*
 /out
+/core/build
+/core/out
+/telegram/build
+/telegram/out
 
 
 #Gradle files
