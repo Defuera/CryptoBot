@@ -31,8 +31,8 @@ class RequestProcessor(private val commandHandlerFacade: CommandHandlerFacade) {
                     toChannelId(message.chat().id()),
                     message.text()
             )
-        } catch (exception: InvalidCommand) {
-            exception.message
+        } catch (invalidCommand: InvalidCommand) {
+            invalidCommand.message
         }
     }
 

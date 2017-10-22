@@ -7,6 +7,8 @@ import com.pengrad.telegrambot.model.Update
 import kotlinx.coroutines.experimental.launch
 import ru.justd.cryptobot.di.MainModule
 import ru.justd.cryptobot.handler.CommandHandlerFacade
+import ru.justd.cryptobot.handler.KillCommandHandlerFactory
+import ru.justd.cryptobot.handler.ShutdownException
 import ru.justd.cryptobot.messenger.MessageSender
 import ru.justd.cryptobot.messenger.Messenger
 import ru.justd.cryptobot.messenger.RequestProcessor
@@ -27,6 +29,8 @@ class TelegramMessenger(private val uuid: String) : Messenger {
                 .mainModule(MainModule(this))
                 .build()
                 .inject(this)
+
+        commandHandlerFacade.addCommandHandler(KillCommandHandlerFactory(uuid))
     }
 
     fun run() {
@@ -44,7 +48,15 @@ class TelegramMessenger(private val uuid: String) : Messenger {
     private fun handleAsync(update: Update) {
         launch {
             val chatId = update.message().chat().id()
-            sendMessage(toChannelId(chatId), requestProcessor.process(update))
+
+            try {
+                sendMessage(toChannelId(chatId), requestProcessor.process(update))
+            } catch (shutdownException: ShutdownException) {
+                sendMessage(toChannelId(chatId), shutdownException.message)
+                telegramBot.removeGetUpdatesListener()
+                System.exit(0)
+            }
+
         }
     }
 

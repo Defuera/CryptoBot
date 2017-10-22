@@ -5,6 +5,12 @@ import dagger.Provides
 import ru.justd.cryptobot.exchanges.ExchangeFacade
 import ru.justd.cryptobot.handler.CommandHandlerFacade
 import ru.justd.cryptobot.handler.CommandHandlerFacadeImpl
+import ru.justd.cryptobot.handler.InstantFactory
+import ru.justd.cryptobot.handler.about.AboutCommandHandler
+import ru.justd.cryptobot.handler.help.HelpCommandHandler
+import ru.justd.cryptobot.handler.price.PriceCommandHandlerFactory
+import ru.justd.cryptobot.handler.subscribe.SubscribeFactory
+import ru.justd.cryptobot.handler.update.UpdateCommandHandler
 import ru.justd.cryptobot.messenger.Messenger
 import ru.justd.cryptobot.persistance.Storage
 import ru.justd.cryptobot.publisher.Publisher
@@ -23,7 +29,15 @@ class MainModule(val messenger: Messenger) {
     fun provideCommandHandlerFacade(
             exchangeFacade: ExchangeFacade,
             storage: Storage
-    ): CommandHandlerFacade = CommandHandlerFacadeImpl(exchangeFacade, storage)
+    ): CommandHandlerFacade = CommandHandlerFacadeImpl(
+            mutableListOf(
+                    InstantFactory("/about", AboutCommandHandler),
+                    InstantFactory("/help", HelpCommandHandler),
+                    InstantFactory("/update", UpdateCommandHandler),
+                    PriceCommandHandlerFactory(exchangeFacade),
+                    SubscribeFactory(storage)
+            )
+    )
 
     @Provides
     @Singleton

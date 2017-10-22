@@ -6,7 +6,15 @@ import ru.justd.cryptobot.exchanges.exceptions.RequestFailed
 import ru.justd.cryptobot.handler.CommandHandler
 import ru.justd.cryptobot.messenger.model.OutgoingMessage
 
-class PriceCommandHandler constructor(
+/**
+ * Allows user to retrieve cryptos price from supported exchanges.
+ *
+ * **Usage:** /price BASE TARGET EXCHANGE_CODE
+ * 1. BASE - requierd, crypto currency (BTC, ETH, LTC are supported by most exchanges)
+ * 1. TARGET - optional, fiat currency (most of exchanges support USD, EUR, GBP)
+ * 1. EXCHANGE_CODE - optional, as for now Gdax, Coinbase and Cryptonator exchanges are supported
+ */
+class PriceCommandHandler (
         private val exchangeFacade: ExchangeFacade,
         val base: String?,
         val target: String?,
