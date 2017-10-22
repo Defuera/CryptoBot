@@ -22,13 +22,15 @@ class TelegramMessenger(private val uuid: String) : Messenger {
     private val telegramBot: TelegramBot = TelegramBotAdapter.build(BuildConfig.BOT_TOKEN) //todo provide debug/production bot based on BuildType
     private val messageSender = MessageSender(uuid, telegramBot)
 
-    fun run() {
-        println("TelegramMessenger started, id: $uuid")
-
+    init {
         DaggerTelegramComponent.builder()
                 .mainModule(MainModule(this))
                 .build()
                 .inject(this)
+    }
+
+    fun run() {
+        println("TelegramMessenger started, id: $uuid")
 
         requestProcessor = RequestProcessor(commandHandlerFacade)
 

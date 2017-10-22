@@ -17,12 +17,15 @@ class RequestProcessor(private val commandHandlerFacade: CommandHandlerFacade) {
                 MessageEntity.Type.bot_command -> handleBotCommand(message)
                 else -> "message type not supported ${entity.type()}"
             }
+        } else if (isBotAddedToChannel(message)) {
+            //greeting message
+            commandHandlerFacade.handle(toChannelId(message.chat().id()), "/help")
         } else {
             "message with no entities not supported"
         }
     }
 
-    private fun handleBotCommand(message: Message): String { //todo cover with integration test
+    private fun handleBotCommand(message: Message): String {
         return try {
             commandHandlerFacade.handle(
                     toChannelId(message.chat().id()),
@@ -33,7 +36,6 @@ class RequestProcessor(private val commandHandlerFacade: CommandHandlerFacade) {
         }
     }
 
-    //todo is there's better way to detect, that telegramBot just been added to a channel/group?
     private fun isBotAddedToChannel(message: Message) =
             message.newChatMembers()?.find { user -> user.isBot && user.username() == "CryptAdviserBot" } != null
 
