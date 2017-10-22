@@ -5,17 +5,19 @@ import com.pengrad.telegrambot.TelegramBotAdapter
 import dagger.Module
 import dagger.Provides
 import ru.justd.cryptobot.BuildConfig
-import ru.justd.cryptobot.UserPreferences
 import ru.justd.cryptobot.exchanges.ExchangeFacade
 import ru.justd.cryptobot.handler.CommandHandlerFacade
 import ru.justd.cryptobot.handler.CommandHandlerFacadeImpl
+import ru.justd.cryptobot.messenger.Messenger
 import ru.justd.cryptobot.messenger.MessageReceiver
 import ru.justd.cryptobot.messenger.MessageSender
-import javax.inject.Named
+import ru.justd.cryptobot.persistance.Storage
+import ru.justd.cryptobot.publisher.Publisher
+import ru.justd.cryptobot.publisher.PublisherImpl
 import javax.inject.Singleton
 
 @Module(includes = arrayOf(ExchangeApiModule::class, StorageModule::class))
-class MainModule {
+class MainModule(val messenger: Messenger) {
 
     @Provides
     @Singleton
@@ -25,8 +27,16 @@ class MainModule {
     @Singleton
     fun provideCommandHandlerFacade(
             exchangeFacade: ExchangeFacade,
-            userPreferences: UserPreferences
-    ): CommandHandlerFacade = CommandHandlerFacadeImpl(exchangeFacade, userPreferences)
+            storage: Storage
+    ): CommandHandlerFacade = CommandHandlerFacadeImpl(exchangeFacade, storage)
+
+    @Provides
+    @Singleton
+    fun providePublisher(
+            messenger: Messenger,
+            exchangeFacade: ExchangeFacade,
+            storage: Storage
+    ): Publisher = PublisherImpl(messenger, exchangeFacade, storage)
 
     @Provides
     @Singleton

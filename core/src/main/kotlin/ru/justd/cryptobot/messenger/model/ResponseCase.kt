@@ -1,4 +1,4 @@
-package ru.justd.cryptobot.messaging.model
+package ru.justd.cryptobot.messenger.model
 
 interface ResponseCase {
 

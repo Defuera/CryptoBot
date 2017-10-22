@@ -1,9 +1,11 @@
 package ru.justd.cryptobot.handler
 
-import ru.justd.cryptobot.UserPreferencesImpl
-import ru.justd.cryptobot.handler.subscribe.SubscribeFactory
+import ru.justd.cryptobot.handler.about.AboutCommandHandler
+import ru.justd.cryptobot.handler.help.HelpCommandHandler
 import ru.justd.cryptobot.handler.kill.KillCommandHandlerFactory
+import ru.justd.cryptobot.handler.price.PriceCommandHandlerFactory
 import ru.justd.cryptobot.handler.update.UpdateCommandHandler
+import ru.justd.cryptobot.handler.subscribe.SubscribeFactory
 import java.util.*
 
 enum class Command(val scheme: String) {
@@ -70,8 +72,7 @@ enum class Command(val scheme: String) {
     }
 
     companion object {
-        private val preferences = UserPreferencesImpl()
-        internal val helpResource: ResourceBundle = ResourceBundle.getBundle("help", preferences.locale())
+        internal val helpResource: ResourceBundle = ResourceBundle.getBundle("help", Locale.getDefault()) //todo get from preferences
     }
 
 }

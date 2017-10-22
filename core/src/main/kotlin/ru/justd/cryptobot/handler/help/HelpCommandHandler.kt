@@ -1,6 +1,8 @@
-package ru.justd.cryptobot.handler
+package ru.justd.cryptobot.handler.help
 
-import ru.justd.cryptobot.messaging.model.OutgoingMessage
+import ru.justd.cryptobot.handler.Command
+import ru.justd.cryptobot.handler.CommandHandler
+import ru.justd.cryptobot.messenger.model.OutgoingMessage
 
 internal object HelpCommandHandler : CommandHandler {
 
@@ -12,5 +14,4 @@ internal object HelpCommandHandler : CommandHandler {
                     .toList()
                     .joinToString("\n\n")
                     .let { OutgoingMessage(it) }
-
 }

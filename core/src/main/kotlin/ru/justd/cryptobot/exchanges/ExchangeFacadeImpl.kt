@@ -1,11 +1,11 @@
 package ru.justd.cryptobot.exchanges
 
-import ru.justd.cryptobot.UserPreferences
 import ru.justd.cryptobot.exchanges.bitfinex.BitfinexApi
 import ru.justd.cryptobot.exchanges.coinbase.CoinbaseApi
 import ru.justd.cryptobot.exchanges.cryptonator.CryptonatorApi
 import ru.justd.cryptobot.exchanges.exceptions.ExchangeNotSupported
 import ru.justd.cryptobot.exchanges.gdax.GdaxApi
+import ru.justd.cryptobot.persistance.Storage
 import javax.inject.Named
 
 class ExchangeFacadeImpl(
@@ -21,15 +21,15 @@ class ExchangeFacadeImpl(
         @Named(BitfinexApi.NAME)
         private val bitfinexApi: ExchangeApi,
 
-        private val preferences: UserPreferences
+        private val storage: Storage
 ) : ExchangeFacade {
 
     @Throws(ExchangeNotSupported::class)
     override fun getRate(base: String?, target: String?, exchangeApiCode: String?): RateResponse {
-        return getApi(exchangeApiCode ?: preferences.exchangeApi())
+        return getApi(exchangeApiCode ?: storage.getExchangeApi("chatId")) //todo pass userId
                 .getRate(
-                        base ?: preferences.baseCurrency(),
-                        target ?: preferences.targetCurrency()
+                        base ?: storage.getBaseCurrency("chatId"),
+                        target ?: storage.getTargetCurrency("chatId")
                 )
     }
 

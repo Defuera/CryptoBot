@@ -4,7 +4,7 @@ import org.assertj.core.api.Assertions.assertThat
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.junit.MockitoJUnitRunner
-import ru.justd.cryptobot.TelegramCryptAdviser.Companion.INSTANCE_ID
+import ru.justd.cryptobot.Bullshit.INSTANCE_ID
 
 @RunWith(MockitoJUnitRunner::class)
 class KillCommandHandlerFactoryTest {
@@ -22,7 +22,7 @@ class KillCommandHandlerFactoryTest {
 
     private fun tryToKillInstanceWithIdAndGetResponse(id: String): String {
         val factory = KillCommandHandlerFactory().apply { message = "/kill $id" }
-        return factory.create().responseMessage()
+        return factory.create().responseMessage().text
     }
 
 }

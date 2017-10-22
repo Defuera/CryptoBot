@@ -1,7 +1,10 @@
 package ru.justd.cryptobot.handler
 
+import ru.justd.cryptobot.handler.exceptions.InvalidCommand
+
 interface CommandHandlerFacade {
 
-    fun createCommandHandler(requestMessage: String): CommandHandler
+    @Throws(InvalidCommand::class)
+    fun createCommandHandler(channelId: String, requestMessage: String): CommandHandler
 
 }

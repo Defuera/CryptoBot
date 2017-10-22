@@ -1,15 +1,16 @@
-package ru.justd.cryptobot.handler
+package ru.justd.cryptobot.handler.price
 
 import ru.justd.cryptobot.exchanges.ExchangeFacade
 import ru.justd.cryptobot.exchanges.exceptions.ExchangeNotSupported
 import ru.justd.cryptobot.exchanges.exceptions.RequestFailed
-import ru.justd.cryptobot.messaging.model.OutgoingMessage
+import ru.justd.cryptobot.handler.CommandHandler
+import ru.justd.cryptobot.messenger.model.OutgoingMessage
 
 class PriceCommandHandler constructor(
         private val exchangeFacade: ExchangeFacade,
-        private val base: String?,
-        private val target: String?,
-        private val exchange: String?
+        val base: String?,
+        val target: String?,
+        val exchange: String?
 ) : CommandHandler {
 
     override fun responseMessage(): OutgoingMessage {
