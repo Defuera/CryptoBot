@@ -34,15 +34,7 @@ class MessageSender(
     }
 
     private fun createSendMessageRequest(chatId: Long, message: String): SendMessage {
-        val request = SendMessage(chatId, formatMessageText(message))
-
-//        val keyboard = message.answers
-//        if (keyboard != null) {
-//            val telegramKeyboard = mapToTelegramKeyboard(keyboard)
-//            request.replyMarkup(telegramKeyboard)
-//        }
-
-        return request.parseMode(ParseMode.Markdown)
+        return SendMessage(chatId, formatMessageText(message)).parseMode(ParseMode.Markdown)
     }
 
 

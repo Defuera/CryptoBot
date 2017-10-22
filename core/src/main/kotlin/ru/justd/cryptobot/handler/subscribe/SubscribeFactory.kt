@@ -8,7 +8,6 @@ private const val ARG_INDEX_BASE = 0
 private const val ARG_INDEX_TARGET = 1
 private const val ARG_INDEX_EXCHANGE = 2
 
-//todo make factory object?
 class SubscribeFactory(val storage: Storage) : CommandHandlerFactory<SubscribeHandler>("/subscribe") {
 
     @Throws(InvalidCommand::class)
