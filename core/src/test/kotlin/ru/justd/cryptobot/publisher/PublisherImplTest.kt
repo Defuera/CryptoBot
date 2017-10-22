@@ -12,7 +12,6 @@ import ru.justd.cryptobot.exchanges.ExchangeFacade
 import ru.justd.cryptobot.exchanges.RateResponse
 import ru.justd.cryptobot.handler.subscribe.Subscription
 import ru.justd.cryptobot.messenger.Messenger
-import ru.justd.cryptobot.messenger.model.OutgoingMessage
 import ru.justd.cryptobot.persistance.Storage
 import ru.justd.cryptobot.persistance.UserPreferences
 import java.util.*
@@ -25,42 +24,42 @@ internal class PublisherImplTest {
     private val facadeMock = mock<ExchangeFacade>()
     private val storageMock = mock<Storage>()
 
-//    @Test
-//    fun `verify update being published after storage new subscription added to storage`() {
-//        //setup
-//        val subject = PublishSubject.create<Update>()
-//        whenever(storageMock.observeUpdates()).thenReturn(subject)
-//        val base = "btc"
-//        val target = "usd"
-//        val channelId = "100"
-//        val exchange = "gdax"
-//        val amount = 0.2
-//
-//        val rateResponse = RateResponse(amount, base, target)
-//        whenever(facadeMock.getRate(anyString(), anyString(), anyString())).thenReturn(rateResponse)
-//
-//        testInstance = PublisherImpl(botMock, facadeMock, storageMock)
-//
-//        //action
-//        subject.onNext(Update(
-//                channelId,
-//                UserPreferences(
-//                        "base",
-//                        "target",
-//                        "exchange",
-//                        Locale.CANADA,
-//                        listOf(Subscription(base, target, exchange, 200))
-//                )
-//        ))
-//
-//        Thread.sleep(100) //todo not cool, but otherwise it's not working, since publisher working in different thread
-//
-//        //test
-//        argumentCaptor<OutgoingMessage>().apply {
-//            verify(botMock).sendMessage(anyString(), capture())
-//            assertThat(firstValue.text).isEqualTo("$base price is $amount $target")
-//        }
-//
-//    }
+    @Test
+    fun `verify update being published after storage new subscription added to storage`() {
+        //setup
+        val subject = PublishSubject.create<Update>()
+        whenever(storageMock.observeUpdates()).thenReturn(subject)
+        val base = "btc"
+        val target = "usd"
+        val channelId = "100"
+        val exchange = "gdax"
+        val amount = 0.2
+
+        val rateResponse = RateResponse(amount, base, target)
+        whenever(facadeMock.getRate(anyString(), anyString(), anyString())).thenReturn(rateResponse)
+
+        testInstance = PublisherImpl(botMock, facadeMock, storageMock)
+
+        //action
+        subject.onNext(Update(
+                channelId,
+                UserPreferences(
+                        "base",
+                        "target",
+                        "exchange",
+                        Locale.CANADA,
+                        listOf(Subscription(base, target, exchange, 200))
+                )
+        ))
+
+        Thread.sleep(100) //todo not cool, but otherwise it's not working, since publisher working in different thread
+
+        //test
+        argumentCaptor<String>().apply {
+            verify(botMock).sendMessage(anyString(), capture())
+            assertThat(firstValue).isEqualTo("$base price is $amount $target")
+        }
+
+    }
 
 }

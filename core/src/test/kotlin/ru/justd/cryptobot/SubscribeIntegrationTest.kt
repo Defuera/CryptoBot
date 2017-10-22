@@ -14,7 +14,7 @@ import ru.justd.cryptobot.handler.exceptions.InvalidCommand
 import ru.justd.cryptobot.handler.subscribe.SubscribeFactory
 import ru.justd.cryptobot.handler.subscribe.Subscription
 
-internal class SubscribeCommandIntegrationTest {
+internal class SubscribeIntegrationTest {
 
     lateinit var testInstance: CommandHandlerFacade
     

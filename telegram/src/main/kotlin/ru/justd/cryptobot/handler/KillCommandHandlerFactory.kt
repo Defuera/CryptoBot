@@ -1,6 +1,6 @@
 package ru.justd.cryptobot.handler
 
-class KillCommandHandlerFactory(private val instanceUuid : String) : CommandHandlerFactory<KillCommandHandler>("kill") {
+class KillCommandHandlerFactory(private val instanceUuid : String) : CommandHandlerFactory<KillCommandHandler>("/kill") {
 
     override fun create(channelId: String, request: String) =
             KillCommandHandler(retrieveInstanceId(request) == instanceUuid)
