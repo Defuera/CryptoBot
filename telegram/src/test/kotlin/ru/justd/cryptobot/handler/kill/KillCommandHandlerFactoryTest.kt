@@ -10,10 +10,12 @@ import ru.justd.cryptobot.handler.ShutdownException
 @RunWith(MockitoJUnitRunner::class)
 class KillCommandHandlerFactoryTest {
 
+    val uuid = "uuid"
+    val testInstance = KillCommandHandlerFactory(uuid)
+
     @Test(expected = ShutdownException::class)
     fun testKillThisInstance() {
-        val id = "uuid"
-        tryToKillInstanceWithIdAndGetResponse(id)
+        tryToKillInstanceWithIdAndGetResponse(uuid)
     }
 
     @Test
@@ -23,7 +25,7 @@ class KillCommandHandlerFactoryTest {
     }
 
     private fun tryToKillInstanceWithIdAndGetResponse(id: String): String {
-        return KillCommandHandlerFactory(id).create("chatId", "/kill $id").responseMessage().text
+        return testInstance.create("chatId", "/kill $id").responseMessage().text
     }
 
 }

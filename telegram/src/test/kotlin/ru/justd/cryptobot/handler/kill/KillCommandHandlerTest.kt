@@ -20,7 +20,7 @@ class KillCommandHandlerTest {
     fun testKillOtherInstance() {
         val handler = KillCommandHandler(false)
         assertThat(handler.responseMessage().text)
-                .isEqualTo("I was glad to serve you! Farewell!")
+                .isEqualTo("Phew! It's not me!")
     }
 
 }

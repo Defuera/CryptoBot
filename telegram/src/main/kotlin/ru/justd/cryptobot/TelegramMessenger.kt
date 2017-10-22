@@ -12,9 +12,13 @@ import ru.justd.cryptobot.handler.ShutdownException
 import ru.justd.cryptobot.messenger.MessageSender
 import ru.justd.cryptobot.messenger.Messenger
 import ru.justd.cryptobot.messenger.RequestProcessor
+import ru.justd.cryptobot.publisher.Publisher
 import javax.inject.Inject
 
 class TelegramMessenger(private val uuid: String) : Messenger {
+
+    @Inject
+    lateinit var publisher : Publisher //todo if I not inject it it's not instantiated, then publisher is not working
 
     @Inject
     lateinit var commandHandlerFacade: CommandHandlerFacade

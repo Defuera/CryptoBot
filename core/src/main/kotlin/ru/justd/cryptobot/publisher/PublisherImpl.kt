@@ -5,12 +5,11 @@ import ru.justd.cryptobot.exchanges.ExchangeFacade
 import ru.justd.cryptobot.exchanges.RateResponse
 import ru.justd.cryptobot.exchanges.exceptions.ExchangeNotSupported
 import ru.justd.cryptobot.exchanges.exceptions.RequestFailed
+import ru.justd.cryptobot.handler.subscribe.Subscription
 import ru.justd.cryptobot.messenger.Messenger
 import ru.justd.cryptobot.persistance.Storage
-import ru.justd.cryptobot.handler.subscribe.Subscription
-import ru.justd.cryptobot.messenger.model.OutgoingMessage
 
-class PublisherImpl(
+internal class PublisherImpl(
         private val messenger: Messenger,
         private val exchangeFacade: ExchangeFacade,
         storage: Storage
