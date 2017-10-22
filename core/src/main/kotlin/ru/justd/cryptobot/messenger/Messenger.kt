@@ -1,5 +1,10 @@
 package ru.justd.cryptobot.messenger
 
+import ru.justd.cryptobot.messenger.model.OutgoingMessage
+
 interface Messenger {
-    fun sendMessage(channelId: String, outgoingMessage: String)
+
+    fun onRequestReceived()
+
+    fun sendMessage(channelId: String, message: OutgoingMessage)
 }

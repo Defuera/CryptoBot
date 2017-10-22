@@ -1,89 +1,59 @@
 package ru.justd.cryptobot
 
 import com.pengrad.telegrambot.TelegramBot
-import com.pengrad.telegrambot.UpdatesListener.CONFIRMED_UPDATES_ALL
-import com.pengrad.telegrambot.model.Update
-import kotlinx.coroutines.experimental.launch
-import ru.justd.cryptobot.di.DaggerMainComponent
+import com.pengrad.telegrambot.TelegramBotAdapter
 import ru.justd.cryptobot.di.MainModule
-import ru.justd.cryptobot.handler.kill.KillCommandHandler
-import ru.justd.cryptobot.handler.kill.ShutdownException
-import ru.justd.cryptobot.messenger.model.OutgoingMessage
+import ru.justd.cryptobot.handler.CommandHandlerFacade
 import ru.justd.cryptobot.messenger.MessageReceiver
 import ru.justd.cryptobot.messenger.MessageSender
-import ru.justd.cryptobot.messenger.MessengerImpl
+import ru.justd.cryptobot.messenger.Messenger
+import ru.justd.cryptobot.messenger.model.OutgoingMessage
+import java.util.*
 import javax.inject.Inject
 
 
 fun main(args: Array<String>) {
-    TelegramCryptAdviser().run()
+    TelegramMessenger(UUID.randomUUID().toString()).run()
 }
 
 //todo class can be removed once updated to kotlin 1.2. Until then it's used to be able to inject dependencies
-class TelegramCryptAdviser {
+class TelegramMessenger(val uuid: String) : Messenger {
 
     @Inject
-    lateinit var telegramBot: TelegramBot
+    lateinit var commandHandlerFacade: CommandHandlerFacade
 
-    @Inject
     lateinit var messageReceiver: MessageReceiver
 
-    @Inject
-    lateinit var messageSender: MessageSender
+    val telegramBot : TelegramBot = TelegramBotAdapter.build(BuildConfig.BOT_TOKEN) //todo provide debug/production bot based on BuildType
+    val messageSender = MessageSender(uuid, telegramBot)
 
     fun run() {
-        println("TelegramCryptAdviser started, id: ${Bullshit.INSTANCE_ID}")
-        inject()
-        initMessageSender()
-        initMessageReceiver()
-    }
+        println("TelegramMessenger started, id: $uuid")
 
-    private fun inject() {
-        val messenger = MessengerImpl()
         DaggerMainComponent
                 .builder()
-                .mainModule(MainModule(messenger))
+                .mainModule(MainModule(this))
                 .build()
                 .inject(this)
 
-        messenger.messageSender = messageSender
-        messenger.messageReceiver = messageReceiver
+        messageReceiver = MessageReceiver(commandHandlerFacade)
+        //todo killhandler
+//        commandHandlerFacade.registerHandler()
+
+        messageReceiver.onUpdateProcessed = { chatId, message ->
+            sendMessage(chatId, message)
+        }
+        telegramBot.setUpdatesListener(messageReceiver)
     }
 
-    private fun initMessageSender() {
-        messageReceiver.onProcessListener = { chatId, commandHandler ->
-            messageSender.sendMessage(chatId, commandHandler)
-        }
+    override fun sendMessage(channelId: String, message: OutgoingMessage) {
+        messageSender.sendMessage(toTelegramId(channelId), message)
     }
 
-    private fun initMessageReceiver() {
-        telegramBot.setUpdatesListener { updates ->
-            updates.forEach {
-                launch { processUpdate(it) }
-            }
+    private fun toTelegramId(channelId: String) = channelId.toLong()
 
-            CONFIRMED_UPDATES_ALL
-        }
-    }
+    override fun onRequestReceived() {
 
-    private fun processUpdate(update: Update) {
-        try {
-            messageReceiver.processUpdate(update)
-        } catch (e: ShutdownException) {
-            killInstance(update.message().chat().id())
-        } catch (e: Throwable) {
-            e.printStackTrace()
-        }
-    }
-
-    private fun killInstance(chatId: Long) {
-        messageSender.sendMessage(
-                chatId,
-                OutgoingMessage(KillCommandHandler.FAREWELL_MESSAGE)
-        ) { _, _ ->
-            telegramBot.removeGetUpdatesListener()
-            System.exit(0)
-        }
     }
 
 }

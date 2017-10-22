@@ -12,6 +12,7 @@ import ru.justd.cryptobot.exchanges.ExchangeFacade
 import ru.justd.cryptobot.exchanges.RateResponse
 import ru.justd.cryptobot.handler.subscribe.Subscription
 import ru.justd.cryptobot.messenger.Messenger
+import ru.justd.cryptobot.messenger.model.OutgoingMessage
 import ru.justd.cryptobot.persistance.Storage
 import ru.justd.cryptobot.persistance.UserPreferences
 import java.util.*
@@ -55,9 +56,9 @@ internal class PublisherImplTest {
         Thread.sleep(100) //todo not cool, but otherwise it's not working, since publisher working in different thread
 
         //test
-        argumentCaptor<String>().apply {
+        argumentCaptor<OutgoingMessage>().apply {
             verify(botMock).sendMessage(anyString(), capture())
-            assertThat(firstValue).isEqualTo("$base price is $amount $target")
+            assertThat(firstValue.text).isEqualTo("$base price is $amount $target")
         }
 
     }

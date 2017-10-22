@@ -8,20 +8,19 @@ import com.pengrad.telegrambot.model.request.Keyboard
 import com.pengrad.telegrambot.model.request.ParseMode
 import com.pengrad.telegrambot.request.SendMessage
 import com.pengrad.telegrambot.response.SendResponse
-import ru.justd.cryptobot.Bullshit
 import ru.justd.cryptobot.adapter.MessageAdapter
-import ru.justd.cryptobot.handler.CommandHandler
-import ru.justd.cryptobot.messenger.model.OutgoingMessage
 import ru.justd.cryptobot.messenger.model.AnswerCase
 import ru.justd.cryptobot.messenger.model.Message
+import ru.justd.cryptobot.messenger.model.OutgoingMessage
 import java.io.IOException
 
 class MessageSender(
+        private val uuid: String,
         private val telegramBot: TelegramBot
 ) {
 
-    fun sendMessage(chatId: Long, commandHandler: CommandHandler) {
-        sendMessage(chatId, commandHandler.responseMessage()) { _, response ->
+    fun sendMessage(chatId: Long, message: OutgoingMessage) {
+        sendMessage(chatId, message) { _, response ->
             println("response message: ${response?.message()?.text()}")
         }
     }
@@ -77,6 +76,6 @@ class MessageSender(
             )
 
     private fun formatMessageText(message: String) =
-            "*${Bullshit.INSTANCE_ID}*\n_thread: ${Thread.currentThread().name}_\n\n$message"
+            "*$uuid*\n_thread: ${Thread.currentThread().name}_\n\n$message"
 
 }
