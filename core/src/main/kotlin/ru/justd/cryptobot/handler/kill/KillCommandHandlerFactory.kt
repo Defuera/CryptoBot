@@ -1,6 +1,5 @@
 package ru.justd.cryptobot.handler.kill
 
-import ru.justd.cryptobot.Bullshit
 import ru.justd.cryptobot.handler.Command
 import ru.justd.cryptobot.handler.CommandHandlerFactory
 
@@ -9,8 +8,8 @@ class KillCommandHandlerFactory : CommandHandlerFactory<KillCommandHandler> { //
     lateinit var message: String
 
     override fun create(): KillCommandHandler =
-            KillCommandHandler(
-                    retrieveInstanceId(message) == Bullshit.INSTANCE_ID
+            KillCommandHandler(false
+//                    retrieveInstanceId(message) == Bullshit.INSTANCE_ID
             )
 
     private fun retrieveInstanceId(message: String) =

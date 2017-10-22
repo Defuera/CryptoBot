@@ -13,6 +13,11 @@ internal class CommandHandlerFacadeImpl( //todo it seems like this is an object 
         private val store: Storage
 ) : CommandHandlerFacade {
 
+    override fun handle(channelId: String, requestMessage: String): String =
+            createCommandHandler(channelId, requestMessage)
+                    .responseMessage()
+                    .text
+
     @Throws(InvalidCommand::class)
     override fun createCommandHandler(channelId: String, requestMessage: String): CommandHandler {
         val factory = findCommandHandlerFactory(requestMessage)

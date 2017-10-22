@@ -54,7 +54,7 @@ class PublisherImpl(
     }
 
     private fun sendMessage(channelId: String, text: String) {
-        messenger.sendMessage(channelId, OutgoingMessage(text))
+        messenger.sendMessage(channelId, text)
     }
 
 }
