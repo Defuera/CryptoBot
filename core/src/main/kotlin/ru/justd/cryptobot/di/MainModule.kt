@@ -1,16 +1,17 @@
 package ru.justd.cryptobot.di
 
-import com.pengrad.telegrambot.TelegramBot
-import com.pengrad.telegrambot.TelegramBotAdapter
 import dagger.Module
 import dagger.Provides
-import ru.justd.cryptobot.BuildConfig
 import ru.justd.cryptobot.exchanges.ExchangeFacade
 import ru.justd.cryptobot.handler.CommandHandlerFacade
 import ru.justd.cryptobot.handler.CommandHandlerFacadeImpl
+import ru.justd.cryptobot.handler.InstantFactory
+import ru.justd.cryptobot.handler.about.AboutCommandHandler
+import ru.justd.cryptobot.handler.help.HelpCommandHandler
+import ru.justd.cryptobot.handler.price.PriceCommandHandlerFactory
+import ru.justd.cryptobot.handler.subscribe.SubscribeFactory
+import ru.justd.cryptobot.handler.update.UpdateCommandHandler
 import ru.justd.cryptobot.messenger.Messenger
-import ru.justd.cryptobot.messenger.MessageReceiver
-import ru.justd.cryptobot.messenger.MessageSender
 import ru.justd.cryptobot.persistance.Storage
 import ru.justd.cryptobot.publisher.Publisher
 import ru.justd.cryptobot.publisher.PublisherImpl
@@ -21,14 +22,22 @@ class MainModule(val messenger: Messenger) {
 
     @Provides
     @Singleton
-    fun provideTelegramBotAdapter(): TelegramBot = TelegramBotAdapter.build(BuildConfig.BOT_TOKEN) //todo provide debug/production bot based on BuildType
+    fun provideMessenger() = messenger
 
     @Provides
     @Singleton
     fun provideCommandHandlerFacade(
             exchangeFacade: ExchangeFacade,
             storage: Storage
-    ): CommandHandlerFacade = CommandHandlerFacadeImpl(exchangeFacade, storage)
+    ): CommandHandlerFacade = CommandHandlerFacadeImpl(
+            mutableListOf(
+                    InstantFactory("/about", AboutCommandHandler),
+                    InstantFactory("/help", HelpCommandHandler),
+                    InstantFactory("/update", UpdateCommandHandler),
+                    PriceCommandHandlerFactory(exchangeFacade),
+                    SubscribeFactory(storage)
+            )
+    )
 
     @Provides
     @Singleton
@@ -37,17 +46,5 @@ class MainModule(val messenger: Messenger) {
             exchangeFacade: ExchangeFacade,
             storage: Storage
     ): Publisher = PublisherImpl(messenger, exchangeFacade, storage)
-
-    @Provides
-    @Singleton
-    fun provideMessageReceiver(
-            commandHandlerFacade: CommandHandlerFacade
-    ): MessageReceiver = MessageReceiver(commandHandlerFacade)
-
-    @Provides
-    @Singleton
-    fun provideMessageSender(
-            telegramBot: TelegramBot
-    ): MessageSender = MessageSender(telegramBot)
 
 }

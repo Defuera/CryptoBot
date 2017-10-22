@@ -4,7 +4,6 @@ import dagger.Module
 import dagger.Provides
 import ru.justd.cryptobot.persistance.Storage
 import ru.justd.cryptobot.persistance.StorageImpl
-import ru.justd.cryptobot.persistance.UserPreferences
 import javax.inject.Singleton
 
 @Module

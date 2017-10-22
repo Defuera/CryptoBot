@@ -4,7 +4,15 @@ import ru.justd.cryptobot.handler.CommandHandler
 import ru.justd.cryptobot.messenger.model.OutgoingMessage
 import ru.justd.cryptobot.persistance.Storage
 
-
+/**
+ * Provides scheduled updates every x minutes on preconfigured [PRICE] request
+ *
+ * * **Usage:** /subscribe BASE TARGET EXCHANGE_CODE every FREQUENCY_MIN
+ * 1. BASE, TARGET, EXCHANGE_CODE - see [price](Command##Price) //todo link to price command in docs
+ * 1. FREQUENCY_MIN - how often you want to receive updates in minutes.
+ *
+ * You can have multiple subscriptions
+ */
 class SubscribeHandler constructor(
         private val userId: String,
         private val storage: Storage,

@@ -4,25 +4,28 @@ import org.assertj.core.api.Assertions.assertThat
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.junit.MockitoJUnitRunner
-import ru.justd.cryptobot.Bullshit.INSTANCE_ID
+import ru.justd.cryptobot.handler.KillCommandHandlerFactory
+import ru.justd.cryptobot.handler.ShutdownException
 
 @RunWith(MockitoJUnitRunner::class)
 class KillCommandHandlerFactoryTest {
 
+    val uuid = "uuid"
+    val testInstance = KillCommandHandlerFactory(uuid)
+
     @Test(expected = ShutdownException::class)
     fun testKillThisInstance() {
-        tryToKillInstanceWithIdAndGetResponse(INSTANCE_ID)
+        tryToKillInstanceWithIdAndGetResponse(uuid)
     }
 
     @Test
     fun testKillOtherInstance() {
         val message = tryToKillInstanceWithIdAndGetResponse("someshit")
-        assertThat(message).isEqualTo(KillCommandHandler.SURVIVOR_MESSAGE)
+        assertThat(message).isEqualTo("Phew! It's not me!")
     }
 
     private fun tryToKillInstanceWithIdAndGetResponse(id: String): String {
-        val factory = KillCommandHandlerFactory().apply { message = "/kill $id" }
-        return factory.create().responseMessage().text
+        return testInstance.create("chatId", "/kill $id").responseMessage().text
     }
 
 }

@@ -1,27 +1,27 @@
 package ru.justd.cryptobot
 
-import com.nhaarman.mockito_kotlin.mock
 import com.nhaarman.mockito_kotlin.verify
 import com.nhaarman.mockito_kotlin.whenever
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
 import ru.justd.cryptobot.di.StorageModule
-import ru.justd.cryptobot.exchanges.ExchangeFacade
 import ru.justd.cryptobot.exchanges.cryptonator.CryptonatorApi
 import ru.justd.cryptobot.exchanges.gdax.GdaxApi
 import ru.justd.cryptobot.handler.CommandHandlerFacade
 import ru.justd.cryptobot.handler.CommandHandlerFacadeImpl
 import ru.justd.cryptobot.handler.exceptions.InvalidCommand
+import ru.justd.cryptobot.handler.subscribe.SubscribeFactory
 import ru.justd.cryptobot.handler.subscribe.Subscription
+import ru.justd.cryptobot.persistance.Storage
 
-internal class SubscribeTest {
+internal class SubscribeIntegrationTest {
 
-//    lateinit var testInstance: TelegramCryptAdviser
-    lateinit var commandHandlerFacade : CommandHandlerFacade
-    private val storageMock = StorageModule.storageMock
+    lateinit var testInstance: CommandHandlerFacade
+    
+    private lateinit var storageMock : Storage
+
     private val userId = "chatId"
-
     private val BASE_LTC = "LTC"
     private val BASE_BCC = "BCC"
     private val TARGET_GBP = "GBP"
@@ -31,9 +31,8 @@ internal class SubscribeTest {
 
     @Before
     fun setup() {
-        commandHandlerFacade = CommandHandlerFacadeImpl(mock<ExchangeFacade>(), storageMock)
-//        testInstance = TelegramCryptAdviser()
-//        testInstance.run()
+        storageMock = StorageModule.storageMock
+        testInstance = CommandHandlerFacadeImpl(mutableListOf(SubscribeFactory(storageMock)))
 
         whenever(storageMock.getExchangeApi(userId)).thenReturn("stub api")
         whenever(storageMock.getBaseCurrency(userId)).thenReturn("stub base")
@@ -44,7 +43,7 @@ internal class SubscribeTest {
     fun `test base is absent throws exception`() {
         try {
             //action
-            commandHandlerFacade.createCommandHandler(userId, "/subscribe").responseMessage()
+            testInstance.handle(userId, "/subscribe")
         } catch (e: Exception) {
 
             //test
@@ -56,27 +55,28 @@ internal class SubscribeTest {
     @Test
     fun `test subscribe with ltc gbp`() {
         //action
-        val response = commandHandlerFacade.createCommandHandler(userId, "/subscribe $TARGET_GBP $TARGET_GBP").responseMessage()
+        val response = testInstance.handle(userId, "/subscribe $BASE_BCC $TARGET_GBP")
 
         //test
-        assertThat(response.text).isEqualTo("subscriptions created")
+        assertThat(response).isEqualTo("subscriptions created")
+        verify(storageMock).addSubscription(userId, Subscription(BASE_LTC, TARGET_GBP, EXCHANGE_GDAX, 5))
     }
 
     @Test
-    fun `test subscribe btc usd gdax`() { //todo not working because of asynchronousy
+    fun `test subscribe btc usd gdax`() {
         //action
-        val response = commandHandlerFacade.createCommandHandler(userId, "/subscribe $BASE_LTC $TARGET_GBP $EXCHANGE_GDAX").responseMessage()
+        val response = testInstance.handle(userId, "/subscribe $BASE_LTC $TARGET_GBP $EXCHANGE_CRYPTONATOR")
 
         //test
-        assertThat(response.text).isEqualTo("subscriptions created")
-        verify(storageMock).addSubscription(userId, Subscription(BASE_LTC, TARGET_GBP, EXCHANGE_GDAX, 5))
+        assertThat(response).isEqualTo("subscriptions created")
+        verify(storageMock).addSubscription(userId, Subscription(BASE_LTC, TARGET_GBP, EXCHANGE_CRYPTONATOR, 5))
     }
 
     @Test
     fun `test multiple subscriptions`() {
         //action
-        commandHandlerFacade.createCommandHandler(userId, "/subscribe $BASE_LTC $TARGET_GBP $EXCHANGE_GDAX").responseMessage()
-        commandHandlerFacade.createCommandHandler(userId, "/subscribe $BASE_BCC $TARGET_EUR $EXCHANGE_CRYPTONATOR").responseMessage()
+        testInstance.handle(userId, "/subscribe $BASE_LTC $TARGET_GBP $EXCHANGE_GDAX")
+        testInstance.handle(userId, "/subscribe $BASE_BCC $TARGET_EUR $EXCHANGE_CRYPTONATOR")
 
         //test
         verify(storageMock).addSubscription(userId, Subscription(BASE_LTC, TARGET_GBP, EXCHANGE_GDAX, 5))

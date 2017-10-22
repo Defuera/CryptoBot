@@ -1,6 +1,5 @@
-package ru.justd.cryptobot.handler.kill
+package ru.justd.cryptobot.handler
 
-import ru.justd.cryptobot.handler.CommandHandler
 import ru.justd.cryptobot.messenger.model.OutgoingMessage
 
 class KillCommandHandler(
@@ -9,14 +8,14 @@ class KillCommandHandler(
 
     companion object {
 
-        const val FAREWELL_MESSAGE = "I was glad to serve you! Farewell!"
-        const val SURVIVOR_MESSAGE = "Phew! It's not me!"
+        private const val FAREWELL_MESSAGE = "I was glad to serve you! Farewell!"
+        private const val SURVIVOR_MESSAGE = "Phew! It's not me!"
 
     }
 
     override fun responseMessage() =
             if (kill)
-                throw ShutdownException()
+                throw ShutdownException(FAREWELL_MESSAGE)
             else
                 OutgoingMessage(SURVIVOR_MESSAGE)
 

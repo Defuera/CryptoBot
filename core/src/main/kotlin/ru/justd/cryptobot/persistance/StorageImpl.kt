@@ -39,7 +39,7 @@ class StorageImpl constructor(val storageDataSource: HashMap<String, UserPrefere
 
     override fun getSubscriptions(channelId: String): List<Subscription>? = storageDataSource[channelId]?.subscriptions
 
-    @Throws(StorageException::class)
+    @Throws(StorageException::class) //todo try to execute publisher before adding the subscription, to check weather it's valid
     override fun addSubscription(channelId: String, newSubscription: Subscription) { //todo check if already exists, if so - modify
         val userPreferences = storageDataSource[channelId]
         val newPreference = addSubscriptionToExistingPreference(userPreferences, newSubscription)

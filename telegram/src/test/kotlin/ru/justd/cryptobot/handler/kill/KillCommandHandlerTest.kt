@@ -4,6 +4,8 @@ import org.assertj.core.api.Assertions.assertThat
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.junit.MockitoJUnitRunner
+import ru.justd.cryptobot.handler.KillCommandHandler
+import ru.justd.cryptobot.handler.ShutdownException
 
 @RunWith(MockitoJUnitRunner::class)
 class KillCommandHandlerTest {
@@ -18,7 +20,7 @@ class KillCommandHandlerTest {
     fun testKillOtherInstance() {
         val handler = KillCommandHandler(false)
         assertThat(handler.responseMessage().text)
-                .isEqualTo(KillCommandHandler.SURVIVOR_MESSAGE)
+                .isEqualTo("Phew! It's not me!")
     }
 
 }

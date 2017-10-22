@@ -1,5 +1,6 @@
 package ru.justd.cryptobot.messenger
 
 interface Messenger {
-    fun sendMessage(channelId: String, outgoingMessage: String)
+
+    fun sendMessage(channelId: String, message: String)
 }

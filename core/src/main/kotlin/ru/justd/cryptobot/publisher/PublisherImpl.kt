@@ -5,11 +5,11 @@ import ru.justd.cryptobot.exchanges.ExchangeFacade
 import ru.justd.cryptobot.exchanges.RateResponse
 import ru.justd.cryptobot.exchanges.exceptions.ExchangeNotSupported
 import ru.justd.cryptobot.exchanges.exceptions.RequestFailed
+import ru.justd.cryptobot.handler.subscribe.Subscription
 import ru.justd.cryptobot.messenger.Messenger
 import ru.justd.cryptobot.persistance.Storage
-import ru.justd.cryptobot.handler.subscribe.Subscription
 
-class PublisherImpl(
+internal class PublisherImpl(
         private val messenger: Messenger,
         private val exchangeFacade: ExchangeFacade,
         storage: Storage
@@ -52,8 +52,8 @@ class PublisherImpl(
         }.trim()
     }
 
-    private fun sendMessage(channelId: String, outgoingMessage: String) {
-        messenger.sendMessage(channelId, outgoingMessage)
+    private fun sendMessage(channelId: String, text: String) {
+        messenger.sendMessage(channelId, text)
     }
 
 }
