@@ -59,6 +59,7 @@ dependencies {
     implementation 'com.google.code.gson:gson:2.8.2'
     implementation 'com.github.hotchemi:khronos:0.9.0' //date extension http://hotchemi.github.io/khronos/
     implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-core:0.19.1'
+    implementation "io.reactivex.rxjava2:rxjava:2.1.5"
 
     //dagger
     implementation "com.google.dagger:dagger:$daggerVersion"
