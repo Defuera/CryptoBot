@@ -5,20 +5,18 @@ import com.pengrad.telegrambot.TelegramBotAdapter
 import com.pengrad.telegrambot.UpdatesListener
 import com.pengrad.telegrambot.model.Update
 import kotlinx.coroutines.experimental.launch
-import ru.justd.cryptobot.di.MainModule
 import ru.justd.cryptobot.handler.CommandHandlerFacade
 import ru.justd.cryptobot.handler.KillCommandHandlerFactory
 import ru.justd.cryptobot.handler.ShutdownException
 import ru.justd.cryptobot.messenger.MessageSender
-import ru.justd.cryptobot.messenger.Messenger
 import ru.justd.cryptobot.messenger.RequestProcessor
 import ru.justd.cryptobot.publisher.Publisher
 import javax.inject.Inject
 
-class TelegramMessenger(private val uuid: String) : Messenger {
+class TelegramMessenger(private val uuid: String) {
 
     @Inject
-    lateinit var publisher : Publisher //todo if I not inject it it's not instantiated, then publisher is not working
+    lateinit var publisher: Publisher //todo if I not inject it it's not instantiated, then publisher is not working
 
     @Inject
     lateinit var commandHandlerFacade: CommandHandlerFacade
@@ -30,11 +28,16 @@ class TelegramMessenger(private val uuid: String) : Messenger {
 
     init {
         DaggerTelegramComponent.builder()
-                .mainModule(MainModule(this))
                 .build()
                 .inject(this)
 
         commandHandlerFacade.addCommandHandler(KillCommandHandlerFactory(uuid))
+
+        publisher
+                .observeUpdates()
+                .subscribe { sendMessage(it.channelId, it.message) }
+
+
     }
 
     fun run() {
@@ -64,14 +67,8 @@ class TelegramMessenger(private val uuid: String) : Messenger {
         }
     }
 
-
-    //region Messenger
-
-    override fun sendMessage(channelId: String, message: String) {
+    fun sendMessage(channelId: String, message: String) {
         messageSender.sendMessage(toChatId(channelId), message)
     }
-
-    //endregion
-
 
 }
