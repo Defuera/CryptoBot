@@ -36,7 +36,7 @@ class RequestProcessor(private val commandHandlerFacade: CommandHandlerFacade) {
         }
     }
 
-    private fun isBotAddedToChannel(message: Message) =
+    private fun isBotAddedToChannel(message: Message) = //todo handle /start here
             message.newChatMembers()?.find { user -> user.isBot && user.username() == "CryptAdviserBot" } != null
 
 }

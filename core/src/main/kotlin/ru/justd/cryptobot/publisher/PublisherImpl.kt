@@ -29,7 +29,7 @@ internal class PublisherImpl(
     }
 
     private fun initWorker(channelId: String, subscription: Subscription) {
-        Thread(Runnable {
+        Thread(Runnable { //todo rx worker
             print("new thread started")
             val response = exchangeFacade.getRate(subscription.base, subscription.target, subscription.exchange)
             publishUpdate(channelId, response)
