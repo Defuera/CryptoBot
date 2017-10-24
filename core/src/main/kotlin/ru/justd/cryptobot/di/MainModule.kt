@@ -11,18 +11,13 @@ import ru.justd.cryptobot.handler.help.HelpCommandHandler
 import ru.justd.cryptobot.handler.price.PriceCommandHandlerFactory
 import ru.justd.cryptobot.handler.subscribe.SubscribeFactory
 import ru.justd.cryptobot.handler.update.UpdateCommandHandler
-import ru.justd.cryptobot.messenger.Messenger
 import ru.justd.cryptobot.persistance.Storage
 import ru.justd.cryptobot.publisher.Publisher
 import ru.justd.cryptobot.publisher.PublisherImpl
 import javax.inject.Singleton
 
 @Module(includes = arrayOf(ExchangeApiModule::class, StorageModule::class))
-class MainModule(val messenger: Messenger) {
-
-    @Provides
-    @Singleton
-    fun provideMessenger() = messenger
+class MainModule {
 
     @Provides
     @Singleton
@@ -42,9 +37,8 @@ class MainModule(val messenger: Messenger) {
     @Provides
     @Singleton
     fun providePublisher(
-            messenger: Messenger,
             exchangeFacade: ExchangeFacade,
             storage: Storage
-    ): Publisher = PublisherImpl(messenger, exchangeFacade, storage)
+    ): Publisher = PublisherImpl(exchangeFacade, storage)
 
 }

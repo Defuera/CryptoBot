@@ -2,7 +2,6 @@ package ru.justd.cryptobot.persistance
 
 import io.reactivex.Observable
 import ru.justd.cryptobot.handler.subscribe.Subscription
-import ru.justd.cryptobot.publisher.Update
 import java.util.*
 
 interface Storage { //todo add removeSubscription
@@ -27,6 +26,6 @@ interface Storage { //todo add removeSubscription
 
     fun addSubscription(channelId: String, newSubscription: Subscription)
 
-    fun observeUpdates(): Observable<Update>
+    fun observeUpdates(): Observable<PreferenceUpdate>
 
 }
