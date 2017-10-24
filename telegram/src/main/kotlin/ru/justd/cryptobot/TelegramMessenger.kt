@@ -1,5 +1,6 @@
 package ru.justd.cryptobot
 
+import com.mongodb.MongoClient
 import com.pengrad.telegrambot.TelegramBot
 import com.pengrad.telegrambot.TelegramBotAdapter
 import com.pengrad.telegrambot.UpdatesListener
@@ -35,6 +36,12 @@ class TelegramMessenger(private val uuid: String) : Messenger {
                 .inject(this)
 
         commandHandlerFacade.addCommandHandler(KillCommandHandlerFactory(uuid))
+
+        val mongo = MongoClient()
+        val db = mongo.getDatabase("db")
+        val collection = db.getCollection("test")
+
+        println("collection: $collection")
     }
 
     fun run() {
