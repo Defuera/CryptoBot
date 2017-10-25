@@ -3,6 +3,7 @@ package ru.justd.cryptobot.persistance
 import com.mongodb.client.MongoCollection
 import com.mongodb.client.MongoDatabase
 import com.mongodb.client.model.Filters.eq
+import com.mongodb.client.model.UpdateOptions
 import io.reactivex.Observable
 import org.bson.Document
 import ru.justd.cryptobot.exchanges.gdax.GdaxApi
@@ -84,20 +85,17 @@ class MongoStorageImpl(private val mongo: MongoDatabase) : Storage {
     }
 
     private inline fun updateProperty(channelId: String, documentUpdate: (Document) -> Document) {
-        val preferencesCollection = getPreferencesCollection()
+        val update = Document().append(
+                "\$set",
+                documentUpdate.invoke(Document())
+        )
 
-        if (getPreferences(channelId) == null) {
-            preferencesCollection.insertOne(
-                    documentUpdate.invoke(Document(PROPERTY_ID, channelId))
-            )
-        } else {
-            val update = Document().append(
-                    "\$set",
-                    documentUpdate.invoke(Document())
-            )
-
-            preferencesCollection.updateOne(eq(PROPERTY_ID, channelId), update)
-        }
+        getPreferencesCollection()
+                .updateOne(
+                        eq(PROPERTY_ID, channelId),
+                        update,
+                        UpdateOptions().upsert(true)
+                )
     }
 
     companion object {
