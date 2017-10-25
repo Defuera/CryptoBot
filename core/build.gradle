@@ -62,7 +62,7 @@ dependencies {
     implementation "com.squareup.okhttp3:okhttp:$okHttpVersion"
     implementation "com.squareup.okhttp3:logging-interceptor:$okHttpVersion"
 
-    h
+    implementation 'org.mongodb:mongodb-driver:3.5.0'
 
     implementation 'com.github.hotchemi:khronos:0.9.0' //date extension http://hotchemi.github.io/khronos/
     implementation "io.reactivex.rxjava2:rxjava:2.1.5"

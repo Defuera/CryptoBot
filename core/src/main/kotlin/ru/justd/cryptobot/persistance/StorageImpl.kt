@@ -11,11 +11,15 @@ import java.util.*
 class StorageImpl constructor(val storageDataSource: HashMap<String, UserPreferences>) : Storage {
 
     private val DEFAULT_BASE = "BTC"
+
     private val DEFAULT_TARGET = "USD"
     private val DEFAULT_EXCHAGE = GdaxApi.NAME
     private val DEFAULT_LOCALE = Locale.getDefault() //todo
-
     private val updateSubject = BehaviorSubject.create<Update>()
+
+    override fun registerChannel(channelId: String) {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
 
     override fun getBaseCurrency(channelId: String) = storageDataSource[channelId]?.base ?: DEFAULT_BASE
 

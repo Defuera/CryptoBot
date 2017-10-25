@@ -1,6 +1,5 @@
 package ru.justd.cryptobot
 
-import com.mongodb.MongoClient
 import com.pengrad.telegrambot.TelegramBot
 import com.pengrad.telegrambot.TelegramBotAdapter
 import com.pengrad.telegrambot.UpdatesListener
@@ -13,6 +12,7 @@ import ru.justd.cryptobot.handler.ShutdownException
 import ru.justd.cryptobot.messenger.MessageSender
 import ru.justd.cryptobot.messenger.Messenger
 import ru.justd.cryptobot.messenger.RequestProcessor
+import ru.justd.cryptobot.persistance.Storage
 import ru.justd.cryptobot.publisher.Publisher
 import javax.inject.Inject
 
@@ -23,6 +23,9 @@ class TelegramMessenger(private val uuid: String) : Messenger {
 
     @Inject
     lateinit var commandHandlerFacade: CommandHandlerFacade
+
+    @Inject
+    lateinit var storage: Storage
 
     private lateinit var requestProcessor: RequestProcessor
 
@@ -36,18 +39,12 @@ class TelegramMessenger(private val uuid: String) : Messenger {
                 .inject(this)
 
         commandHandlerFacade.addCommandHandler(KillCommandHandlerFactory(uuid))
-
-        val mongo = MongoClient()
-        val db = mongo.getDatabase("db")
-        val collection = db.getCollection("test")
-
-        println("collection: $collection")
     }
 
     fun run() {
         println("TelegramMessenger started, id: $uuid")
 
-        requestProcessor = RequestProcessor(commandHandlerFacade)
+        requestProcessor = RequestProcessor(commandHandlerFacade, storage)
 
         telegramBot.setUpdatesListener({ updates ->
             updates.forEach { handleAsync(it) }

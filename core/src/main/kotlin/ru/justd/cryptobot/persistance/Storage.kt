@@ -7,6 +7,8 @@ import java.util.*
 
 interface Storage { //todo add removeSubscription
 
+    fun registerChannel(channelId: String)
+
     fun getBaseCurrency(channelId: String): String
 
     fun setBaseCurrency(channelId: String, base: String)
