@@ -76,13 +76,7 @@ class MongoStorageImpl(private val mongo: MongoDatabase) : Storage {
                     .find(eq(PROPERTY_ID, channelId))
                     .firstOrNull()
 
-    private fun getPreferencesCollection(): MongoCollection<Document> {
-        if (!mongo.listCollectionNames().contains(COLLECTION_NAME)) {
-            mongo.createCollection(COLLECTION_NAME)
-        }
-
-        return mongo.getCollection(COLLECTION_NAME)
-    }
+    private fun getPreferencesCollection(): MongoCollection<Document> = mongo.getCollection(COLLECTION_NAME)
 
     private inline fun updateProperty(channelId: String, documentUpdate: (Document) -> Document) {
         val update = Document().append(
