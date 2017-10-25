@@ -1,8 +1,11 @@
 package ru.justd.cryptobot.handler.subscribe
 
+import ru.justd.cryptobot.exchanges.ExchangeApi
+import ru.justd.cryptobot.exchanges.coinbase.CoinbaseApi
 import ru.justd.cryptobot.handler.CommandHandlerFactory
 import ru.justd.cryptobot.handler.exceptions.InvalidCommand
 import ru.justd.cryptobot.persistance.Storage
+import java.util.*
 
 private const val ARG_INDEX_BASE = 0
 private const val ARG_INDEX_TARGET = 1
@@ -12,6 +15,9 @@ class SubscribeFactory(val storage: Storage) : CommandHandlerFactory<SubscribeHa
 
     @Throws(InvalidCommand::class)
     override fun create(channelId: String, request: String): SubscribeHandler {
+
+        storage.setExchangeApi(channelId, CoinbaseApi.NAME)
+
         println("SubscribeHandler#create $request")
 
         val base = retrieveArg(request, ARG_INDEX_BASE)

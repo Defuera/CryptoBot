@@ -7,15 +7,13 @@ import java.util.*
 
 interface Storage { //todo add removeSubscription
 
-    fun registerChannel(channelId: String)
-
     fun getBaseCurrency(channelId: String): String
 
     fun setBaseCurrency(channelId: String, base: String)
 
     fun getTargetCurrency(channelId: String): String
 
-    fun setTargetCurrency(channelId: String, base: String)
+    fun setTargetCurrency(channelId: String, target: String)
 
     fun getExchangeApi(channelId: String): String
 

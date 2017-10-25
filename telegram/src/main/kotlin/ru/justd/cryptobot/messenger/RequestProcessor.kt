@@ -8,10 +8,7 @@ import ru.justd.cryptobot.handler.exceptions.InvalidCommand
 import ru.justd.cryptobot.persistance.Storage
 import ru.justd.cryptobot.toChannelId
 
-class RequestProcessor(
-        private val commandHandlerFacade: CommandHandlerFacade,
-        private val storage: Storage
-) {
+class RequestProcessor(private val commandHandlerFacade: CommandHandlerFacade) {
 
     fun process(update: Update): String {
         val message = update.message()
@@ -31,8 +28,6 @@ class RequestProcessor(
     private fun sendGreetingMessage(chatId: Long) = commandHandlerFacade.handle(toChannelId(chatId), "/help")
 
     private fun handleBotCommand(message: Message): String {
-        storage.registerChannel(message.chat().id().toString())
-
         return try {
             commandHandlerFacade.handle(
                     toChannelId(message.chat().id()),

@@ -12,53 +12,57 @@ import java.util.*
 
 class MongoStorageImpl(private val mongo: MongoDatabase) : Storage {
 
-    override fun registerChannel(channelId: String) {
-        if (getPreferences(channelId) == null) {
-            getPreferencesCollection().insertOne(
-                    createDefaultPreferences(channelId)
-            )
-        }
-    }
-
     override fun getBaseCurrency(channelId: String): String =
             getPreferences(channelId)
-                    ?.getString("base_currency")
-                    ?: throw IllegalStateException("channel $channelId wasn't registered")
+                    ?.getString(PROPERTY_BASE_CURRENCY)
+                    ?: DEFAULT_BASE_CURRENCY
 
     override fun setBaseCurrency(channelId: String, base: String) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        updateProperty(
+                channelId,
+                { it.append(PROPERTY_BASE_CURRENCY, base) }
+        )
     }
 
     override fun getTargetCurrency(channelId: String): String =
             getPreferences(channelId)
-                    ?.getString("target_currency")
-                    ?: throw IllegalStateException("channel $channelId wasn't registered")
+                    ?.getString(PROPERTY_TARGET_CURRENCY)
+                    ?: DEFAULT_TARGET_CURRENCY
 
-    override fun setTargetCurrency(channelId: String, base: String) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    override fun setTargetCurrency(channelId: String, target: String) {
+        updateProperty(
+                channelId,
+                { it.append(PROPERTY_TARGET_CURRENCY, target) }
+        )
     }
 
     override fun getExchangeApi(channelId: String): String =
             getPreferences(channelId)
-                    ?.getString("exchange")
-                    ?: throw IllegalStateException("channel $channelId wasn't registered")
+                    ?.getString(PROPERTY_EXCHANGE)
+                    ?: DEFAULT_EXCHAGE
 
     override fun setExchangeApi(channelId: String, exchangeApiName: String) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        updateProperty(
+                channelId,
+                { it.append(PROPERTY_EXCHANGE, exchangeApiName) }
+        )
     }
 
     override fun getLocale(channelId: String): Locale =
-            getPreferences(channelId)
-                    ?.getString("locale")
-                    ?.let { Locale(it) }
-                    ?: throw IllegalStateException("channel $channelId wasn't registered")
+            (getPreferences(channelId)
+                    ?.getString(PROPERTY_LOCALE) ?: DEFAULT_LOCALE)
+                    .let { Locale(it) }
 
     override fun setLocale(channelId: String, locale: Locale) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        updateProperty(
+                channelId,
+                { it.append(PROPERTY_LOCALE, locale) }
+        )
     }
 
-    override fun getSubscriptions(channelId: String): List<Subscription>? =
-            TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    override fun getSubscriptions(channelId: String): List<Subscription>? {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
 
     override fun addSubscription(channelId: String, newSubscription: Subscription) {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
@@ -68,23 +72,48 @@ class MongoStorageImpl(private val mongo: MongoDatabase) : Storage {
 
     private fun getPreferences(channelId: String): Document? =
             getPreferencesCollection()
-                    .find(eq("_id", channelId))
+                    .find(eq(PROPERTY_ID, channelId))
                     .firstOrNull()
 
     private fun getPreferencesCollection(): MongoCollection<Document> {
-        if (!mongo.listCollectionNames().contains("preferences")) {
-            mongo.createCollection("preferences")
+        if (!mongo.listCollectionNames().contains(COLLECTION_NAME)) {
+            mongo.createCollection(COLLECTION_NAME)
         }
 
-        return mongo.getCollection("preferences")
+        return mongo.getCollection(COLLECTION_NAME)
     }
 
-    // todo _id must be telegram-agnostic and set incrementally
-    private fun createDefaultPreferences(channelId: String) =
-            Document("_id", channelId)
-                    .append("locale", "en")
-                    .append("base_currency", "BTC")
-                    .append("target_currency", "USD")
-                    .append("exchange", GdaxApi.NAME)
+    private inline fun updateProperty(channelId: String, documentUpdate: (Document) -> Document) {
+        val preferencesCollection = getPreferencesCollection()
+
+        if (getPreferences(channelId) == null) {
+            preferencesCollection.insertOne(
+                    documentUpdate.invoke(Document(PROPERTY_ID, channelId))
+            )
+        } else {
+            val update = Document().append(
+                    "\$set",
+                    documentUpdate.invoke(Document())
+            )
+
+            preferencesCollection.updateOne(eq(PROPERTY_ID, channelId), update)
+        }
+    }
+
+    companion object {
+        private const val COLLECTION_NAME = "preferences"
+
+        private const val PROPERTY_ID = "_id"
+        private const val PROPERTY_LOCALE = "locale"
+        private const val PROPERTY_BASE_CURRENCY = "base_currency"
+        private const val PROPERTY_TARGET_CURRENCY = "target_currency"
+        private const val PROPERTY_EXCHANGE = "exchange"
+        private const val PROPERTY_SUBSCRIPTIONS = "subscriptions"
+
+        private const val DEFAULT_BASE_CURRENCY = "BTC"
+        private const val DEFAULT_TARGET_CURRENCY = "USD"
+        private const val DEFAULT_EXCHAGE = GdaxApi.NAME
+        private val DEFAULT_LOCALE = Locale.getDefault().language
+    }
 
 }

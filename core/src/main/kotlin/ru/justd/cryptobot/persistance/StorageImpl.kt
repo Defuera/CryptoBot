@@ -17,10 +17,6 @@ class StorageImpl constructor(val storageDataSource: HashMap<String, UserPrefere
     private val DEFAULT_LOCALE = Locale.getDefault() //todo
     private val updateSubject = BehaviorSubject.create<Update>()
 
-    override fun registerChannel(channelId: String) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-    }
-
     override fun getBaseCurrency(channelId: String) = storageDataSource[channelId]?.base ?: DEFAULT_BASE
 
     override fun setBaseCurrency(channelId: String, base: String) {//todo
