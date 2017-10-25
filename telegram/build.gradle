@@ -46,23 +46,19 @@ repositories {
 
 sourceSets {
     main.kotlin.srcDirs += "$buildDir/generated/source/kapt/main"
-
 }
 
 
 def daggerVersion = "2.11"
 dependencies {
-    compile project(":core")
+    implementation project(":core")
 
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jre8:$kotlin_version"
     implementation 'com.github.pengrad:java-telegram-bot-api:3.3.0'
     implementation 'com.google.code.gson:gson:2.8.2'
     implementation 'com.github.hotchemi:khronos:0.9.0' //date extension http://hotchemi.github.io/khronos/
     implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-core:0.19.1'
-
-    //dagger
-    implementation "com.google.dagger:dagger:$daggerVersion"
-    kapt "com.google.dagger:dagger-compiler:$daggerVersion"
+    implementation "io.reactivex.rxjava2:rxjava:2.1.5"
 }
 
 //tests
