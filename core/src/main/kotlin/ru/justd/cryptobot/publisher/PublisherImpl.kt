@@ -1,21 +1,24 @@
 package ru.justd.cryptobot.publisher
 
 
+import io.reactivex.Observable
+import io.reactivex.subjects.BehaviorSubject
 import ru.justd.cryptobot.exchanges.ExchangeFacade
 import ru.justd.cryptobot.exchanges.RateResponse
 import ru.justd.cryptobot.exchanges.exceptions.ExchangeNotSupported
 import ru.justd.cryptobot.exchanges.exceptions.RequestFailed
 import ru.justd.cryptobot.handler.subscribe.Subscription
-import ru.justd.cryptobot.messenger.Messenger
 import ru.justd.cryptobot.persistance.Storage
 
-internal class PublisherImpl(
-        private val messenger: Messenger,
+internal class PublisherImpl constructor(
         private val exchangeFacade: ExchangeFacade,
         storage: Storage
 ) : Publisher {
 
+    private val subject = BehaviorSubject.create<Update>()
+
     init {
+
         val observeUpdates = storage.observeUpdates()
         observeUpdates
                 .subscribe(
@@ -28,18 +31,22 @@ internal class PublisherImpl(
                 )
     }
 
+    override fun observeUpdates(): Observable<Update> = subject //todo identify subscriber to filter messages (subscribers should not get messages of other subscribers)
+
     private fun initWorker(channelId: String, subscription: Subscription) {
-        Thread(Runnable { //todo rx worker
+        Thread(Runnable {
+            //todo rx worker
             print("new thread started")
             val response = exchangeFacade.getRate(subscription.base, subscription.target, subscription.exchange)
             publishUpdate(channelId, response)
+
             Thread.sleep(subscription.periodicityMins * 1000 * 60)
             initWorker(channelId, subscription)
         }).start()
     }
 
     private fun publishUpdate(channelId: String, rate: RateResponse) {
-        sendMessage(channelId, createMessage(rate))
+        subject.onNext(Update(channelId, createMessage(rate)))
     }
 
     private fun createMessage(rate: RateResponse): String { //todo this is copied from PriceHandler
@@ -50,10 +57,6 @@ internal class PublisherImpl(
         } catch (error: RequestFailed) {
             error.message
         }.trim()
-    }
-
-    private fun sendMessage(channelId: String, text: String) {
-        messenger.sendMessage(channelId, text)
     }
 
 }

@@ -69,7 +69,7 @@ class MongoStorageImpl(private val mongo: MongoDatabase) : Storage {
         )
     }
 
-    override fun observeUpdates(): Observable<Update> = Observable.empty()
+    override fun observeUpdates(): Observable<PreferenceUpdate> = Observable.empty()
 
     private fun getPreferences(channelId: String): UserPreferences? =
             getPreferencesCollection()
