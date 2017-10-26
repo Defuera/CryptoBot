@@ -4,6 +4,7 @@ import com.mongodb.MongoClient
 import com.mongodb.client.MongoDatabase
 import dagger.Module
 import dagger.Provides
+import ru.justd.cryptobot.BuildConfig
 import ru.justd.cryptobot.persistance.MongoStorageImpl
 import ru.justd.cryptobot.persistance.Storage
 import javax.inject.Singleton
@@ -17,6 +18,6 @@ class StorageModule {
 
     @Provides
     @Singleton
-    fun provideMongo(): MongoDatabase = MongoClient().getDatabase("db")
+    fun provideMongo(): MongoDatabase = MongoClient(BuildConfig.MONGO_ADDRESS).getDatabase("db")
 
 }

@@ -1,7 +1,5 @@
 package ru.justd.cryptobot.handler.subscribe
 
-import ru.justd.cryptobot.exchanges.ExchangeApi
-import ru.justd.cryptobot.exchanges.coinbase.CoinbaseApi
 import ru.justd.cryptobot.handler.CommandHandlerFactory
 import ru.justd.cryptobot.handler.exceptions.InvalidCommand
 import ru.justd.cryptobot.persistance.Storage

@@ -57,7 +57,7 @@ class MongoStorageImpl(private val mongo: MongoDatabase) : Storage {
     override fun setLocale(channelId: String, locale: Locale) {
         updateProperty(
                 channelId,
-                { it.append(PROPERTY_LOCALE, locale) }
+                { it.append(PROPERTY_LOCALE, locale.language) }
         )
     }
 
