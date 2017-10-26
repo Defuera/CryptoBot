@@ -3,11 +3,11 @@ package ru.justd.cryptobot.messenger
 import com.pengrad.telegrambot.model.Message
 import com.pengrad.telegrambot.model.MessageEntity
 import com.pengrad.telegrambot.model.Update
-import ru.justd.cryptobot.handler.CommandHandlerFacade
+import ru.justd.cryptobot.CryptoCore
 import ru.justd.cryptobot.handler.exceptions.InvalidCommand
 import ru.justd.cryptobot.toChannelId
 
-class RequestProcessor(private val commandHandlerFacade: CommandHandlerFacade) {
+class RequestProcessor(private val cryptoCore: CryptoCore) {
 
     fun process(update: Update): String {
         val message = update.message()
@@ -19,7 +19,7 @@ class RequestProcessor(private val commandHandlerFacade: CommandHandlerFacade) {
             }
         } else if (isBotAddedToChannel(message)) {
             //greeting message
-            commandHandlerFacade.handle(toChannelId(message.chat().id()), "/help")
+            cryptoCore.handle(toChannelId(message.chat().id()), "/help")
         } else {
             "message with no entities not supported"
         }
@@ -27,7 +27,7 @@ class RequestProcessor(private val commandHandlerFacade: CommandHandlerFacade) {
 
     private fun handleBotCommand(message: Message): String {
         return try {
-            commandHandlerFacade.handle(
+            cryptoCore.handle(
                     toChannelId(message.chat().id()),
                     message.text()
             )
