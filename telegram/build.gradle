@@ -48,8 +48,6 @@ sourceSets {
     main.kotlin.srcDirs += "$buildDir/generated/source/kapt/main"
 }
 
-
-def daggerVersion = "2.11"
 dependencies {
     implementation project(":core")
 
