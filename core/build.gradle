@@ -13,7 +13,6 @@ kotlin {
 
 buildscript {
     project.group = 'ru.justd.cryptobot'
-    ext.kotlin_version = '1.1.51'
 
     repositories {
         mavenCentral()
@@ -48,10 +47,6 @@ sourceSets {
     main.kotlin.srcDirs += "$buildDir/generated/source/kapt/main"
 
 }
-
-
-def daggerVersion = "2.11"
-def okHttpVersion = '3.9.0'
 
 dependencies {
     // kotlin
