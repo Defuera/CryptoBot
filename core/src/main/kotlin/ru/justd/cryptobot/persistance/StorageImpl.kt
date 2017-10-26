@@ -7,6 +7,7 @@ import ru.justd.cryptobot.handler.subscribe.StorageException
 import ru.justd.cryptobot.handler.subscribe.Subscription
 import ru.justd.cryptobot.publisher.Update
 import java.util.*
+import kotlin.collections.ArrayList
 
 class StorageImpl constructor(val storageDataSource: HashMap<String, UserPreferences>) : Storage {
 
@@ -56,7 +57,7 @@ class StorageImpl constructor(val storageDataSource: HashMap<String, UserPrefere
 
         val existingSubscriptions = userPreferences.subscriptions
 
-        val newSubscriptionsList = existingSubscriptions + newSubscription
+        val newSubscriptionsList = (existingSubscriptions ?: ArrayList()) + newSubscription
 
         return userPreferences.copy(subscriptions = newSubscriptionsList)
 
