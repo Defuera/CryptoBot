@@ -1,10 +1,11 @@
 package ru.justd.cryptobot.messenger
 
-import com.pengrad.telegrambot.Callback
 import com.pengrad.telegrambot.TelegramBot
+import com.pengrad.telegrambot.model.request.InlineKeyboardButton
+import com.pengrad.telegrambot.model.request.InlineKeyboardMarkup
+import com.pengrad.telegrambot.model.request.Keyboard
 import com.pengrad.telegrambot.model.request.ParseMode
 import com.pengrad.telegrambot.request.SendMessage
-import com.pengrad.telegrambot.response.SendResponse
 import java.io.IOException
 
 class MessageSender(
@@ -18,27 +19,38 @@ class MessageSender(
     ) {
         println("send response...")
 
-        telegramBot.execute(
-                createSendMessageRequest(chatId, outgoingMessage),
-                object : Callback<SendMessage, SendResponse> {
+        val request = SendMessage(chatId, formatMessageText(outgoingMessage))
+//        request.attachKeyboard(arrayOf(
+//                arrayOf("test"),
+//                arrayOf("case", "lace")
+//        ))
+        request.parseMode(ParseMode.Markdown)
 
-                    override fun onResponse(request: SendMessage?, response: SendResponse?) {
-                        println("on response sent: ${response?.message()?.text()}")
-                    }
+        try {
+            val response = telegramBot.execute(request)
+            println("on response sent: ${response?.message()?.text()}")
+        } catch (io: IOException) {
+            println("failure: ${io.message}")
+        }
 
-                    override fun onFailure(request: SendMessage?, e: IOException?) {
-                        println("failure: ${e?.message}")
-                    }
-
-                })
     }
-
-    private fun createSendMessageRequest(chatId: Long, message: String): SendMessage {
-        return SendMessage(chatId, formatMessageText(message)).parseMode(ParseMode.Markdown)
-    }
-
-
     private fun formatMessageText(message: String) =
             "*$uuid*\n_thread: ${Thread.currentThread().name}_\n\n$message"
+
+    fun SendMessage.attachKeyboard(keyboard: Array<Array<String>>) {
+        val telegramKeyboard = mapToTelegramKeyboard(keyboard)
+        this.replyMarkup(telegramKeyboard)
+    }
+
+    private fun mapToTelegramKeyboard(keyboard: Array<Array<String>>): Keyboard =
+            InlineKeyboardMarkup(
+                    *keyboard
+                            .map {
+                                it.map {
+                                    InlineKeyboardButton(it).callbackData("/callback $it")
+                                }.toTypedArray()
+                            }
+                            .toTypedArray()
+            )
 
 }

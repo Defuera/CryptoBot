@@ -26,6 +26,7 @@ class RequestProcessor(private val cryptoCore: CryptoCore) {
     }
 
     private fun handleBotCommand(message: Message): String {
+        println("bot command recognized: ${message.text()}")
         return try {
             cryptoCore.handle(
                     toChannelId(message.chat().id()),
