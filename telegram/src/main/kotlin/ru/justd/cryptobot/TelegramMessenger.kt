@@ -9,6 +9,7 @@ import ru.justd.cryptobot.handler.KillCommandHandlerFactory
 import ru.justd.cryptobot.handler.ShutdownException
 import ru.justd.cryptobot.messenger.MessageSender
 import ru.justd.cryptobot.messenger.RequestProcessor
+import ru.justd.cryptobot.messenger.model.Reply
 
 class TelegramMessenger(private val uuid: String) {
 
@@ -21,8 +22,7 @@ class TelegramMessenger(private val uuid: String) {
 
     init {
         cryptoCore.addCommandHandler(KillCommandHandlerFactory(uuid))
-
-        cryptoCore.setUpdateListener { sendMessage(it.channelId, it.message) }
+        cryptoCore.setUpdateListener { sendMessage(it.channelId, Reply(it.message)) }
     }
 
     fun run() {
@@ -44,7 +44,7 @@ class TelegramMessenger(private val uuid: String) {
             try {
                 sendMessage(toChannelId(chatId), requestProcessor.process(update))
             } catch (shutdownException: ShutdownException) {
-                sendMessage(toChannelId(chatId), shutdownException.message)
+                sendMessage(toChannelId(chatId), Reply(shutdownException.message))
                 telegramBot.removeGetUpdatesListener()
                 System.exit(0)
             }
@@ -52,7 +52,7 @@ class TelegramMessenger(private val uuid: String) {
         }
     }
 
-    fun sendMessage(channelId: String, message: String) {
+    fun sendMessage(channelId: String, message: Reply) {
         messageSender.sendMessage(toChatId(channelId), message)
     }
 

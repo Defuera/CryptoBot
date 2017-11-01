@@ -1,7 +1,7 @@
 package ru.justd.cryptobot.handler.subscribe
 
 import ru.justd.cryptobot.handler.CommandHandler
-import ru.justd.cryptobot.messenger.model.OutgoingMessage
+import ru.justd.cryptobot.messenger.model.Reply
 import ru.justd.cryptobot.persistance.Storage
 
 /**
@@ -25,16 +25,30 @@ import ru.justd.cryptobot.persistance.Storage
 class SubscribeHandler(
         private val userId: String,
         private val storage: Storage,
-        val base: String,
-        val target: String,
+        val base: String?,
+        val target: String?,
         val exchange: String?
 ) : CommandHandler {
 
-    override fun responseMessage(): OutgoingMessage {
+    override fun createReply(): Reply {
 
-        //todo looks like it action should not be result of invoking responseMessage fun..
-        storage.addSubscription(userId, Subscription(base, target, exchange ?: storage.getExchangeApi(userId), 5))
-        return OutgoingMessage("subscriptions created")
+        if (base.isNullOrBlank()){
+            return Reply(
+                    "Please choose crypto currency from the list or use full command `/subscribe BASE TARGET EXCHANGE_CODE every INT_TIME_VALUE`", //todo something wrong with /
+                    arrayOf("BTC", "ETH", "BCC") //todo magic string. store list of supported currencies
+            )
+        }
+
+        if (target.isNullOrBlank()){
+            return Reply(
+                    "Please choose fiat currency from the list or use full command `/subscribe` BASE TARGET EXCHANGE_CODE every INT_TIME_VALUE",
+                    arrayOf("USD", "EUR", "GBP") //todo magic string. store list of supported fiat  currencies
+            )
+        }
+
+        //todo looks like it action should not be result of invoking createReply fun..
+        storage.addSubscription(userId, Subscription(base!!, target!!, exchange ?: storage.getExchangeApi(userId), 5))
+        return Reply("subscriptions created")
 
     }
 

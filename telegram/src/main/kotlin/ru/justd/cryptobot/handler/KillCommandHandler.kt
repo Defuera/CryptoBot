@@ -1,6 +1,6 @@
 package ru.justd.cryptobot.handler
 
-import ru.justd.cryptobot.messenger.model.OutgoingMessage
+import ru.justd.cryptobot.messenger.model.Reply
 
 class KillCommandHandler(
         private val kill: Boolean
@@ -13,10 +13,10 @@ class KillCommandHandler(
 
     }
 
-    override fun responseMessage() =
+    override fun createReply() =
             if (kill)
                 throw ShutdownException(FAREWELL_MESSAGE)
             else
-                OutgoingMessage(SURVIVOR_MESSAGE)
+                Reply(SURVIVOR_MESSAGE)
 
 }

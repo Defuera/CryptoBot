@@ -3,6 +3,7 @@ package ru.justd.cryptobot
 import ru.justd.cryptobot.di.DaggerCryptoCoreComponent
 import ru.justd.cryptobot.handler.CommandHandlerFacade
 import ru.justd.cryptobot.handler.CommandHandlerFactory
+import ru.justd.cryptobot.messenger.model.Reply
 import ru.justd.cryptobot.publisher.Publisher
 import ru.justd.cryptobot.publisher.Update
 import javax.inject.Inject
@@ -26,7 +27,7 @@ class CryptoCore {
 
     }
 
-    fun handle(channelId: String, request: String): String {
+    fun handle(channelId: String, request: String): Reply {
         return commandHandlerFacade.handle(channelId, request)
     }
 

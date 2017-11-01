@@ -13,13 +13,13 @@ class KillCommandHandlerTest {
     @Test(expected = ShutdownException::class)
     fun testKillThisInstance() {
         val handler = KillCommandHandler(true)
-        handler.responseMessage()
+        handler.createReply()
     }
 
     @Test
     fun testKillOtherInstance() {
         val handler = KillCommandHandler(false)
-        assertThat(handler.responseMessage().text)
+        assertThat(handler.createReply().text)
                 .isEqualTo("Phew! It's not me!")
     }
 

@@ -1,11 +1,9 @@
 package ru.justd.cryptobot.messenger
 
 import com.pengrad.telegrambot.TelegramBot
-import com.pengrad.telegrambot.model.request.InlineKeyboardButton
-import com.pengrad.telegrambot.model.request.InlineKeyboardMarkup
-import com.pengrad.telegrambot.model.request.Keyboard
 import com.pengrad.telegrambot.model.request.ParseMode
 import com.pengrad.telegrambot.request.SendMessage
+import ru.justd.cryptobot.messenger.model.Reply
 import java.io.IOException
 
 class MessageSender(
@@ -13,17 +11,14 @@ class MessageSender(
         private val telegramBot: TelegramBot
 ) {
 
-    fun sendMessage(
-            chatId: Long,
-            outgoingMessage: String
-    ) {
+    fun sendMessage(chatId: Long, reply: Reply) {
         println("send response...")
 
-        val request = SendMessage(chatId, formatMessageText(outgoingMessage))
-//        request.attachKeyboard(arrayOf(
-//                arrayOf("test"),
-//                arrayOf("case", "lace")
-//        ))
+        val request = SendMessage(chatId, formatMessageText(reply.text))
+        if (KeyboardAdapter.hasOptions(reply)) {
+            request.replyMarkup(KeyboardAdapter.createKeyboard(reply))
+        }
+
         request.parseMode(ParseMode.Markdown)
 
         try {
@@ -34,23 +29,8 @@ class MessageSender(
         }
 
     }
+
     private fun formatMessageText(message: String) =
             "*$uuid*\n_thread: ${Thread.currentThread().name}_\n\n$message"
-
-    fun SendMessage.attachKeyboard(keyboard: Array<Array<String>>) {
-        val telegramKeyboard = mapToTelegramKeyboard(keyboard)
-        this.replyMarkup(telegramKeyboard)
-    }
-
-    private fun mapToTelegramKeyboard(keyboard: Array<Array<String>>): Keyboard =
-            InlineKeyboardMarkup(
-                    *keyboard
-                            .map {
-                                it.map {
-                                    InlineKeyboardButton(it).callbackData("/callback $it")
-                                }.toTypedArray()
-                            }
-                            .toTypedArray()
-            )
 
 }
