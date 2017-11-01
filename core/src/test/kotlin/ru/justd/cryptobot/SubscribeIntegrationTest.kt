@@ -55,20 +55,20 @@ internal class SubscribeIntegrationTest {
     @Test
     fun `test subscribe with ltc gbp`() {
         //action
-        val response = testInstance.handle(userId, "/subscribe $BASE_BCC $TARGET_GBP")
+        val reply = testInstance.handle(userId, "/subscribe $BASE_LTC $TARGET_GBP")
 
         //test
-        assertThat(response).isEqualTo("subscriptions created")
+        assertThat(reply.text).isEqualTo("subscriptions created")
         verify(storageMock).addSubscription(userId, Subscription(BASE_LTC, TARGET_GBP, EXCHANGE_GDAX, 5))
     }
 
     @Test
     fun `test subscribe btc usd gdax`() {
         //action
-        val response = testInstance.handle(userId, "/subscribe $BASE_LTC $TARGET_GBP $EXCHANGE_CRYPTONATOR")
+        val reply = testInstance.handle(userId, "/subscribe $BASE_LTC $TARGET_GBP $EXCHANGE_CRYPTONATOR")
 
         //test
-        assertThat(response).isEqualTo("subscriptions created")
+        assertThat(reply.text).isEqualTo("subscriptions created")
         verify(storageMock).addSubscription(userId, Subscription(BASE_LTC, TARGET_GBP, EXCHANGE_CRYPTONATOR, 5))
     }
 
