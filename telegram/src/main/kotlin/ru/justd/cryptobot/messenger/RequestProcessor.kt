@@ -12,17 +12,18 @@ class RequestProcessor(private val cryptoCore: CryptoCore) {
 
     fun process(update: Update): Reply {
         val message = update.message()
+        val channelId = toChannelId(message.chat().id())
         val entity = message.entities()?.first() //todo what if more than one entity? Should we support it?
         return if (entity != null) {
             when (entity.type()) {
                 MessageEntity.Type.bot_command -> handleBotCommand(message)
-                else -> Reply("message type not supported ${entity.type()}")
+                else -> Reply(channelId, "message type not supported ${entity.type()}")
             }
         } else if (isBotAddedToChannel(message)) {
             //greeting message
-            cryptoCore.handle(toChannelId(message.chat().id()), "/help")
+            cryptoCore.handle(channelId, "/help")
         } else {
-            Reply("message with no entities not supported")
+            Reply(channelId, "message with no entities not supported")
         }
     }
 
@@ -34,7 +35,7 @@ class RequestProcessor(private val cryptoCore: CryptoCore) {
                     message.text()
             )
         } catch (invalidCommand: InvalidCommand) {
-            Reply(invalidCommand.message)
+            Reply(toChannelId(message.chat().id()), invalidCommand.message)
         }
     }
 

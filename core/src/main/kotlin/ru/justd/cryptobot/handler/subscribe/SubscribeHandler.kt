@@ -30,10 +30,11 @@ class SubscribeHandler(
         val exchange: String?
 ) : CommandHandler {
 
-    override fun createReply(): Reply {
+    override fun createReply(channelId: String): Reply {
 
         if (base.isNullOrBlank()){
             return Reply(
+                    channelId,
                     "Please choose crypto currency from the list or use full command `/subscribe BASE TARGET EXCHANGE_CODE every INT_TIME_VALUE`", //todo something wrong with /
                     arrayOf("BTC", "ETH", "BCC") //todo magic string. store list of supported currencies
             )
@@ -41,6 +42,7 @@ class SubscribeHandler(
 
         if (target.isNullOrBlank()){
             return Reply(
+                    channelId,
                     "Please choose fiat currency from the list or use full command `/subscribe` BASE TARGET EXCHANGE_CODE every INT_TIME_VALUE",
                     arrayOf("USD", "EUR", "GBP") //todo magic string. store list of supported fiat  currencies
             )
@@ -48,7 +50,7 @@ class SubscribeHandler(
 
         //todo looks like it action should not be result of invoking createReply fun..
         storage.addSubscription(userId, Subscription(base!!, target!!, exchange ?: storage.getExchangeApi(userId), 5))
-        return Reply("subscriptions created")
+        return Reply(channelId, "subscriptions created")
 
     }
 

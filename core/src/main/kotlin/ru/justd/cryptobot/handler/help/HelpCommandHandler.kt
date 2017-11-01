@@ -5,7 +5,7 @@ import ru.justd.cryptobot.messenger.model.Reply
 
 internal object HelpCommandHandler : CommandHandler {
 
-    override fun createReply() = Reply("todo, restore") //todo
+    override fun createReply(channelId: String) = Reply(channelId,"todo, restore") //todo
 //            Command
 //                    .values()
 //                    .filter { it.description()?.isNotEmpty() ?: false }

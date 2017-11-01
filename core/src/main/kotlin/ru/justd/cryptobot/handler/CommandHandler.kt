@@ -4,6 +4,6 @@ import ru.justd.cryptobot.messenger.model.Reply
 
 interface CommandHandler {
 
-    fun createReply(): Reply
+    fun createReply(channelId: String): Reply
 
 }

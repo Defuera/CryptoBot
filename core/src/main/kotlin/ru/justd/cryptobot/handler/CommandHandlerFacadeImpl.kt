@@ -12,7 +12,7 @@ internal class CommandHandlerFacadeImpl(
         val factory = factories.find { it.canHandle(request) } ?: throw InvalidCommand("Command `$request` not supported ")
         val handler = factory.create(channelId, request)
 
-        return handler.createReply()
+        return handler.createReply(channelId)
     }
 
     override fun <T : CommandHandler> addCommandHandler(factory: CommandHandlerFactory<T>) {

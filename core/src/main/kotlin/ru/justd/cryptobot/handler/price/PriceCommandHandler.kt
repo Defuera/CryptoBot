@@ -21,7 +21,7 @@ class PriceCommandHandler (
         val exchange: String?
 ) : CommandHandler {
 
-    override fun createReply(): Reply {
+    override fun createReply(channelId: String): Reply {
         println("PriceCommandHandler#createReply $base $target $exchange")
 
         val message = try {
@@ -34,7 +34,7 @@ class PriceCommandHandler (
             error.message
         }.trim()
 
-        return Reply(message)
+        return Reply(channelId, message)
     }
 
 }

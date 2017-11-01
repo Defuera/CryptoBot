@@ -5,6 +5,6 @@ import ru.justd.cryptobot.messenger.model.Reply
 
 internal object AboutCommandHandler : CommandHandler {
 
-    override fun createReply() =  Reply("ain't no about for you, doug")
+    override fun createReply(channelId: String) =  Reply(channelId,"ain't no about for you, doug")
 
 }

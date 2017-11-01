@@ -6,7 +6,8 @@ import ru.justd.cryptobot.messenger.model.Reply
 
 internal object UpdateCommandHandler : CommandHandler {
 
-    override fun createReply() = Reply( //todo, what's that?
+    override fun createReply(channelId: String) = Reply( //todo, what's that?
+            channelId,
             "ain't no update for you, doug"
 //            Responses(UpdateCase.values().asList())
     )

@@ -13,10 +13,10 @@ class KillCommandHandler(
 
     }
 
-    override fun createReply() =
+    override fun createReply(channelId: String) =
             if (kill)
-                throw ShutdownException(FAREWELL_MESSAGE)
+                throw ShutdownException(channelId, FAREWELL_MESSAGE)
             else
-                Reply(SURVIVOR_MESSAGE)
+                Reply(channelId, SURVIVOR_MESSAGE)
 
 }

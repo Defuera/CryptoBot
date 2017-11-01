@@ -22,7 +22,7 @@ class TelegramMessenger(private val uuid: String) {
 
     init {
         cryptoCore.addCommandHandler(KillCommandHandlerFactory(uuid))
-        cryptoCore.setUpdateListener { sendMessage(it.channelId, Reply(it.message)) }
+        cryptoCore.setUpdateListener { sendMessage(Reply(it.channelId, it.message)) }
     }
 
     fun run() {
@@ -39,12 +39,11 @@ class TelegramMessenger(private val uuid: String) {
 
     private fun handleAsync(update: Update) {
         launch {
-            val chatId = update.message().chat().id()
 
             try {
-                sendMessage(toChannelId(chatId), requestProcessor.process(update))
-            } catch (shutdownException: ShutdownException) {
-                sendMessage(toChannelId(chatId), Reply(shutdownException.message))
+                sendMessage(requestProcessor.process(update))
+            } catch (exception: ShutdownException) {
+                sendMessage(Reply(exception.channelId, exception.message))
                 telegramBot.removeGetUpdatesListener()
                 System.exit(0)
             }
@@ -52,8 +51,8 @@ class TelegramMessenger(private val uuid: String) {
         }
     }
 
-    fun sendMessage(channelId: String, message: Reply) {
-        messageSender.sendMessage(toChatId(channelId), message)
+    fun sendMessage(reply: Reply) {
+        messageSender.sendMessage(toChatId(reply.replyTo), reply)
     }
 
 }

@@ -37,7 +37,7 @@ class PriceCommandHandlerTest {
         whenever(exchangeFacade.getRate(base)).thenReturn(RateResponse(.0, base, "USD"))
 
         //test
-        val message = PriceCommandHandler(exchangeFacade, base, null, null).createReply()
+        val message = PriceCommandHandler(exchangeFacade, base, null, null).createReply("channelId")
 
         //assert
         assertThat(message.text).matches(patternForPair(base, "USD"))
@@ -51,7 +51,7 @@ class PriceCommandHandlerTest {
         whenever(exchangeFacade.getRate(base, target)).thenReturn(RateResponse(.0, base, target))
 
         //test
-        val message = PriceCommandHandler(exchangeFacade, base, target, null).createReply()
+        val message = PriceCommandHandler(exchangeFacade, base, target, null).createReply("channelId")
 
         //assert
         assertThat(message.text).matches(patternForPair(base, target))
@@ -69,7 +69,7 @@ class PriceCommandHandlerTest {
         whenever(exchangeFacade.getRate(base, target, invalidExchange)).thenThrow(ExchangeNotSupported(invalidExchange))
 
         //action
-        val message = PriceCommandHandler(exchangeFacade, base, target, invalidExchange).createReply()
+        val message = PriceCommandHandler(exchangeFacade, base, target, invalidExchange).createReply("channelId")
 
         //assert
         assertThat(message.text).isEqualTo("$invalidExchange exchange not supported")
