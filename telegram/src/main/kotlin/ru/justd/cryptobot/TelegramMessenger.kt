@@ -5,61 +5,45 @@ import com.pengrad.telegrambot.TelegramBotAdapter
 import com.pengrad.telegrambot.UpdatesListener
 import com.pengrad.telegrambot.model.Update
 import kotlinx.coroutines.experimental.launch
-import ru.justd.cryptobot.handler.CommandHandlerFacade
 import ru.justd.cryptobot.handler.KillCommandHandlerFactory
 import ru.justd.cryptobot.handler.ShutdownException
 import ru.justd.cryptobot.messenger.MessageSender
 import ru.justd.cryptobot.messenger.RequestProcessor
-import ru.justd.cryptobot.publisher.Publisher
-import javax.inject.Inject
+import ru.justd.cryptobot.messenger.model.Reply
 
 class TelegramMessenger(private val uuid: String) {
-
-    @Inject
-    lateinit var publisher: Publisher //todo if I not inject it it's not instantiated, then publisher is not working
-
-    @Inject
-    lateinit var commandHandlerFacade: CommandHandlerFacade
 
     private lateinit var requestProcessor: RequestProcessor
 
     private val telegramBot: TelegramBot = TelegramBotAdapter.build(BuildConfig.BOT_TOKEN) //todo provide debug/production bot based on BuildType
     private val messageSender = MessageSender(uuid, telegramBot)
 
+    val cryptoCore = CryptoCore()
+
     init {
-        DaggerTelegramComponent.builder()
-                .build()
-                .inject(this)
-
-        commandHandlerFacade.addCommandHandler(KillCommandHandlerFactory(uuid))
-
-        publisher
-                .observeUpdates()
-                .subscribe { sendMessage(it.channelId, it.message) }
-
-
+        cryptoCore.addCommandHandler(KillCommandHandlerFactory(uuid))
+        cryptoCore.setUpdateListener { sendMessage(Reply(it.channelId, it.message)) }
     }
 
     fun run() {
         println("TelegramMessenger started, id: $uuid")
 
-        requestProcessor = RequestProcessor(commandHandlerFacade)
+        requestProcessor = RequestProcessor(cryptoCore)
 
-        telegramBot.setUpdatesListener({ updates ->
+        telegramBot.setUpdatesListener { updates ->
             updates.forEach { handleAsync(it) }
 
             UpdatesListener.CONFIRMED_UPDATES_ALL
-        })
+        }
     }
 
     private fun handleAsync(update: Update) {
         launch {
-            val chatId = update.message().chat().id()
 
             try {
-                sendMessage(toChannelId(chatId), requestProcessor.process(update))
-            } catch (shutdownException: ShutdownException) {
-                sendMessage(toChannelId(chatId), shutdownException.message)
+                sendMessage(requestProcessor.process(update))
+            } catch (exception: ShutdownException) {
+                sendMessage(Reply(exception.channelId, exception.message))
                 telegramBot.removeGetUpdatesListener()
                 System.exit(0)
             }
@@ -67,8 +51,8 @@ class TelegramMessenger(private val uuid: String) {
         }
     }
 
-    fun sendMessage(channelId: String, message: String) {
-        messageSender.sendMessage(toChatId(channelId), message)
+    fun sendMessage(reply: Reply) {
+        messageSender.sendMessage(toChatId(reply.replyTo), reply)
     }
 
 }

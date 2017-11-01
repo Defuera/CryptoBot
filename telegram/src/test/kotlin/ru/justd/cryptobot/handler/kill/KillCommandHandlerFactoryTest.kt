@@ -25,7 +25,7 @@ class KillCommandHandlerFactoryTest {
     }
 
     private fun tryToKillInstanceWithIdAndGetResponse(id: String): String {
-        return testInstance.create("chatId", "/kill $id").responseMessage().text
+        return testInstance.create("chatId", "/kill $id").createReply("channelId").text
     }
 
 }

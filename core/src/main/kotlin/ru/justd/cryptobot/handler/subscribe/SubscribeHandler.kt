@@ -1,31 +1,56 @@
 package ru.justd.cryptobot.handler.subscribe
 
 import ru.justd.cryptobot.handler.CommandHandler
-import ru.justd.cryptobot.messenger.model.OutgoingMessage
+import ru.justd.cryptobot.messenger.model.Reply
 import ru.justd.cryptobot.persistance.Storage
 
 /**
- * Provides scheduled updates every x minutes on preconfigured [PRICE] request
  *
- * * **Usage:** /subscribe BASE TARGET EXCHANGE_CODE every FREQUENCY_MIN
- * 1. BASE, TARGET, EXCHANGE_CODE - see [price](Command##Price) //todo link to price command in docs
- * 1. FREQUENCY_MIN - how often you want to receive updates in minutes.
+ * Allows you to subscribe for an update for a specific cryptocurrency price with given fiat and exchange.
  *
+ * * **Usage:** /subscribe BASE TARGET EXCHANGE_CODE every INT_TIME_VALUE
+ * 1. BASE - cryptocurrency code (like BTC or LTC), **required**
+ * 1. TARGET - fiat code (like USD or EUR), **required**
+ * 1. EXCHANGE_CODE - exchange name (like Gdax or Bitfinex, see list of available exchanges), **optional**
+ * 1. FREQUENCY_MIN - how often you want to receive updates in minutes (ex. 10m) or hours (2h). Minimum periodicity is 5 minutes
+ *
+ * Exchange parameter is optional, however base and target are required.
+ * You can get an update at a specific time (donno how to implement for telegram, so use UCT)
+ * You can get an update every x minutes, hours
+ * You can get an update when price changes significantly (can specify percent)
+ * You can combine those conditions
  * You can have multiple subscriptions
+ *
  */
-class SubscribeHandler constructor(
+class SubscribeHandler(
         private val userId: String,
         private val storage: Storage,
-        val base: String,
-        val target: String,
+        val base: String?,
+        val target: String?,
         val exchange: String?
 ) : CommandHandler {
 
-    override fun responseMessage(): OutgoingMessage {
+    override fun createReply(channelId: String): Reply {
 
-        //todo looks like it action should not be result of invoking responseMessage fun..
-        storage.addSubscription(userId, Subscription(base, target, exchange ?: storage.getExchangeApi(userId), 5))
-        return OutgoingMessage("subscriptions created")
+        if (base.isNullOrBlank()){
+            return Reply(
+                    channelId,
+                    "Please choose crypto currency from the list or use full command `/subscribe BASE TARGET EXCHANGE_CODE every INT_TIME_VALUE`", //todo something wrong with /
+                    arrayOf("BTC", "ETH", "BCC") //todo magic string. store list of supported currencies
+            )
+        }
+
+        if (target.isNullOrBlank()){
+            return Reply(
+                    channelId,
+                    "Please choose fiat currency from the list or use full command `/subscribe` BASE TARGET EXCHANGE_CODE every INT_TIME_VALUE",
+                    arrayOf("USD", "EUR", "GBP") //todo magic string. store list of supported fiat  currencies
+            )
+        }
+
+        //todo looks like it action should not be result of invoking createReply fun..
+        storage.addSubscription(userId, Subscription(base!!, target!!, exchange ?: storage.getExchangeApi(userId), 5))
+        return Reply(channelId, "subscriptions created")
 
     }
 

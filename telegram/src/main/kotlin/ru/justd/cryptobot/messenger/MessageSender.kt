@@ -1,10 +1,9 @@
 package ru.justd.cryptobot.messenger
 
-import com.pengrad.telegrambot.Callback
 import com.pengrad.telegrambot.TelegramBot
 import com.pengrad.telegrambot.model.request.ParseMode
 import com.pengrad.telegrambot.request.SendMessage
-import com.pengrad.telegrambot.response.SendResponse
+import ru.justd.cryptobot.messenger.model.Reply
 import java.io.IOException
 
 class MessageSender(
@@ -12,31 +11,24 @@ class MessageSender(
         private val telegramBot: TelegramBot
 ) {
 
-    fun sendMessage(
-            chatId: Long,
-            outgoingMessage: String
-    ) {
+    fun sendMessage(chatId: Long, reply: Reply) {
         println("send response...")
 
-        telegramBot.execute(
-                createSendMessageRequest(chatId, outgoingMessage),
-                object : Callback<SendMessage, SendResponse> {
+        val request = SendMessage(chatId, formatMessageText(reply.text))
+        if (KeyboardAdapter.hasOptions(reply)) {
+            request.replyMarkup(KeyboardAdapter.createKeyboard(reply))
+        }
 
-                    override fun onResponse(request: SendMessage?, response: SendResponse?) {
-                        println("on response sent: ${response?.message()?.text()}")
-                    }
+        request.parseMode(ParseMode.Markdown)
 
-                    override fun onFailure(request: SendMessage?, e: IOException?) {
-                        println("failure: ${e?.message}")
-                    }
+        try {
+            val response = telegramBot.execute(request)
+            println("on response sent: ${response?.message()?.text()}")
+        } catch (io: IOException) {
+            println("failure: ${io.message}")
+        }
 
-                })
     }
-
-    private fun createSendMessageRequest(chatId: Long, message: String): SendMessage {
-        return SendMessage(chatId, formatMessageText(message)).parseMode(ParseMode.Markdown)
-    }
-
 
     private fun formatMessageText(message: String) =
             "*$uuid*\n_thread: ${Thread.currentThread().name}_\n\n$message"

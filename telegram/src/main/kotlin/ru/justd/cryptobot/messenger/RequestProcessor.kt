@@ -3,36 +3,39 @@ package ru.justd.cryptobot.messenger
 import com.pengrad.telegrambot.model.Message
 import com.pengrad.telegrambot.model.MessageEntity
 import com.pengrad.telegrambot.model.Update
-import ru.justd.cryptobot.handler.CommandHandlerFacade
+import ru.justd.cryptobot.CryptoCore
 import ru.justd.cryptobot.handler.exceptions.InvalidCommand
+import ru.justd.cryptobot.messenger.model.Reply
 import ru.justd.cryptobot.toChannelId
 
-class RequestProcessor(private val commandHandlerFacade: CommandHandlerFacade) {
+class RequestProcessor(private val cryptoCore: CryptoCore) {
 
-    fun process(update: Update): String {
+    fun process(update: Update): Reply {
         val message = update.message()
+        val channelId = toChannelId(message.chat().id())
         val entity = message.entities()?.first() //todo what if more than one entity? Should we support it?
         return if (entity != null) {
             when (entity.type()) {
                 MessageEntity.Type.bot_command -> handleBotCommand(message)
-                else -> "message type not supported ${entity.type()}"
+                else -> Reply(channelId, "message type not supported ${entity.type()}")
             }
         } else if (isBotAddedToChannel(message)) {
             //greeting message
-            commandHandlerFacade.handle(toChannelId(message.chat().id()), "/help")
+            cryptoCore.handle(channelId, "/help")
         } else {
-            "message with no entities not supported"
+            Reply(channelId, "message with no entities not supported")
         }
     }
 
-    private fun handleBotCommand(message: Message): String {
+    private fun handleBotCommand(message: Message): Reply {
+        println("bot command recognized: ${message.text()}")
         return try {
-            commandHandlerFacade.handle(
+            cryptoCore.handle(
                     toChannelId(message.chat().id()),
                     message.text()
             )
         } catch (invalidCommand: InvalidCommand) {
-            invalidCommand.message
+            Reply(toChannelId(message.chat().id()), invalidCommand.message)
         }
     }
 

@@ -2,24 +2,23 @@ package ru.justd.cryptobot
 
 import com.nhaarman.mockito_kotlin.verify
 import com.nhaarman.mockito_kotlin.whenever
+import io.reactivex.Observable
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
 import ru.justd.cryptobot.di.StorageModule
 import ru.justd.cryptobot.exchanges.cryptonator.CryptonatorApi
 import ru.justd.cryptobot.exchanges.gdax.GdaxApi
-import ru.justd.cryptobot.handler.CommandHandlerFacade
-import ru.justd.cryptobot.handler.CommandHandlerFacadeImpl
 import ru.justd.cryptobot.handler.exceptions.InvalidCommand
-import ru.justd.cryptobot.handler.subscribe.SubscribeFactory
 import ru.justd.cryptobot.handler.subscribe.Subscription
+import ru.justd.cryptobot.persistance.PreferenceUpdate
 import ru.justd.cryptobot.persistance.Storage
 
 internal class SubscribeIntegrationTest {
 
-    lateinit var testInstance: CommandHandlerFacade
-    
-    private lateinit var storageMock : Storage
+    lateinit var testInstance: CryptoCore
+
+    private lateinit var storageMock: Storage
 
     private val userId = "chatId"
     private val BASE_LTC = "LTC"
@@ -32,11 +31,12 @@ internal class SubscribeIntegrationTest {
     @Before
     fun setup() {
         storageMock = StorageModule.storageMock
-        testInstance = CommandHandlerFacadeImpl(mutableListOf(SubscribeFactory(storageMock)))
-
+        whenever(storageMock.observeUpdates()).thenReturn(Observable.create<PreferenceUpdate> { })
         whenever(storageMock.getExchangeApi(userId)).thenReturn("stub api")
         whenever(storageMock.getBaseCurrency(userId)).thenReturn("stub base")
         whenever(storageMock.getTargetCurrency(userId)).thenReturn("stub target")
+
+        testInstance = CryptoCore()
     }
 
     @Test
@@ -55,20 +55,20 @@ internal class SubscribeIntegrationTest {
     @Test
     fun `test subscribe with ltc gbp`() {
         //action
-        val response = testInstance.handle(userId, "/subscribe $BASE_BCC $TARGET_GBP")
+        val reply = testInstance.handle(userId, "/subscribe $BASE_LTC $TARGET_GBP")
 
         //test
-        assertThat(response).isEqualTo("subscriptions created")
+        assertThat(reply.text).isEqualTo("subscriptions created")
         verify(storageMock).addSubscription(userId, Subscription(BASE_LTC, TARGET_GBP, EXCHANGE_GDAX, 5))
     }
 
     @Test
     fun `test subscribe btc usd gdax`() {
         //action
-        val response = testInstance.handle(userId, "/subscribe $BASE_LTC $TARGET_GBP $EXCHANGE_CRYPTONATOR")
+        val reply = testInstance.handle(userId, "/subscribe $BASE_LTC $TARGET_GBP $EXCHANGE_CRYPTONATOR")
 
         //test
-        assertThat(response).isEqualTo("subscriptions created")
+        assertThat(reply.text).isEqualTo("subscriptions created")
         verify(storageMock).addSubscription(userId, Subscription(BASE_LTC, TARGET_GBP, EXCHANGE_CRYPTONATOR, 5))
     }
 
