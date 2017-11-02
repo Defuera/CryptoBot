@@ -2,6 +2,7 @@ package ru.justd.cryptobot.messenger
 
 import com.pengrad.telegrambot.TelegramBot
 import com.pengrad.telegrambot.model.request.ParseMode
+import com.pengrad.telegrambot.request.EditMessageReplyMarkup
 import com.pengrad.telegrambot.request.SendMessage
 import ru.justd.cryptobot.messenger.model.Reply
 import java.io.IOException
@@ -11,10 +12,10 @@ class MessageSender(
         private val telegramBot: TelegramBot
 ) {
 
-    fun sendMessage(chatId: Long, reply: Reply) {
-        println("send response...")
+    fun sendMessage(reply: Reply) {
+        println("send reply...")
 
-        val request = SendMessage(chatId, formatMessageText(reply.text))
+        val request = SendMessage(reply.channelId, formatMessageText(reply.text))
         if (KeyboardAdapter.hasOptions(reply)) {
             request.replyMarkup(KeyboardAdapter.createKeyboard(reply))
         }
@@ -24,6 +25,23 @@ class MessageSender(
         try {
             val response = telegramBot.execute(request)
             println("on response sent: ${response?.message()?.text()}")
+        } catch (io: IOException) {
+            println("failure: ${io.message}")
+        }
+
+    }
+
+    fun updateMessage(messageId: Int, reply: Reply) {
+        println("update message...")
+
+        val request = EditMessageReplyMarkup(reply.channelId, messageId, formatMessageText(reply.text))
+
+        if (KeyboardAdapter.hasOptions(reply)) {
+            request.replyMarkup(KeyboardAdapter.createKeyboard(reply))
+        }
+
+        try {
+            telegramBot.execute(request)
         } catch (io: IOException) {
             println("failure: ${io.message}")
         }

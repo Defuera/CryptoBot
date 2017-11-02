@@ -1,6 +1,7 @@
 package ru.justd.cryptobot.handler.subscribe
 
 import ru.justd.cryptobot.handler.CommandHandler
+import ru.justd.cryptobot.messenger.model.Dialog
 import ru.justd.cryptobot.messenger.model.Reply
 import ru.justd.cryptobot.persistance.Storage
 
@@ -35,16 +36,16 @@ class SubscribeHandler(
         if (base.isNullOrBlank()){
             return Reply(
                     channelId,
-                    "Please choose crypto currency from the list or use full command `/subscribe BASE TARGET EXCHANGE_CODE every INT_TIME_VALUE`", //todo something wrong with /
-                    arrayOf("BTC", "ETH", "BCC") //todo magic string. store list of supported currencies
+                    "Choose crypto",
+                    Dialog("/subscribe", arrayOf("BTC", "ETH", "BCC")) //todo magic string. store list of supported currencies
             )
         }
 
         if (target.isNullOrBlank()){
             return Reply(
                     channelId,
-                    "Please choose fiat currency from the list or use full command `/subscribe` BASE TARGET EXCHANGE_CODE every INT_TIME_VALUE",
-                    arrayOf("USD", "EUR", "GBP") //todo magic string. store list of supported fiat  currencies
+                    "Choose fiat",
+                    Dialog("/subscribe $base", arrayOf("USD", "EUR", "GBP")) //todo magic string. store list of supported currencies
             )
         }
 
