@@ -5,6 +5,7 @@ import ru.justd.cryptobot.handler.exceptions.InvalidCommand
 import ru.justd.cryptobot.messenger.model.Dialog
 import ru.justd.cryptobot.messenger.model.Reply
 import ru.justd.cryptobot.persistance.Storage
+import java.util.*
 
 /**
  *
@@ -90,7 +91,7 @@ class SubscribeHandler constructor(
             PERIOD_2_HOURS -> 120
             PERIOD_12_HOURS -> 60 * 12
             PERIOD_1_DAY -> 60 * 24
-            else -> throw InvalidCommand("Period shoud be in minutes from one of the following choises: \n$SET_PERIODS")
+            else -> throw InvalidCommand("Period shoud be in minutes from one of the following choises: \n${Arrays.toString(SET_PERIODS)}")
         }
 
     }

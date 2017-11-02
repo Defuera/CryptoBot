@@ -1,5 +1,6 @@
 package ru.justd.cryptobot
 
+import com.nhaarman.mockito_kotlin.times
 import com.nhaarman.mockito_kotlin.verify
 import com.nhaarman.mockito_kotlin.whenever
 import io.reactivex.Observable
@@ -27,6 +28,7 @@ internal class SubscribeIntegrationTest {
     private val TARGET_EUR = "EUR"
     private val EXCHANGE_GDAX = GdaxApi.NAME
     private val EXCHANGE_CRYPTONATOR = CryptonatorApi.NAME
+    private val PERIODICITY = "every_5_minutes"
 
     @Before
     fun setup() {
@@ -53,33 +55,23 @@ internal class SubscribeIntegrationTest {
     }
 
     @Test
-    fun `test subscribe with ltc gbp`() {
-        //action
-        val reply = testInstance.handle(userId, "/subscribe $BASE_LTC $TARGET_GBP")
-
-        //test
-        assertThat(reply.text).isEqualTo("subscriptions created")
-        verify(storageMock).addSubscription(userId, Subscription(BASE_LTC, TARGET_GBP, EXCHANGE_GDAX, 5))
-    }
-
-    @Test
     fun `test subscribe btc usd gdax`() {
         //action
-        val reply = testInstance.handle(userId, "/subscribe $BASE_LTC $TARGET_GBP $EXCHANGE_CRYPTONATOR")
+        val reply = testInstance.handle(userId, "/subscribe $BASE_LTC $TARGET_GBP $EXCHANGE_CRYPTONATOR $PERIODICITY")
 
         //test
         assertThat(reply.text).isEqualTo("subscriptions created")
-        verify(storageMock).addSubscription(userId, Subscription(BASE_LTC, TARGET_GBP, EXCHANGE_CRYPTONATOR, 5))
+        verify(storageMock, times(1)).addSubscription(userId, Subscription(BASE_LTC, TARGET_GBP, EXCHANGE_CRYPTONATOR, 5))
     }
 
     @Test
     fun `test multiple subscriptions`() {
         //action
-        testInstance.handle(userId, "/subscribe $BASE_LTC $TARGET_GBP $EXCHANGE_GDAX")
-        testInstance.handle(userId, "/subscribe $BASE_BCC $TARGET_EUR $EXCHANGE_CRYPTONATOR")
+        testInstance.handle(userId, "/subscribe $BASE_LTC $TARGET_GBP $EXCHANGE_GDAX $PERIODICITY")
+        testInstance.handle(userId, "/subscribe $BASE_BCC $TARGET_EUR $EXCHANGE_CRYPTONATOR $PERIODICITY")
 
         //test
-        verify(storageMock).addSubscription(userId, Subscription(BASE_LTC, TARGET_GBP, EXCHANGE_GDAX, 5))
-        verify(storageMock).addSubscription(userId, Subscription(BASE_BCC, TARGET_EUR, EXCHANGE_CRYPTONATOR, 5))
+        verify(storageMock, times(1)).addSubscription(userId, Subscription(BASE_LTC, TARGET_GBP, EXCHANGE_GDAX, 5))
+        verify(storageMock, times(1)).addSubscription(userId, Subscription(BASE_BCC, TARGET_EUR, EXCHANGE_CRYPTONATOR, 5))
     }
 }
