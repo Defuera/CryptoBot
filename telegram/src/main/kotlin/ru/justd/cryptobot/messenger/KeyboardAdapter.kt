@@ -16,15 +16,17 @@ object KeyboardAdapter {
         return mapToTelegramKeyboard(dialog)
     }
 
-    private fun mapToTelegramKeyboard(dialog: Dialog): InlineKeyboardMarkup =
-            InlineKeyboardMarkup(
-                    *arrayOf(dialog.dialogOptions)
-                            .map {
-                                it.map {
-                                    InlineKeyboardButton(it).callbackData("${dialog.callbackLabel} $it")
-                                }.toTypedArray()
-                            }
-                            .toTypedArray()
-            )
+    private fun mapToTelegramKeyboard(dialog: Dialog): InlineKeyboardMarkup {
+        val matrix = createButtonsMatrix(dialog)
+        return InlineKeyboardMarkup(*matrix)
+    }
+
+    private fun createButtonsMatrix(dialog: Dialog): Array<Array<InlineKeyboardButton>> {
+        return dialog.dialogOptions
+                .map {
+                    arrayOf(InlineKeyboardButton(it).callbackData("${dialog.callbackLabel} $it"))
+                }
+                .toTypedArray()
+    }
 
 }
