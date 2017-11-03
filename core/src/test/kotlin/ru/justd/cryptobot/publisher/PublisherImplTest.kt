@@ -6,8 +6,8 @@ import io.reactivex.observers.TestObserver
 import io.reactivex.subjects.PublishSubject
 import org.junit.Test
 import org.mockito.ArgumentMatchers.anyString
-import ru.justd.cryptobot.exchanges.ExchangeFacade
-import ru.justd.cryptobot.exchanges.RateResponse
+import ru.justd.cryptobot.api.exchanges.ExchangeFacade
+import ru.justd.cryptobot.api.exchanges.RateResponse
 import ru.justd.cryptobot.handler.subscribe.Subscription
 import ru.justd.cryptobot.persistance.PreferenceUpdate
 import ru.justd.cryptobot.persistance.Storage

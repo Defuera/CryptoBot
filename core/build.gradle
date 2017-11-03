@@ -41,6 +41,7 @@ buildConfig {
 repositories {
     mavenCentral()
     jcenter()
+    maven { url = 'https://raw.githubusercontent.com/blockchain/api-v1-client-java/mvn-repo' }
 }
 
 sourceSets {
@@ -56,7 +57,6 @@ dependencies {
     implementation 'com.google.code.gson:gson:2.8.2'
     implementation "com.squareup.okhttp3:okhttp:$okHttpVersion"
     implementation "com.squareup.okhttp3:logging-interceptor:$okHttpVersion"
-
 
     implementation 'com.github.hotchemi:khronos:0.9.0' //date extension http://hotchemi.github.io/khronos/
     implementation "io.reactivex.rxjava2:rxjava:2.1.5"

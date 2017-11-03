@@ -1,4 +1,4 @@
-package ru.justd.cryptobot.exchanges
+package ru.justd.cryptobot.api.exchanges
 
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
@@ -7,10 +7,10 @@ import org.mockito.Mock
 import org.mockito.Mockito.times
 import org.mockito.Mockito.verify
 import org.mockito.MockitoAnnotations
-import ru.justd.cryptobot.exchanges.coinbase.CoinbaseApi
-import ru.justd.cryptobot.exchanges.cryptonator.CryptonatorApi
-import ru.justd.cryptobot.exchanges.exceptions.ExchangeNotSupported
-import ru.justd.cryptobot.exchanges.gdax.GdaxApi
+import ru.justd.cryptobot.api.exchanges.coinbase.CoinbaseApi
+import ru.justd.cryptobot.api.exchanges.cryptonator.CryptonatorApi
+import ru.justd.cryptobot.api.exchanges.exceptions.ExchangeNotSupported
+import ru.justd.cryptobot.api.exchanges.gdax.GdaxApi
 import ru.justd.cryptobot.persistance.Storage
 
 internal class ExchangeFacadeImplTest {

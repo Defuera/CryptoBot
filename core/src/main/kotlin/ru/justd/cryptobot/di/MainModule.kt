@@ -2,7 +2,7 @@ package ru.justd.cryptobot.di
 
 import dagger.Module
 import dagger.Provides
-import ru.justd.cryptobot.exchanges.ExchangeFacade
+import ru.justd.cryptobot.api.exchanges.ExchangeFacade
 import ru.justd.cryptobot.handler.CommandHandlerFacade
 import ru.justd.cryptobot.handler.CommandHandlerFacadeImpl
 import ru.justd.cryptobot.handler.InstantFactory
@@ -16,7 +16,7 @@ import ru.justd.cryptobot.publisher.Publisher
 import ru.justd.cryptobot.publisher.PublisherImpl
 import javax.inject.Singleton
 
-@Module(includes = arrayOf(ExchangeApiModule::class, StorageModule::class))
+@Module(includes = arrayOf(ExchangeApiModule::class, BlockchainModule::class, StorageModule::class))
 class MainModule {
 
     @Provides
