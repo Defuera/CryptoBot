@@ -7,7 +7,7 @@ import okhttp3.Request
 class BitcoinInfoApi(private val okHttpClient: OkHttpClient) : BlockchainApi {
 
     private val BASE_URL = "https://bitaps.com/api"
-    private val ENDPOINT_ADDRESS = "/address"
+    private val ENDPOINT_ADDRESS = "address"
     private val gson = Gson()
 
     /**

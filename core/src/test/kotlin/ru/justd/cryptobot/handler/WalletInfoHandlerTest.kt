@@ -29,7 +29,7 @@ internal class WalletInfoHandlerTest {
     fun testSuccess() {
         //setup
         whenever(bitcoinInfoApiMock.getAddressInfo(anyString())).thenReturn(
-                AddressInfo("0.69870", "", "", "", "", "",
+                AddressInfo("6917027", "", "", "", "", "",
                         "", "", "", "", "", "",
                         "")
         )
@@ -38,7 +38,7 @@ internal class WalletInfoHandlerTest {
         val reply = testInstance.handle("chatId", "/info 1EuxvSVf5yWLYtHiDkzbcd7pp5cooqPfJD")
 
         //test
-        assertThat(reply.text).isEqualTo("You have 0.69870 BTC")
+        assertThat(reply.text).isEqualTo("You have 0.06917027 BTC")
     }
 
 }
