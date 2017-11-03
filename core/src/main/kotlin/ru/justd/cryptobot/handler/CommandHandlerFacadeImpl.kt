@@ -19,5 +19,4 @@ internal class CommandHandlerFacadeImpl(
         factories.add(factory)
     }
 
-
 }

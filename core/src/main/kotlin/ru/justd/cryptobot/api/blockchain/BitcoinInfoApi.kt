@@ -4,16 +4,16 @@ import com.google.gson.Gson
 import okhttp3.OkHttpClient
 import okhttp3.Request
 
-class BitcoinInfoApi(val okHttpClient: OkHttpClient) {
+class BitcoinInfoApi(private val okHttpClient: OkHttpClient) : BlockchainApi {
 
-    val BASE_URL = "https://bitaps.com/api"
-    val ENDPOINT_ADDRESS = "/address"
-    val gson = Gson()
+    private val BASE_URL = "https://bitaps.com/api"
+    private val ENDPOINT_ADDRESS = "/address"
+    private val gson = Gson()
 
     /**
      * https://docs.gdax.com/#get-product-order-book
      */
-    fun getAddressInfo(address: String): AddressInfo {
+    override fun getAddressInfo(address: String): AddressInfo {
         val response = okHttpClient
                 .newCall(requestBuilder(address).build())
                 .execute()
@@ -33,3 +33,4 @@ class BitcoinInfoApi(val okHttpClient: OkHttpClient) {
     }
 
 }
+
