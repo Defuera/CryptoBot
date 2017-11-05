@@ -1,12 +1,12 @@
-package ru.justd.cryptobot.exchanges.coinbase
+package ru.justd.cryptobot.api.exchanges.coinbase
 
 import khronos.Dates
 import khronos.toString
 import okhttp3.OkHttpClient
 import okhttp3.Request
-import ru.justd.cryptobot.exchanges.PollingExchange
-import ru.justd.cryptobot.exchanges.RateResponse
-import ru.justd.cryptobot.exchanges.exceptions.RequestFailed
+import ru.justd.cryptobot.api.exchanges.PollingExchange
+import ru.justd.cryptobot.api.exchanges.RateResponse
+import ru.justd.cryptobot.api.exchanges.exceptions.RequestFailed
 
 private const val BASE_URL = "https://api.coinbase.com/v2"
 private const val HEADER_CB_VERSION = "CB-VERSION"

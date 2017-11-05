@@ -1,4 +1,4 @@
-package ru.justd.cryptobot
+package ru.justd.cryptobot.handler
 
 import com.nhaarman.mockito_kotlin.times
 import com.nhaarman.mockito_kotlin.verify
@@ -7,9 +7,10 @@ import io.reactivex.Observable
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
+import ru.justd.cryptobot.CryptoCore
 import ru.justd.cryptobot.di.StorageModule
-import ru.justd.cryptobot.exchanges.cryptonator.CryptonatorApi
-import ru.justd.cryptobot.exchanges.gdax.GdaxApi
+import ru.justd.cryptobot.api.exchanges.cryptonator.CryptonatorApi
+import ru.justd.cryptobot.api.exchanges.gdax.GdaxApi
 import ru.justd.cryptobot.handler.exceptions.InvalidCommand
 import ru.justd.cryptobot.handler.subscribe.Subscription
 import ru.justd.cryptobot.persistance.PreferenceUpdate

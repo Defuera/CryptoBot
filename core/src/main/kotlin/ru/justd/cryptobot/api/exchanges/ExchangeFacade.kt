@@ -1,4 +1,4 @@
-package ru.justd.cryptobot.exchanges
+package ru.justd.cryptobot.api.exchanges
 
 interface ExchangeFacade {
 

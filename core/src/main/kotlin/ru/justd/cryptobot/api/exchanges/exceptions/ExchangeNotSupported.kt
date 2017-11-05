@@ -1,3 +1,3 @@
-package ru.justd.cryptobot.exchanges.exceptions
+package ru.justd.cryptobot.api.exchanges.exceptions
 
 class ExchangeNotSupported(val exchange : String) : RuntimeException()

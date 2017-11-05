@@ -1,8 +1,8 @@
 package ru.justd.cryptobot.handler.price
 
-import ru.justd.cryptobot.exchanges.ExchangeFacade
-import ru.justd.cryptobot.exchanges.exceptions.ExchangeNotSupported
-import ru.justd.cryptobot.exchanges.exceptions.RequestFailed
+import ru.justd.cryptobot.api.exchanges.ExchangeFacade
+import ru.justd.cryptobot.api.exchanges.exceptions.ExchangeNotSupported
+import ru.justd.cryptobot.api.exchanges.exceptions.RequestFailed
 import ru.justd.cryptobot.handler.CommandHandler
 import ru.justd.cryptobot.messenger.model.Reply
 

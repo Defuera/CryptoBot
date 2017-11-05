@@ -25,12 +25,4 @@ class SubscribeFactory(val storage: Storage) : CommandHandlerFactory<SubscribeHa
         )
     }
 
-    private fun retrieveArg(request: String, index: Int): String? { //todo this is the same as PriceFactory
-        val args = request
-                .replace(scheme, "")
-                .trim()
-                .split(" ")
-
-        return if (index <= args.lastIndex) args[index] else null
-    }
 }

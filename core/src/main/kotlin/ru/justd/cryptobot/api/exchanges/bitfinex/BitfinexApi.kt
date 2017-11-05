@@ -1,9 +1,9 @@
-package ru.justd.cryptobot.exchanges.bitfinex
+package ru.justd.cryptobot.api.exchanges.bitfinex
 
 import okhttp3.OkHttpClient
-import ru.justd.cryptobot.exchanges.PollingExchange
-import ru.justd.cryptobot.exchanges.RateResponse
-import ru.justd.cryptobot.exchanges.exceptions.RequestFailed
+import ru.justd.cryptobot.api.exchanges.PollingExchange
+import ru.justd.cryptobot.api.exchanges.RateResponse
+import ru.justd.cryptobot.api.exchanges.exceptions.RequestFailed
 
 private const val BASE_URL = "https://api.bitfinex.com/v1"
 

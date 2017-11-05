@@ -2,7 +2,7 @@ package ru.justd.cryptobot.persistance
 
 import io.reactivex.Observable
 import io.reactivex.subjects.BehaviorSubject
-import ru.justd.cryptobot.exchanges.gdax.GdaxApi
+import ru.justd.cryptobot.api.exchanges.gdax.GdaxApi
 import ru.justd.cryptobot.handler.subscribe.StorageException
 import ru.justd.cryptobot.handler.subscribe.Subscription
 import java.util.*
