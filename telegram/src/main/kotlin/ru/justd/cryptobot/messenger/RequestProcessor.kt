@@ -1,5 +1,6 @@
 package ru.justd.cryptobot.messenger
 
+import com.pengrad.telegrambot.model.CallbackQuery
 import com.pengrad.telegrambot.model.Message
 import com.pengrad.telegrambot.model.MessageEntity
 import com.pengrad.telegrambot.model.Update
@@ -8,15 +9,41 @@ import ru.justd.cryptobot.handler.exceptions.InvalidCommand
 import ru.justd.cryptobot.messenger.model.Reply
 import ru.justd.cryptobot.toChannelId
 
-class RequestProcessor(private val cryptoCore: CryptoCore) {
+class RequestProcessor(
+        private val cryptoCore: CryptoCore,
+        private val messageSender: MessageSender
+) {
 
-    fun process(update: Update): Reply {
-        val message = update.message()
+    fun process(update: Update) {
+        update.message()?.let {
+            handleMessage(it)
+        }
+
+        update.callbackQuery()?.let {
+            handleCallback(it)
+        }
+
+        messageSender.sendMessage(Reply("", "Unable to resolve request")) //todo chat id
+    }
+
+    private fun handleCallback(callbackQuery: CallbackQuery): Reply {
+        val message = callbackQuery.message()
+        val reply = handleBotCommand(
+                toChannelId(message.chat().id()),
+                callbackQuery.data()
+        )
+
+        messageSender.updateMessage(message.messageId(), reply)
+        return reply
+    }
+
+    private fun handleMessage(message: Message) {
         val channelId = toChannelId(message.chat().id())
         val entity = message.entities()?.first() //todo what if more than one entity? Should we support it?
-        return if (entity != null) {
+
+        val reply =  if (entity != null) {
             when (entity.type()) {
-                MessageEntity.Type.bot_command -> handleBotCommand(message)
+                MessageEntity.Type.bot_command -> handleBotCommand(toChannelId(message.chat().id()), message.text())
                 else -> Reply(channelId, "message type not supported ${entity.type()}")
             }
         } else if (isBotAddedToChannel(message)) {
@@ -25,17 +52,16 @@ class RequestProcessor(private val cryptoCore: CryptoCore) {
         } else {
             Reply(channelId, "message with no entities not supported")
         }
+
+        messageSender.sendMessage(reply)
     }
 
-    private fun handleBotCommand(message: Message): Reply {
-        println("bot command recognized: ${message.text()}")
+    private fun handleBotCommand(channelId: String, inquiry: String): Reply {
+        println("bot command recognized: $inquiry")
         return try {
-            cryptoCore.handle(
-                    toChannelId(message.chat().id()),
-                    message.text()
-            )
+            cryptoCore.handle(channelId, inquiry)
         } catch (invalidCommand: InvalidCommand) {
-            Reply(toChannelId(message.chat().id()), invalidCommand.message)
+            Reply(channelId, invalidCommand.message)
         }
     }
 

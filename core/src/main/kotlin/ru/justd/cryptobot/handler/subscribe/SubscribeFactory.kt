@@ -7,6 +7,7 @@ import ru.justd.cryptobot.persistance.Storage
 private const val ARG_INDEX_BASE = 0
 private const val ARG_INDEX_TARGET = 1
 private const val ARG_INDEX_EXCHANGE = 2
+private const val ARG_INDEX_PERIOD = 3
 
 class SubscribeFactory(val storage: Storage) : CommandHandlerFactory<SubscribeHandler>("/subscribe") {
 
@@ -19,7 +20,8 @@ class SubscribeFactory(val storage: Storage) : CommandHandlerFactory<SubscribeHa
                 storage,
                 retrieveArg(request, ARG_INDEX_BASE),
                 retrieveArg(request, ARG_INDEX_TARGET),
-                retrieveArg(request, ARG_INDEX_EXCHANGE)
+                retrieveArg(request, ARG_INDEX_EXCHANGE),
+                retrieveArg(request, ARG_INDEX_PERIOD)
         )
     }
 

@@ -1,7 +1,7 @@
 package ru.justd.cryptobot.messenger.model
 
 data class Reply constructor(
-        val replyTo : String,
+        val channelId: String,
         val text: String,
-        val dialogOptions : Array<String> = arrayOf()
+        val dialog: Dialog? = null
 )

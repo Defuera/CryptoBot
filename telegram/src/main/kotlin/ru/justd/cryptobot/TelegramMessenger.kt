@@ -28,7 +28,7 @@ class TelegramMessenger(private val uuid: String) {
     fun run() {
         println("TelegramMessenger started, id: $uuid")
 
-        requestProcessor = RequestProcessor(cryptoCore)
+        requestProcessor = RequestProcessor(cryptoCore, messageSender) //todo this is against Vasya
 
         telegramBot.setUpdatesListener { updates ->
             updates.forEach { handleAsync(it) }
@@ -41,7 +41,7 @@ class TelegramMessenger(private val uuid: String) {
         launch {
 
             try {
-                sendMessage(requestProcessor.process(update))
+                requestProcessor.process(update)
             } catch (exception: ShutdownException) {
                 sendMessage(Reply(exception.channelId, exception.message))
                 telegramBot.removeGetUpdatesListener()
@@ -52,7 +52,7 @@ class TelegramMessenger(private val uuid: String) {
     }
 
     fun sendMessage(reply: Reply) {
-        messageSender.sendMessage(toChatId(reply.replyTo), reply)
+        messageSender.sendMessage(reply)
     }
 
 }
