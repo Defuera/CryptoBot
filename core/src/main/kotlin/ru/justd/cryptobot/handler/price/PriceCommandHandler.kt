@@ -1,10 +1,10 @@
 package ru.justd.cryptobot.handler.price
 
-import ru.justd.cryptobot.exchanges.ExchangeFacade
-import ru.justd.cryptobot.exchanges.exceptions.ExchangeNotSupported
-import ru.justd.cryptobot.exchanges.exceptions.RequestFailed
+import ru.justd.cryptobot.api.exchanges.ExchangeFacade
+import ru.justd.cryptobot.api.exchanges.exceptions.ExchangeNotSupported
+import ru.justd.cryptobot.api.exchanges.exceptions.RequestFailed
 import ru.justd.cryptobot.handler.CommandHandler
-import ru.justd.cryptobot.messenger.model.OutgoingMessage
+import ru.justd.cryptobot.messenger.model.Reply
 
 /**
  * Allows user to retrieve cryptos price from supported exchanges.
@@ -21,8 +21,8 @@ class PriceCommandHandler (
         val exchange: String?
 ) : CommandHandler {
 
-    override fun responseMessage(): OutgoingMessage {
-        println("PriceCommandHandler#responseMessage $base $target $exchange")
+    override fun createReply(channelId: String): Reply {
+        println("PriceCommandHandler#createReply $base $target $exchange")
 
         val message = try {
             val rate = exchangeFacade.getRate(base, target, exchange)
@@ -34,7 +34,7 @@ class PriceCommandHandler (
             error.message
         }.trim()
 
-        return OutgoingMessage(message)
+        return Reply(channelId, message)
     }
 
 }

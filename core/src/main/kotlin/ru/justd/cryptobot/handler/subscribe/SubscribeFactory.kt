@@ -7,6 +7,7 @@ import ru.justd.cryptobot.persistance.Storage
 private const val ARG_INDEX_BASE = 0
 private const val ARG_INDEX_TARGET = 1
 private const val ARG_INDEX_EXCHANGE = 2
+private const val ARG_INDEX_PERIOD = 3
 
 class SubscribeFactory(val storage: Storage) : CommandHandlerFactory<SubscribeHandler>("/subscribe") {
 
@@ -14,21 +15,14 @@ class SubscribeFactory(val storage: Storage) : CommandHandlerFactory<SubscribeHa
     override fun create(channelId: String, request: String): SubscribeHandler {
         println("SubscribeHandler#create $request")
 
-        val base = retrieveArg(request, ARG_INDEX_BASE)
-        val target = retrieveArg(request, ARG_INDEX_TARGET)
-        if (base == null || target == null) {
-            throw InvalidCommand("Invalid format, please try `/subscribe BASE TARGER {EXCHANGE}`")
-        }
-
-        return SubscribeHandler(channelId, storage, base, target, retrieveArg(request, ARG_INDEX_EXCHANGE))
+        return SubscribeHandler(
+                channelId,
+                storage,
+                retrieveArg(request, ARG_INDEX_BASE),
+                retrieveArg(request, ARG_INDEX_TARGET),
+                retrieveArg(request, ARG_INDEX_EXCHANGE),
+                retrieveArg(request, ARG_INDEX_PERIOD)
+        )
     }
 
-    private fun retrieveArg(request: String, index: Int): String? { //todo this is the same as PriceFactory
-        val args = request
-                .replace(scheme, "")
-                .trim()
-                .split(" ")
-
-        return if (index <= args.lastIndex) args[index] else null
-    }
 }

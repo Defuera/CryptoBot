@@ -20,4 +20,13 @@ abstract class CommandHandlerFactory<out T : CommandHandler>(val scheme: String)
     @Throws(InvalidCommand::class)
     abstract fun create(channelId: String, request: String): T
 
+    fun retrieveArg(request: String, index: Int): String? {
+        val args = request
+                .replace(scheme, "")
+                .trim()
+                .split(" ")
+
+        return if (index <= args.lastIndex) args[index] else null
+    }
+
 }

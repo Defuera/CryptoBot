@@ -1,10 +1,10 @@
-package ru.justd.cryptobot.exchanges
+package ru.justd.cryptobot.api.exchanges
 
-import ru.justd.cryptobot.exchanges.bitfinex.BitfinexApi
-import ru.justd.cryptobot.exchanges.coinbase.CoinbaseApi
-import ru.justd.cryptobot.exchanges.cryptonator.CryptonatorApi
-import ru.justd.cryptobot.exchanges.exceptions.ExchangeNotSupported
-import ru.justd.cryptobot.exchanges.gdax.GdaxApi
+import ru.justd.cryptobot.api.exchanges.bitfinex.BitfinexApi
+import ru.justd.cryptobot.api.exchanges.coinbase.CoinbaseApi
+import ru.justd.cryptobot.api.exchanges.cryptonator.CryptonatorApi
+import ru.justd.cryptobot.api.exchanges.exceptions.ExchangeNotSupported
+import ru.justd.cryptobot.api.exchanges.gdax.GdaxApi
 import ru.justd.cryptobot.persistance.Storage
 import javax.inject.Named
 

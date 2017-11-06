@@ -1,9 +1,9 @@
 package ru.justd.cryptobot.handler
 
-import ru.justd.cryptobot.messenger.model.OutgoingMessage
+import ru.justd.cryptobot.messenger.model.Reply
 
 interface CommandHandler {
 
-    fun responseMessage(): OutgoingMessage
+    fun createReply(channelId: String): Reply
 
 }

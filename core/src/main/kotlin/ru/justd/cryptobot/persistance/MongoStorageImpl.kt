@@ -7,9 +7,8 @@ import com.mongodb.client.model.Filters.eq
 import com.mongodb.client.model.UpdateOptions
 import io.reactivex.Observable
 import org.bson.Document
-import ru.justd.cryptobot.exchanges.gdax.GdaxApi
+import ru.justd.cryptobot.api.exchanges.gdax.GdaxApi
 import ru.justd.cryptobot.handler.subscribe.Subscription
-import ru.justd.cryptobot.publisher.Update
 import java.util.*
 import kotlin.collections.ArrayList
 

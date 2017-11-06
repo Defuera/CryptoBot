@@ -13,7 +13,6 @@ kotlin {
 
 buildscript {
     project.group = 'ru.justd.cryptobot'
-    ext.kotlin_version = '1.1.51'
 
     repositories {
         mavenCentral()
@@ -44,16 +43,13 @@ buildConfig {
 repositories {
     mavenCentral()
     jcenter()
+    maven { url = 'https://raw.githubusercontent.com/blockchain/api-v1-client-java/mvn-repo' }
 }
 
 sourceSets {
     main.kotlin.srcDirs += "$buildDir/generated/source/kapt/main"
 
 }
-
-
-def daggerVersion = "2.11"
-def okHttpVersion = '3.9.0'
 
 dependencies {
     // kotlin

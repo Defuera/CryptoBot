@@ -1,9 +1,9 @@
-package ru.justd.cryptobot.exchanges.cryptonator
+package ru.justd.cryptobot.api.exchanges.cryptonator
 
 import okhttp3.OkHttpClient
-import ru.justd.cryptobot.exchanges.PollingExchange
-import ru.justd.cryptobot.exchanges.RateResponse
-import ru.justd.cryptobot.exchanges.exceptions.RequestFailed
+import ru.justd.cryptobot.api.exchanges.PollingExchange
+import ru.justd.cryptobot.api.exchanges.RateResponse
+import ru.justd.cryptobot.api.exchanges.exceptions.RequestFailed
 import ru.justd.cryptotrader.api.cryptonator.model.TickerEnvelope
 
 

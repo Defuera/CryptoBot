@@ -1,9 +1,9 @@
-package ru.justd.cryptobot.exchanges
+package ru.justd.cryptobot.api.exchanges
 
 import com.google.gson.Gson
 import okhttp3.OkHttpClient
 import okhttp3.Request
-import ru.justd.cryptobot.exchanges.exceptions.RequestFailed
+import ru.justd.cryptobot.api.exchanges.exceptions.RequestFailed
 
 abstract class PollingExchange(private val okHttpClient: OkHttpClient) : ExchangeApi {
 
