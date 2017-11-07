@@ -1,13 +1,16 @@
-package ru.justd.cryptobot.api.blockchain
+package ru.justd.cryptobot.api.blockchain.bitcoin
 
 import com.google.gson.Gson
 import okhttp3.OkHttpClient
 import okhttp3.Request
+import ru.justd.cryptobot.api.blockchain.AddressInfo
+import ru.justd.cryptobot.api.blockchain.BlockchainApi
+
 
 class BitcoinInfoApi(private val okHttpClient: OkHttpClient) : BlockchainApi {
 
     private val BASE_URL = "https://bitaps.com/api"
-    private val ENDPOINT_ADDRESS = "address"
+    private val ENDPOINT_ADDRESS = "/address"
     private val gson = Gson()
 
     /**
@@ -20,7 +23,7 @@ class BitcoinInfoApi(private val okHttpClient: OkHttpClient) : BlockchainApi {
 
         val bodyString = response.body()?.string()
         if (!bodyString.isNullOrBlank()) {
-            return gson.fromJson(bodyString, AddressInfo::class.java)
+            return gson.fromJson(bodyString, BitcoinAddressInfo::class.java)
         } else {
             throw RuntimeException("oioi") //todo unexpected error together with failed request (newCall.execute())?
         }
@@ -29,7 +32,7 @@ class BitcoinInfoApi(private val okHttpClient: OkHttpClient) : BlockchainApi {
     private fun requestBuilder(address: String): Request.Builder {
         return Request.Builder()
                 .get()
-                .url("$BASE_URL/$ENDPOINT_ADDRESS/$address")
+                .url("$BASE_URL$ENDPOINT_ADDRESS/$address")
     }
 
 }

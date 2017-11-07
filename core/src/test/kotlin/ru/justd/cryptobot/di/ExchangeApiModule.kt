@@ -6,7 +6,7 @@ import dagger.Provides
 import okhttp3.OkHttpClient
 import org.mockito.Mockito
 import ru.justd.cryptobot.api.exchanges.ExchangeApi
-import ru.justd.cryptobot.api.exchanges.ExchangeFacade
+import ru.justd.cryptobot.api.exchanges.ExchangeApiFacade
 import ru.justd.cryptobot.api.exchanges.bitfinex.BitfinexApi
 import ru.justd.cryptobot.api.exchanges.coinbase.CoinbaseApi
 import ru.justd.cryptobot.api.exchanges.cryptonator.CryptonatorApi
@@ -20,7 +20,7 @@ class ExchangeApiModule {
 
     companion object {
 
-        val exchangeFacade = Mockito.mock(ExchangeFacade::class.java)
+        val exchangeFacade = Mockito.mock(ExchangeApiFacade::class.java)
 
     }
 

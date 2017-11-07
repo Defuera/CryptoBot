@@ -8,7 +8,7 @@ import org.junit.runner.RunWith
 import org.mockito.Mock
 import org.mockito.MockitoAnnotations
 import org.mockito.junit.MockitoJUnitRunner
-import ru.justd.cryptobot.api.exchanges.ExchangeFacade
+import ru.justd.cryptobot.api.exchanges.ExchangeApiFacade
 import ru.justd.cryptobot.api.exchanges.RateResponse
 import ru.justd.cryptobot.api.exchanges.exceptions.ExchangeNotSupported
 import ru.justd.cryptobot.handler.price.PriceCommandHandler
@@ -23,7 +23,7 @@ class PriceCommandHandlerTest {
     }
 
     @Mock
-    lateinit var exchangeFacade: ExchangeFacade
+    lateinit var exchangeFacade: ExchangeApiFacade
 
     @Before
     fun setup() {

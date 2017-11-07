@@ -11,7 +11,7 @@ import ru.justd.cryptobot.messenger.MessageSender
 import ru.justd.cryptobot.messenger.RequestProcessor
 import ru.justd.cryptobot.messenger.model.Reply
 
-class TelegramMessenger(private val uuid: String) {
+class TelegramMessenger(private val uuid: String) { //todo https://core.telegram.org/bots/faq#how-can-i-make-requests-in-response-to-updates
 
     private lateinit var requestProcessor: RequestProcessor
 

@@ -15,7 +15,7 @@ import ru.justd.cryptobot.persistance.Storage
 
 internal class ExchangeFacadeImplTest {
 
-    lateinit var testInstance: ExchangeFacade
+    lateinit var testInstance: ExchangeApiFacade
 
     @Mock
     lateinit var gdaxApi: ExchangeApi
@@ -35,7 +35,7 @@ internal class ExchangeFacadeImplTest {
     @Before
     fun setup() {
         MockitoAnnotations.initMocks(this)
-        testInstance = ExchangeFacadeImpl(gdaxApi, coinbaseApi, cryptonatorApi, bitfinexApi, storage)
+        testInstance = ExchangeApiFacadeImpl(gdaxApi, coinbaseApi, cryptonatorApi, bitfinexApi, storage)
     }
 
     @Test

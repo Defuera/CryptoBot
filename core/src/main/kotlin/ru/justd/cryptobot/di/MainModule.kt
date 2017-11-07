@@ -2,9 +2,8 @@ package ru.justd.cryptobot.di
 
 import dagger.Module
 import dagger.Provides
-import ru.justd.cryptobot.api.blockchain.BitcoinInfoApi
-import ru.justd.cryptobot.api.blockchain.BlockchainApi
-import ru.justd.cryptobot.api.exchanges.ExchangeFacade
+import ru.justd.cryptobot.api.blockchain.BlockchainInfoApiFacade
+import ru.justd.cryptobot.api.exchanges.ExchangeApiFacade
 import ru.justd.cryptobot.handler.CommandHandlerFacade
 import ru.justd.cryptobot.handler.CommandHandlerFacadeImpl
 import ru.justd.cryptobot.handler.InstantFactory
@@ -17,7 +16,6 @@ import ru.justd.cryptobot.handler.wallet.WalletInfoHandlerFactory
 import ru.justd.cryptobot.persistance.Storage
 import ru.justd.cryptobot.publisher.Publisher
 import ru.justd.cryptobot.publisher.PublisherImpl
-import javax.inject.Named
 import javax.inject.Singleton
 
 @Module(includes = arrayOf(ExchangeApiModule::class, BlockchainModule::class, StorageModule::class))
@@ -26,8 +24,8 @@ class MainModule {
     @Provides
     @Singleton
     fun provideCommandHandlerFacade(
-            exchangeFacade: ExchangeFacade,
-            @Named(NAMED_BLOCKCHAIN_API_BITCOIN) bitcoinInfoApi: BlockchainApi,
+            exchangeFacade: ExchangeApiFacade,
+            blockchainInfoApiFacade: BlockchainInfoApiFacade,
             storage: Storage
     ): CommandHandlerFacade = CommandHandlerFacadeImpl(
             mutableListOf(
@@ -36,14 +34,14 @@ class MainModule {
                     InstantFactory("/update", UpdateCommandHandler),
                     PriceCommandHandlerFactory(exchangeFacade),
                     SubscribeFactory(storage),
-                    WalletInfoHandlerFactory(bitcoinInfoApi)
+                    WalletInfoHandlerFactory(blockchainInfoApiFacade)
             )
     )
 
     @Provides
     @Singleton
     fun providePublisher(
-            exchangeFacade: ExchangeFacade,
+            exchangeFacade: ExchangeApiFacade,
             storage: Storage
     ): Publisher = PublisherImpl(exchangeFacade, storage)
 

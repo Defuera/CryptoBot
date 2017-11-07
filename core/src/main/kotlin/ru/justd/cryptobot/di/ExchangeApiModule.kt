@@ -5,8 +5,8 @@ import dagger.Provides
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import ru.justd.cryptobot.api.exchanges.ExchangeApi
-import ru.justd.cryptobot.api.exchanges.ExchangeFacade
-import ru.justd.cryptobot.api.exchanges.ExchangeFacadeImpl
+import ru.justd.cryptobot.api.exchanges.ExchangeApiFacade
+import ru.justd.cryptobot.api.exchanges.ExchangeApiFacadeImpl
 import ru.justd.cryptobot.api.exchanges.bitfinex.BitfinexApi
 import ru.justd.cryptobot.api.exchanges.coinbase.CoinbaseApi
 import ru.justd.cryptobot.api.exchanges.cryptonator.CryptonatorApi
@@ -53,7 +53,7 @@ class ExchangeApiModule {
             @Named(CryptonatorApi.NAME) cryptonatorApi: ExchangeApi,
             @Named(BitfinexApi.NAME) bitfinexApi: ExchangeApi,
             storage: Storage
-    ): ExchangeFacade = ExchangeFacadeImpl(
+    ): ExchangeApiFacade = ExchangeApiFacadeImpl(
             gdaxApi,
             coinbaseApi,
             cryptonatorApi,

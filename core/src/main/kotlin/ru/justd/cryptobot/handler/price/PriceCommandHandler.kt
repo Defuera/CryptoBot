@@ -1,6 +1,6 @@
 package ru.justd.cryptobot.handler.price
 
-import ru.justd.cryptobot.api.exchanges.ExchangeFacade
+import ru.justd.cryptobot.api.exchanges.ExchangeApiFacade
 import ru.justd.cryptobot.api.exchanges.exceptions.ExchangeNotSupported
 import ru.justd.cryptobot.api.exchanges.exceptions.RequestFailed
 import ru.justd.cryptobot.handler.CommandHandler
@@ -15,7 +15,7 @@ import ru.justd.cryptobot.messenger.model.Reply
  * 1. EXCHANGE_CODE - optional, as for now Gdax, Coinbase and Cryptonator exchanges are supported
  */
 class PriceCommandHandler (
-        private val exchangeFacade: ExchangeFacade,
+        private val exchangeFacade: ExchangeApiFacade,
         val base: String?,
         val target: String?,
         val exchange: String?

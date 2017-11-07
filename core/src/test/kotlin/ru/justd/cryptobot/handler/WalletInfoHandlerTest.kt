@@ -7,7 +7,7 @@ import org.junit.Before
 import org.junit.Test
 import org.mockito.ArgumentMatchers.anyString
 import ru.justd.cryptobot.CryptoCore
-import ru.justd.cryptobot.api.blockchain.AddressInfo
+import ru.justd.cryptobot.api.blockchain.bitcoin.BitcoinAddressInfo
 import ru.justd.cryptobot.di.BlockchainModule
 import ru.justd.cryptobot.di.StorageModule
 import ru.justd.cryptobot.persistance.PreferenceUpdate
@@ -15,7 +15,7 @@ import ru.justd.cryptobot.persistance.PreferenceUpdate
 
 internal class WalletInfoHandlerTest {
 
-    val bitcoinInfoApiMock = BlockchainModule.bitcoinInfoApiMock
+    val bitcoinInfoApiMock = BlockchainModule.blockchainInfoApiFacade
     lateinit var testInstance: CryptoCore
 
     @Before
@@ -29,7 +29,7 @@ internal class WalletInfoHandlerTest {
     fun testSuccess() {
         //setup
         whenever(bitcoinInfoApiMock.getAddressInfo(anyString())).thenReturn(
-                AddressInfo("6917027", "", "", "", "", "",
+                BitcoinAddressInfo("6917027", "", "", "", "", "",
                         "", "", "", "", "", "",
                         "")
         )
