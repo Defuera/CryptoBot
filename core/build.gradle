@@ -27,17 +27,6 @@ buildscript {
 
 }
 
-buildConfig {
-
-    Properties properties = new Properties()
-    properties.load(project.rootProject.file('keystore.properties').newDataInputStream())
-
-    properties.each { key, value ->
-        buildConfigField 'String', key.toString(), value.toString()
-    }
-
-}
-
 repositories {
     mavenCentral()
     jcenter()
