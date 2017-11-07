@@ -5,7 +5,6 @@ import dagger.Module
 import dagger.Provides
 import okhttp3.OkHttpClient
 import ru.justd.cryptobot.api.blockchain.BlockchainApi
-import ru.justd.cryptobot.api.blockchain.BlockchainInfoApiFacade
 import javax.inject.Named
 import javax.inject.Singleton
 
@@ -14,7 +13,7 @@ class BlockchainModule {
 
     companion object {
 
-        val blockchainInfoApiFacade = mock<BlockchainInfoApiFacade>()
+        val blockchainApi = mock<BlockchainApi>()
     }
 
     @Provides
@@ -32,6 +31,6 @@ class BlockchainModule {
     fun provideBlockchainInfoApiFacade(
             @Named(NAMED_BLOCKCHAIN_API_BITCOIN) bitcoinInfoApi: BlockchainApi,
             @Named(NAMED_BLOCKCHAIN_API_ETHER) etherInfoApi: BlockchainApi
-    ): BlockchainInfoApiFacade = mock()
+    ): BlockchainApi = blockchainApi
 
 }

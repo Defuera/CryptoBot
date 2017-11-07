@@ -2,7 +2,7 @@ package ru.justd.cryptobot.di
 
 import dagger.Module
 import dagger.Provides
-import ru.justd.cryptobot.api.blockchain.BlockchainInfoApiFacade
+import ru.justd.cryptobot.api.blockchain.BlockchainApi
 import ru.justd.cryptobot.api.exchanges.ExchangeApiFacade
 import ru.justd.cryptobot.handler.CommandHandlerFacade
 import ru.justd.cryptobot.handler.CommandHandlerFacadeImpl
@@ -25,7 +25,7 @@ class MainModule {
     @Singleton
     fun provideCommandHandlerFacade(
             exchangeFacade: ExchangeApiFacade,
-            blockchainInfoApiFacade: BlockchainInfoApiFacade,
+            blockchainApi: BlockchainApi,
             storage: Storage
     ): CommandHandlerFacade = CommandHandlerFacadeImpl(
             mutableListOf(
@@ -34,7 +34,7 @@ class MainModule {
                     InstantFactory("/update", UpdateCommandHandler),
                     PriceCommandHandlerFactory(exchangeFacade),
                     SubscribeFactory(storage),
-                    WalletInfoHandlerFactory(blockchainInfoApiFacade)
+                    WalletInfoHandlerFactory(blockchainApi)
             )
     )
 

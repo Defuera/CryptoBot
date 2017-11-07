@@ -1,11 +1,11 @@
 package ru.justd.cryptobot.handler.wallet
 
-import ru.justd.cryptobot.api.blockchain.BlockchainInfoApiFacade
+import ru.justd.cryptobot.api.blockchain.BlockchainApi
 import ru.justd.cryptobot.handler.CommandHandlerFactory
 import ru.justd.cryptobot.handler.exceptions.InvalidCommand
 
 class WalletInfoHandlerFactory(
-        private val facade: BlockchainInfoApiFacade
+        private val facade: BlockchainApi
 ) : CommandHandlerFactory<WalletInfoHandler>("/info") {
 
     override fun create(channelId: String, request: String): WalletInfoHandler {

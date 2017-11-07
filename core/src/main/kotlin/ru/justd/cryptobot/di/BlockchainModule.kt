@@ -32,7 +32,7 @@ class BlockchainModule {
     fun provideBlockchainInfoApiFacade(
             @Named(NAMED_BLOCKCHAIN_API_BITCOIN) bitcoinInfoApi : BlockchainApi,
             @Named(NAMED_BLOCKCHAIN_API_ETHER) etherInfoApi : BlockchainApi
-    ): BlockchainInfoApiFacade = BlockchainInfoApiFacade(
+    ): BlockchainApi = BlockchainInfoApiFacade(
             bitcoinInfoApi,
             etherInfoApi
     )

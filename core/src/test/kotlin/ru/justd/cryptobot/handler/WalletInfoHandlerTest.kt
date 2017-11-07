@@ -15,7 +15,7 @@ import ru.justd.cryptobot.persistance.PreferenceUpdate
 
 internal class WalletInfoHandlerTest {
 
-    val bitcoinInfoApiMock = BlockchainModule.blockchainInfoApiFacade
+    val blockchainApi = BlockchainModule.blockchainApi
     lateinit var testInstance: CryptoCore
 
     @Before
@@ -28,7 +28,7 @@ internal class WalletInfoHandlerTest {
     @Test
     fun testSuccess() {
         //setup
-        whenever(bitcoinInfoApiMock.getAddressInfo(anyString())).thenReturn(
+        whenever(blockchainApi.getAddressInfo(anyString())).thenReturn(
                 BitcoinAddressInfo("6917027", "", "", "", "", "",
                         "", "", "", "", "", "",
                         "")
