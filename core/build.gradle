@@ -27,15 +27,19 @@ buildscript {
 
 }
 
-buildConfig {
+buildConfig { //todo wtf, why build fails when I remove it from here?
 
     Properties properties = new Properties()
-    properties.load(project.rootProject.file('keystore.properties').newDataInputStream())
+    def file = project.rootProject.file('keystore.properties')
+    if (file.exists()) {
+        properties.load(file.newDataInputStream())
+    } else {
+        properties.put("BOT_TOKEN", "ci_tests_token")
+    }
 
     properties.each { key, value ->
         buildConfigField 'String', key.toString(), value.toString()
     }
-
 }
 
 repositories {
