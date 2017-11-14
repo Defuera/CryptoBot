@@ -25,9 +25,7 @@ os: linux
 #   may cause associated deployments to fail.
 files:
   - source: "/"
-    destination: "~/cryptadviser/cryptobot"
-#  - source:
-#    destination:
+    destination: "/home/ec2-user/cryptadviser/cryptobot"
 
 
 # For deployments to Amazon Linux, Ubuntu Server, or RHEL instances,
