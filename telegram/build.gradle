@@ -36,10 +36,19 @@ buildConfig {
         properties.load(file.newDataInputStream())
     } else {
         properties.put("BOT_TOKEN", "ci_tests_token")
+        properties.put("IS_DEBUG", "true")
     }
 
     properties.each { key, value ->
-        buildConfigField 'String', key.toString(), value.toString()
+        def fieldName = key.toString()
+        def fieldValue = value.toString()
+
+        if (fieldName == "IS_DEBUG") {
+            buildConfigField 'boolean', fieldName, fieldValue
+        } else {
+            buildConfigField 'String', fieldName, fieldValue
+        }
+
     }
 
 }
@@ -80,5 +89,5 @@ compileTestKotlin {
 }
 
 run {
-    main = 'ru.justd.cryptobot.MainKt'
+    mainClassName = 'ru.justd.cryptobot.MainKt'
 }
