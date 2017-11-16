@@ -17,6 +17,6 @@ class StorageModule {
 
     @Provides
     @Singleton
-    fun provideMongo(): MongoDatabase = MongoClient("52.91.229.51").getDatabase("db")
+    fun provideMongo(): MongoDatabase = MongoClient("52.91.229.51").getDatabase("db") //todo if debug return StorageImpl(HashMap())
 
 }
