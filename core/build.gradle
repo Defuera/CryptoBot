@@ -36,8 +36,6 @@ buildConfig {
         buildConfigField 'String', key.toString(), value.toString()
     }
 
-    buildConfigField 'String', "MONGO_ADDRESS", "34.215.131.167"
-
 }
 
 repositories {
