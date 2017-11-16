@@ -24,7 +24,7 @@ internal class PublisherImpl constructor(
                 .subscribe(
                         { update ->
                             val preferences = update.userPreferences
-                            preferences.subscriptions.forEach {
+                            preferences.subscriptions?.forEach {
                                 initWorker(update.userId, it)
                             }
                         }

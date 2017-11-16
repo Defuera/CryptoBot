@@ -1,5 +1,7 @@
 package ru.justd.cryptobot.di
 
+import com.mongodb.MongoClient
+import com.mongodb.client.MongoDatabase
 import dagger.Module
 import dagger.Provides
 import org.mockito.Mockito.mock
@@ -15,6 +17,10 @@ class StorageModule {
 
     @Provides
     @Singleton
-    fun provideUserPreferences() = storageMock
+    fun provideUserPreferences(mongo: MongoDatabase) = storageMock
+
+    @Provides
+    @Singleton
+    fun provideMongo() = MongoClient().getDatabase("preferences")
 
 }
