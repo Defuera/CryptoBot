@@ -18,6 +18,5 @@
 #Gradle files
 .gradle
 gradle-app.setting
-/gradle/*
 /gradlew
 /gradlew.bat
