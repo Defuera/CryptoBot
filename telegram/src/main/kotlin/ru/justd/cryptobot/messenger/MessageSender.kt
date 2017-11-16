@@ -6,6 +6,7 @@ import com.pengrad.telegrambot.request.BaseRequest
 import com.pengrad.telegrambot.request.EditMessageReplyMarkup
 import com.pengrad.telegrambot.request.EditMessageText
 import com.pengrad.telegrambot.request.SendMessage
+import ru.justd.cryptobot.BuildConfig
 import ru.justd.cryptobot.messenger.model.Reply
 import java.io.IOException
 
@@ -52,6 +53,10 @@ class MessageSender(
     }
 
     private fun formatMessageText(message: String) =
-            "*$uuid*\n_thread: ${Thread.currentThread().name}_\n\n$message"
+            if (BuildConfig.IS_DEBUG) {
+                "*$uuid*\n_thread: ${Thread.currentThread().name}_\n\n$message"
+            } else {
+                message
+            }
 
 }

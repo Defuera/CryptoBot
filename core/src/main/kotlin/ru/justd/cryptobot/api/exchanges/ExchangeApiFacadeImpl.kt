@@ -8,7 +8,7 @@ import ru.justd.cryptobot.api.exchanges.gdax.GdaxApi
 import ru.justd.cryptobot.persistance.Storage
 import javax.inject.Named
 
-class ExchangeFacadeImpl(
+class ExchangeApiFacadeImpl(
         @Named(GdaxApi.NAME)
         private val gdaxApi: ExchangeApi,
 
@@ -22,7 +22,9 @@ class ExchangeFacadeImpl(
         private val bitfinexApi: ExchangeApi,
 
         private val storage: Storage
-) : ExchangeFacade {
+) : ExchangeApiFacade {
+
+    //todo make ExchangeApiFacade implement ExchangeApi, remove storage from this class
 
     @Throws(ExchangeNotSupported::class)
     override fun getRate(base: String?, target: String?, exchangeApiCode: String?): RateResponse {

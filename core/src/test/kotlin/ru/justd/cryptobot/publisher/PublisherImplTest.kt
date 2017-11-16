@@ -6,7 +6,7 @@ import io.reactivex.observers.TestObserver
 import io.reactivex.subjects.PublishSubject
 import org.junit.Test
 import org.mockito.ArgumentMatchers.anyString
-import ru.justd.cryptobot.api.exchanges.ExchangeFacade
+import ru.justd.cryptobot.api.exchanges.ExchangeApiFacade
 import ru.justd.cryptobot.api.exchanges.RateResponse
 import ru.justd.cryptobot.handler.subscribe.Subscription
 import ru.justd.cryptobot.persistance.PreferenceUpdate
@@ -18,7 +18,7 @@ internal class PublisherImplTest {
 
     lateinit var testInstance: PublisherImpl
 
-    private val facadeMock = mock<ExchangeFacade>()
+    private val facadeMock = mock<ExchangeApiFacade>()
     private val storageMock = mock<Storage>()
 
     @Test
