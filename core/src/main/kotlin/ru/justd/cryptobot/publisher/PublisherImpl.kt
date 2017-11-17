@@ -19,19 +19,18 @@ internal class PublisherImpl constructor(
 
     init {
 
-        val observeUpdates = storage.observeUpdates()
-        observeUpdates
+        storage.observeSubscriptionUpdates()
                 .subscribe(
                         { update ->
                             val preferences = update.userPreferences
                             preferences.subscriptions?.forEach {
-                                initWorker(update.userId, it)
+                                initWorker(update.channelId, it)
                             }
                         }
                 )
     }
 
-    override fun observeUpdates(): Observable<Update> = subject //todo identify subscriber to filter messages (subscribers should not get messages of other subscribers)
+    override fun observeUpdates(): Observable<Update> = subject
 
     private fun initWorker(channelId: String, subscription: Subscription) {
         Thread(Runnable {

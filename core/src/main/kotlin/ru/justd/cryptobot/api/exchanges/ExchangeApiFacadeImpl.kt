@@ -28,9 +28,9 @@ class ExchangeApiFacadeImpl(
 
     @Throws(ExchangeNotSupported::class)
     override fun getRate(base: String?, target: String?, exchangeApiCode: String?): RateResponse {
-        return getApi(exchangeApiCode ?: storage.getExchangeApi("chatId")) //todo pass userId
+        return getApi(exchangeApiCode ?: storage.getExchangeApi("chatId")) //todo pass channelId
                 .getRate(
-                        base ?: storage.getBaseCurrency("chatId"),
+                        base ?: storage.getBaseCurrency("chatId"), //todo wtf?
                         target ?: storage.getTargetCurrency("chatId")
                 )
     }

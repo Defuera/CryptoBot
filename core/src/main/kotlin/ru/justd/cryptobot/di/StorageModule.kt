@@ -6,17 +6,22 @@ import dagger.Module
 import dagger.Provides
 import ru.justd.cryptobot.persistance.MongoStorageImpl
 import ru.justd.cryptobot.persistance.Storage
+import ru.justd.cryptobot.persistance.StorageImpl
 import javax.inject.Singleton
 
 @Module
-class StorageModule {
+class StorageModule(val debug: Boolean) {
 
     @Provides
     @Singleton
-    fun provideUserPreferences(mongo: MongoDatabase): Storage = MongoStorageImpl(mongo)
+    fun provideMongo(): MongoDatabase = MongoClient("52.91.229.51").getDatabase("db")
 
     @Provides
     @Singleton
-    fun provideMongo(): MongoDatabase = MongoClient("52.91.229.51").getDatabase("db") //todo if debug return StorageImpl(HashMap())
+    fun provideUserPreferences(mongo: MongoDatabase): Storage =
+            if (debug)
+                StorageImpl(HashMap())
+            else
+                MongoStorageImpl(mongo)
 
 }

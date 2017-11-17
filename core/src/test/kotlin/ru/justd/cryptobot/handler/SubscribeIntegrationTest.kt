@@ -34,7 +34,7 @@ internal class SubscribeIntegrationTest {
     @Before
     fun setup() {
         storageMock = StorageModule.storageMock
-        whenever(storageMock.observeUpdates()).thenReturn(Observable.create<PreferenceUpdate> { })
+        whenever(storageMock.observeSubscriptionUpdates()).thenReturn(Observable.create<PreferenceUpdate> { })
         whenever(storageMock.getExchangeApi(userId)).thenReturn("stub api")
         whenever(storageMock.getBaseCurrency(userId)).thenReturn("stub base")
         whenever(storageMock.getTargetCurrency(userId)).thenReturn("stub target")

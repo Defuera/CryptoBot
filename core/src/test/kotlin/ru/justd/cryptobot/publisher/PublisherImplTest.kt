@@ -25,7 +25,7 @@ internal class PublisherImplTest {
     fun `verify update being published after storage new subscription added to storage`() {
         //setup
         val subject = PublishSubject.create<PreferenceUpdate>()
-        whenever(storageMock.observeUpdates()).thenReturn(subject)
+        whenever(storageMock.observeSubscriptionUpdates()).thenReturn(subject)
         val base = "btc"
         val target = "usd"
         val channelId = "100"

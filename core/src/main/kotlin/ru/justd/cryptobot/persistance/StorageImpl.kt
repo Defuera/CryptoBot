@@ -72,6 +72,6 @@ class StorageImpl constructor(val storageDataSource: HashMap<String, UserPrefere
         )
     }
 
-    override fun observeUpdates(): Observable<PreferenceUpdate> = this.updateSubject
+    override fun observeSubscriptionUpdates(): Observable<PreferenceUpdate> = this.updateSubject
 
 }

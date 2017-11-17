@@ -6,6 +6,7 @@ import com.mongodb.client.MongoDatabase
 import com.mongodb.client.model.Filters.eq
 import com.mongodb.client.model.UpdateOptions
 import io.reactivex.Observable
+import io.reactivex.subjects.BehaviorSubject
 import org.bson.Document
 import ru.justd.cryptobot.api.exchanges.gdax.GdaxApi
 import ru.justd.cryptobot.handler.subscribe.Subscription
@@ -13,6 +14,8 @@ import java.util.*
 import kotlin.collections.ArrayList
 
 class MongoStorageImpl(private val mongo: MongoDatabase) : Storage {
+
+    private val updateSubject = BehaviorSubject.create<PreferenceUpdate>()
 
     override fun getBaseCurrency(channelId: String): String =
             getPreferences(channelId)?.base
@@ -59,16 +62,19 @@ class MongoStorageImpl(private val mongo: MongoDatabase) : Storage {
     }
 
     override fun getSubscriptions(channelId: String): List<Subscription>? =
-        getPreferences(channelId)?.subscriptions
+            getPreferences(channelId)?.subscriptions
 
     override fun addSubscription(channelId: String, newSubscription: Subscription) {
-        updateProperty(
+        updateSubject.onNext(PreferenceUpdate(
                 channelId,
-                { it.copy(subscriptions = (it.subscriptions ?: ArrayList()) + newSubscription) }
-        )
+                updateProperty(
+                        channelId,
+                        { it.copy(subscriptions = (it.subscriptions ?: ArrayList()) + newSubscription) }
+                )
+        ))
     }
 
-    override fun observeUpdates(): Observable<PreferenceUpdate> = Observable.empty()
+    override fun observeSubscriptionUpdates(): Observable<PreferenceUpdate> = updateSubject
 
     private fun getPreferences(channelId: String): UserPreferences? =
             getPreferencesCollection()
@@ -79,7 +85,7 @@ class MongoStorageImpl(private val mongo: MongoDatabase) : Storage {
 
     private fun getPreferencesCollection(): MongoCollection<Document> = mongo.getCollection(COLLECTION_NAME)
 
-    private inline fun updateProperty(channelId: String, preferencesUpdate: (UserPreferences) -> UserPreferences) {
+    private fun updateProperty(channelId: String, preferencesUpdate: (UserPreferences) -> UserPreferences): UserPreferences {
         val preferences = getPreferences(channelId) ?: UserPreferences()
         val updatedPreferences = preferencesUpdate.invoke(preferences)
         val update = Document().append(
@@ -93,6 +99,8 @@ class MongoStorageImpl(private val mongo: MongoDatabase) : Storage {
                         update,
                         UpdateOptions().upsert(true)
                 )
+
+        return updatedPreferences
     }
 
     companion object {

@@ -15,10 +15,10 @@ class TelegramMessenger(private val uuid: String) { //todo https://core.telegram
 
     private lateinit var requestProcessor: RequestProcessor
 
-    private val telegramBot: TelegramBot = TelegramBotAdapter.build(BuildConfig.BOT_TOKEN) //todo provide debug/production bot based on BuildType
+    private val telegramBot: TelegramBot = TelegramBotAdapter.build(BuildConfig.BOT_TOKEN)
     private val messageSender = MessageSender(uuid, telegramBot)
 
-    val cryptoCore = CryptoCore()
+    val cryptoCore = CryptoCore.start(false)
 
     init {
         if (BuildConfig.IS_DEBUG) {
@@ -30,7 +30,7 @@ class TelegramMessenger(private val uuid: String) { //todo https://core.telegram
     fun run() {
         println("TelegramMessenger started, id: $uuid")
 
-        requestProcessor = RequestProcessor(cryptoCore, messageSender) //todo this is against Vasya
+        requestProcessor = RequestProcessor(cryptoCore, messageSender)
 
         telegramBot.setUpdatesListener { updates ->
             updates.forEach { handleAsync(it) }

@@ -26,6 +26,6 @@ interface Storage { //todo add removeSubscription
 
     fun addSubscription(channelId: String, newSubscription: Subscription)
 
-    fun observeUpdates(): Observable<PreferenceUpdate>
+    fun observeSubscriptionUpdates(): Observable<PreferenceUpdate>
 
 }
