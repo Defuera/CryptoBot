@@ -21,7 +21,7 @@ internal class WalletInfoHandlerTest {
     @Before
     fun setup() {
         whenever(StorageModule.storageMock.observeSubscriptionUpdates()).thenReturn(Observable.create<PreferenceUpdate> { })
-        testInstance = CryptoCore()
+        testInstance = CryptoCore.start(true)
     }
 
 
