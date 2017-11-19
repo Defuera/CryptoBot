@@ -1,4 +1,4 @@
-package ru.justd.cryptobot.handler
+package ru.justd.cryptobot.handler.unsubscribe
 
 import com.nhaarman.mockito_kotlin.times
 import com.nhaarman.mockito_kotlin.verify
@@ -15,7 +15,8 @@ import ru.justd.cryptobot.handler.subscribe.Subscription
 import ru.justd.cryptobot.persistance.PreferenceUpdate
 import ru.justd.cryptobot.persistance.Storage
 
-internal class SubscribeIntegrationTest {
+
+class UnsubscribeHandlerTest {
 
     lateinit var testInstance: CryptoCore
 
@@ -39,15 +40,28 @@ internal class SubscribeIntegrationTest {
     }
 
     @Test
-    fun `test base is absent throws exception`() {
-        val response = testInstance.handle(channelId, "/subscribe")
+    fun `no subscriptions to remove`() {
+        //setup
+        whenever(storageMock.getSubscriptions(channelId)).thenReturn(null)
 
-        assertThat(response.channelId).isEqualTo(channelId)
-        assertThat(response.text).isEqualTo("Choose crypto")
+        //action
+        val response = testInstance.handle(channelId, "/unsubscribe")
 
-        val dialog = response.dialog!!
-        assertThat(dialog.callbackLabel).isEqualTo("/subscribe")
-        assertThat(dialog.dialogOptions).isEqualTo(arrayOf("BTC", "ETH", "BCC"))
+        //assert
+        assertThat(response.text).isEqualTo("You don't have subscriptions yet. To create new subscription use **/subscribe** command")
+    }
+
+    @Test
+    fun `remove existing subscription successfully`() {
+        //setup
+        val stubSubscription = Subscription("uuid", "base", "target", "exchange", 5)
+        whenever(storageMock.getSubscriptions(channelId)).thenReturn(listOf(stubSubscription))
+
+        //action
+        val response = testInstance.handle(channelId, "/unsubscribe")
+
+        //assert
+        assertThat(response.text).isEqualTo("Choose subscription to delete:")
     }
 
     @Test

@@ -21,19 +21,18 @@ class UnsubscribeHandler(
             )
         }
 
-        if (subscriptionId == null) {
+        if (subscriptionId.isNullOrBlank()) {
             return Reply(
                     channelId,
                     "Choose subscription to delete:",
-                    Dialog("/unsubscribe", subscriptions.map { it.toString() }.toTypedArray())
+                    Dialog("/unsubscribe", subscriptions.map { it.uuid }.toTypedArray())
             )
         }
 
-        storage.removeSubscription(channelId, subscriptionId)
+        storage.removeSubscription(channelId, subscriptionId!!)
         return Reply(
                 channelId,
-                "Choose subscription to delete:",
-                Dialog("/unsubscribe", subscriptions.map { it.toString() }.toTypedArray())
+                "Subscription removed successfully"
         )
     }
 

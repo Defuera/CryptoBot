@@ -18,7 +18,7 @@ const val DEFAULT_EXCHANGE = GdaxApi.NAME
 class CryptoCore private constructor(debug : Boolean){
 
     companion object {
-        fun start(debug : Boolean = false) = CryptoCore(debug)
+        fun start(debug : Boolean = true) = CryptoCore(debug)
     }
 
 
