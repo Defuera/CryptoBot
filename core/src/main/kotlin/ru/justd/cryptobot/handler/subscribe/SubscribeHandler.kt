@@ -74,7 +74,7 @@ class SubscribeHandler constructor(
             return Reply(
                     channelId,
                     "Choose exchange",
-                    Dialog("/subscribe $base $target", arrayOf("Coinbase", "Gdax", "Cryptonator", "Bitfinex", "Yobit"))
+                    Dialog("/subscribe $base $target", arrayOf("Coinbase", "Gdax", "Cryptonator", "Bitfinex"))
             )
         }
 

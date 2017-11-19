@@ -37,20 +37,20 @@ internal class PublisherImpl constructor(
             //todo rx worker
             print("new thread started")
             val response = exchangeFacade.getRate(subscription.base, subscription.target, subscription.exchange)
-            publishUpdate(channelId, response)
+            publishUpdate(channelId, response, subscription.target)
 
             Thread.sleep(subscription.periodicityMins * 1000 * 60)
             initWorker(channelId, subscription)
         }).start()
     }
 
-    private fun publishUpdate(channelId: String, rate: RateResponse) {
-        subject.onNext(Update(channelId, createMessage(rate)))
+    private fun publishUpdate(channelId: String, rate: RateResponse, target: String) {
+        subject.onNext(Update(channelId, createMessage(rate, target)))
     }
 
-    private fun createMessage(rate: RateResponse): String { //todo this is copied from PriceHandler
+    private fun createMessage(rate: RateResponse, target: String): String { //todo this is copied from PriceHandler
         return try {
-            "${rate.base} price is ${rate.amount} ${rate.target}"
+            "${rate.base} price is ${rate.amount} $target"
         } catch (error: ExchangeNotSupported) {
             "${error.exchange} exchange not supported" //todo log to be aware what exchanges customers are waiting the most, localize
         } catch (error: RequestFailed) {
