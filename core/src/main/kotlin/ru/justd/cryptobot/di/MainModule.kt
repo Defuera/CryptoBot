@@ -34,7 +34,7 @@ class MainModule {
                     InstantFactory("/help", HelpCommandHandler),
                     InstantFactory("/update", UpdateCommandHandler),
                     PriceCommandHandlerFactory(exchangeFacade),
-                    SubscribeFactory(storage),
+                    SubscribeFactory(exchangeFacade, storage),
                     UnsubscribeHandlerFactory(storage),
                     WalletInfoHandlerFactory(blockchainApi)
             )

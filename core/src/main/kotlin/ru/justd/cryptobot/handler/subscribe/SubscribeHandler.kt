@@ -1,7 +1,9 @@
 package ru.justd.cryptobot.handler.subscribe
 
+import ru.justd.cryptobot.api.exchanges.ExchangeApiFacade
 import ru.justd.cryptobot.handler.CommandHandler
 import ru.justd.cryptobot.handler.exceptions.InvalidCommand
+import ru.justd.cryptobot.handler.price.PriceCommandHandler
 import ru.justd.cryptobot.messenger.model.Dialog
 import ru.justd.cryptobot.messenger.model.Option
 import ru.justd.cryptobot.messenger.model.Reply
@@ -28,6 +30,7 @@ import java.util.*
  */
 class SubscribeHandler constructor(
         private val storage: Storage,
+        val exchangeApiFacade: ExchangeApiFacade,
         val base: String?,
         val target: String?,
         val exchange: String?,
@@ -54,7 +57,7 @@ class SubscribeHandler constructor(
 
     override fun createReply(channelId: String): Reply { //todo magic strings
 
-        if (base.isNullOrBlank()) {
+        if (base == null || base.isNullOrBlank()) {
             return Reply(
                     channelId,
                     "Choose crypto",
@@ -62,7 +65,7 @@ class SubscribeHandler constructor(
             )
         }
 
-        if (target.isNullOrBlank()) {
+        if (target == null || target.isNullOrBlank()) {
             return Reply(
                     channelId,
                     "Choose fiat",
@@ -70,7 +73,7 @@ class SubscribeHandler constructor(
             )
         }
 
-        if (exchange.isNullOrBlank()) {
+        if (exchange == null || exchange.isNullOrBlank()) {
             return Reply(
                     channelId,
                     "Choose exchange",
@@ -86,20 +89,21 @@ class SubscribeHandler constructor(
             )
         }
 
-        //todo looks like it action should not be result of invoking createReply fun..
-        //todo check if subscription is valid before returning success
+
+        val priceResponse = PriceCommandHandler(exchangeApiFacade, base, target, exchange).createReply(channelId)
+
         storage.addSubscription(
                 channelId,
                 Subscription(
                         UUID.randomUUID().toString(),
-                        base!!,
-                        target!!,
-                        exchange!!,
+                        base,
+                        target,
+                        exchange,
                         periodToDate(period!!)
                 )
         )
 
-        return Reply(channelId, "subscriptions created")
+        return Reply(channelId, "Subscription created successfully!\n${priceResponse.text}")
 
     }
 

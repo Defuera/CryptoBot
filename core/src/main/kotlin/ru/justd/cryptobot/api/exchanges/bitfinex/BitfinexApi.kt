@@ -21,7 +21,13 @@ class BitfinexApi(okHttpClient: OkHttpClient) : PollingExchange(okHttpClient) {
     @Throws(RequestFailed::class)
     override fun parseResponseBody(bodyString: String, base: String, target: String): RateResponse {
         val ticker = gson.fromJson<Ticker>(bodyString, Ticker::class.java)
-        return RateResponse(ticker.mid, base, target)
+        val errorMessage = ticker.message
+        if (errorMessage.isNullOrBlank()){
+            return RateResponse(ticker.mid, base, target)
+        } else {
+            //then error
+            throw RequestFailed("Error occurred: $errorMessage")
+        }
     }
 
     private data class Ticker(
@@ -32,7 +38,8 @@ class BitfinexApi(okHttpClient: OkHttpClient) : PollingExchange(okHttpClient) {
             val low: Double,
             val high: Double,
             val volume: Double,
-            val timestamp: Double
+            val timestamp: Double,
+            val message : String
     )
 
 }
