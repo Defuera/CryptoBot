@@ -2,6 +2,7 @@ package ru.justd.cryptobot.handler.unsubscribe
 
 import ru.justd.cryptobot.handler.CommandHandler
 import ru.justd.cryptobot.messenger.model.Dialog
+import ru.justd.cryptobot.messenger.model.Option
 import ru.justd.cryptobot.messenger.model.Reply
 import ru.justd.cryptobot.persistance.Storage
 
@@ -25,7 +26,16 @@ class UnsubscribeHandler(
             return Reply(
                     channelId,
                     "Choose subscription to delete:",
-                    Dialog("/unsubscribe", subscriptions.map { it.uuid }.toTypedArray())
+                    Dialog(
+                            "/unsubscribe",
+                            subscriptions
+                                    .map {
+                                        Option(
+                                                "${it.base} ${it.target} ${it.exchange} ${it.periodicityMins}",
+                                                it.uuid
+                                        )
+                                    }
+                    )
             )
         }
 

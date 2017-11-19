@@ -3,6 +3,7 @@ package ru.justd.cryptobot.handler.subscribe
 import ru.justd.cryptobot.handler.CommandHandler
 import ru.justd.cryptobot.handler.exceptions.InvalidCommand
 import ru.justd.cryptobot.messenger.model.Dialog
+import ru.justd.cryptobot.messenger.model.Option
 import ru.justd.cryptobot.messenger.model.Reply
 import ru.justd.cryptobot.persistance.Storage
 import java.util.*
@@ -33,14 +34,23 @@ class SubscribeHandler constructor(
         val period: String?
 ) : CommandHandler {
 
-    private val PERIOD_5_MINS = "every_5_minutes" //todo
+    private val PERIOD_1_MINS = "every_1_minute"
+    private val PERIOD_5_MINS = "every_5_minutes"
     private val PERIOD_30_MINS = "every_30_minutes"
     private val PERIOD_1_HOUR = "every_hour"
     private val PERIOD_2_HOURS = "every_2_hours"
     private val PERIOD_12_HOURS = "every_12_hours"
     private val PERIOD_1_DAY = "once_a_day"
 
-    private val SET_PERIODS = arrayOf(PERIOD_5_MINS, PERIOD_30_MINS, PERIOD_1_HOUR, PERIOD_2_HOURS, PERIOD_12_HOURS, PERIOD_1_DAY)
+    private val SET_PERIODS = listOf(
+            Option("Every minute", PERIOD_1_MINS),
+            Option("Every 5 minutes", PERIOD_5_MINS),
+            Option("Every 30 minutes", PERIOD_30_MINS),
+            Option("Every hour", PERIOD_1_HOUR),
+            Option("Every two hours", PERIOD_2_HOURS),
+            Option("Every 12 hours", PERIOD_12_HOURS),
+            Option("Every day", PERIOD_1_DAY)
+    )
 
     override fun createReply(channelId: String): Reply { //todo magic strings
 
@@ -95,13 +105,14 @@ class SubscribeHandler constructor(
 
     private fun periodToDate(period: String): Long {
         return when (period) {
+            PERIOD_1_MINS -> 1
             PERIOD_5_MINS -> 5
             PERIOD_30_MINS -> 30
             PERIOD_1_HOUR -> 60
             PERIOD_2_HOURS -> 120
             PERIOD_12_HOURS -> 60 * 12
             PERIOD_1_DAY -> 60 * 24
-            else -> throw InvalidCommand("Period shoud be in minutes from one of the following choises: \n${Arrays.toString(SET_PERIODS)}")
+            else -> throw InvalidCommand("Unknown period")
         }
 
     }
