@@ -9,7 +9,7 @@ import ru.justd.cryptobot.handler.subscribe.Subscription
 
 internal class StorageImplTest {
 
-    private val userId = "chatId"
+    private val channelId = "channelId"
 
     private val BASE_LTC = "LTC"
     private val BASE_BCC = "BCC"
@@ -23,15 +23,26 @@ internal class StorageImplTest {
     @Test
     fun `test multiple subscriptions`() {
         //setup
-        val subscription1 = Subscription(BASE_LTC, TARGET_GBP, EXCHANGE_GDAX, 5)
-        val subscription2 = Subscription(BASE_BCC, TARGET_EUR, EXCHANGE_CRYPTONATOR, 15)
+        val subscription1 = Subscription("uuid1", BASE_LTC, TARGET_GBP, EXCHANGE_GDAX, 5)
+        val subscription2 = Subscription("uuid2", BASE_BCC, TARGET_EUR, EXCHANGE_CRYPTONATOR, 15)
 
         //action
-        testInstance.addSubscription(userId, subscription1)
-        testInstance.addSubscription(userId, subscription2)
+        testInstance.addSubscription(channelId, subscription1)
+        testInstance.addSubscription(channelId, subscription2)
 
         //test
-        assertThat(testInstance.getSubscriptions(userId)).isEqualTo(listOf(subscription1, subscription2))
+        assertThat(testInstance.getSubscriptions(channelId)).isEqualTo(listOf(subscription1, subscription2))
     }
 
+
+    @Test
+    fun `test remove subscription`() {
+        `test multiple subscriptions`()
+
+        testInstance.removeSubscription(channelId, "uuid2")
+        assertThat(testInstance.getSubscriptions(channelId))
+                .isEqualTo(listOf(
+                        Subscription("uuid1", BASE_LTC, TARGET_GBP, EXCHANGE_GDAX, 5)
+                ))
+    }
 }

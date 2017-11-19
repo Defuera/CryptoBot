@@ -34,10 +34,10 @@ class PriceCommandHandlerTest {
     fun testGetBtcPrice() {
         //setup
         val base = "BTC"
-        whenever(exchangeFacade.getRate(base)).thenReturn(RateResponse(.0, base, "USD"))
+        whenever(exchangeFacade.getRate(base, "usd", "gdax")).thenReturn(RateResponse(.0, base, "USD"))
 
         //test
-        val message = PriceCommandHandler(exchangeFacade, base, null, null).createReply("channelId")
+        val message = PriceCommandHandler(exchangeFacade, base, null, "gdax").createReply("channelId")
 
         //assert
         assertThat(message.text).matches(patternForPair(base, "USD"))
@@ -48,10 +48,10 @@ class PriceCommandHandlerTest {
         //setup
         val base = "BTC"
         val target = "EUR"
-        whenever(exchangeFacade.getRate(base, target)).thenReturn(RateResponse(.0, base, target))
+        whenever(exchangeFacade.getRate(base, target, "gdax")).thenReturn(RateResponse(.0, base, target))
 
         //test
-        val message = PriceCommandHandler(exchangeFacade, base, target, null).createReply("channelId")
+        val message = PriceCommandHandler(exchangeFacade, base, target, "gdax").createReply("channelId")
 
         //assert
         assertThat(message.text).matches(patternForPair(base, target))

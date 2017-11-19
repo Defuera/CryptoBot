@@ -44,11 +44,7 @@ internal class PublisherImplTest {
         subject.onNext(PreferenceUpdate(
                 channelId,
                 UserPreferences(
-                        "base",
-                        "target",
-                        "exchange",
-                        Locale.CANADA,
-                        listOf(Subscription(base, target, exchange, 200))
+                        listOf(Subscription("uuid", base, target, exchange, 200))
                 )
         ))
 

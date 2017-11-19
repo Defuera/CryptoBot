@@ -34,9 +34,6 @@ internal class SubscribeIntegrationTest {
     fun setup() {
         storageMock = StorageModule.storageMock
         whenever(storageMock.observeSubscriptionUpdates()).thenReturn(Observable.create<PreferenceUpdate> { })
-        whenever(storageMock.getExchangeApi(channelId)).thenReturn("stub api")
-        whenever(storageMock.getBaseCurrency(channelId)).thenReturn("stub base")
-        whenever(storageMock.getTargetCurrency(channelId)).thenReturn("stub target")
 
         testInstance = CryptoCore.start(true)
     }
@@ -60,7 +57,7 @@ internal class SubscribeIntegrationTest {
 
         //test
         assertThat(reply.text).isEqualTo("subscriptions created")
-        verify(storageMock, times(1)).addSubscription(channelId, Subscription(BASE_LTC, TARGET_GBP, EXCHANGE_CRYPTONATOR, 5))
+        verify(storageMock, times(1)).addSubscription(channelId, Subscription("uuid", BASE_LTC, TARGET_GBP, EXCHANGE_CRYPTONATOR, 5))
     }
 
     @Test
@@ -70,7 +67,7 @@ internal class SubscribeIntegrationTest {
         testInstance.handle(channelId, "/subscribe $BASE_BCC $TARGET_EUR $EXCHANGE_CRYPTONATOR $PERIODICITY")
 
         //test
-        verify(storageMock, times(1)).addSubscription(channelId, Subscription(BASE_LTC, TARGET_GBP, EXCHANGE_GDAX, 5))
-        verify(storageMock, times(1)).addSubscription(channelId, Subscription(BASE_BCC, TARGET_EUR, EXCHANGE_CRYPTONATOR, 5))
+        verify(storageMock, times(1)).addSubscription(channelId, Subscription("uuid", BASE_LTC, TARGET_GBP, EXCHANGE_GDAX, 5))
+        verify(storageMock, times(1)).addSubscription(channelId, Subscription("uuid", BASE_BCC, TARGET_EUR, EXCHANGE_CRYPTONATOR, 5))
     }
 }

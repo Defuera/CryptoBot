@@ -26,7 +26,6 @@ import java.util.*
  *
  */
 class SubscribeHandler constructor(
-        private val userId: String,
         private val storage: Storage,
         val base: String?,
         val target: String?,
@@ -78,7 +77,18 @@ class SubscribeHandler constructor(
         }
 
         //todo looks like it action should not be result of invoking createReply fun..
-        storage.addSubscription(userId, Subscription(base!!, target!!, exchange!!, periodToDate(period!!)))
+        //todo check if subscription is valid before returning success
+        storage.addSubscription(
+                channelId,
+                Subscription(
+                        UUID.randomUUID().toString(),
+                        base!!,
+                        target!!,
+                        exchange!!,
+                        periodToDate(period!!)
+                )
+        )
+
         return Reply(channelId, "subscriptions created")
 
     }

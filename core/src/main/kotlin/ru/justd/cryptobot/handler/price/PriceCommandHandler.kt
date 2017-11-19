@@ -1,5 +1,6 @@
 package ru.justd.cryptobot.handler.price
 
+import ru.justd.cryptobot.DEFAULT_EXCHANGE
 import ru.justd.cryptobot.api.exchanges.ExchangeApiFacade
 import ru.justd.cryptobot.api.exchanges.exceptions.ExchangeNotSupported
 import ru.justd.cryptobot.api.exchanges.exceptions.RequestFailed
@@ -25,7 +26,7 @@ class PriceCommandHandler (
         println("PriceCommandHandler#createReply $base $target $exchange")
 
         val message = try {
-            val rate = exchangeFacade.getRate(base, target, exchange)
+            val rate = exchangeFacade.getRate(base, target, exchange ?: DEFAULT_EXCHANGE)
             val exchangeInfo = if (exchange == null) "" else "(via $exchange)"
             "${rate.base} price is ${rate.amount} ${rate.target} $exchangeInfo" //todo localize
         } catch (error: ExchangeNotSupported) {

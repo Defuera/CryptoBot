@@ -11,6 +11,7 @@ import ru.justd.cryptobot.handler.about.AboutCommandHandler
 import ru.justd.cryptobot.handler.help.HelpCommandHandler
 import ru.justd.cryptobot.handler.price.PriceCommandHandlerFactory
 import ru.justd.cryptobot.handler.subscribe.SubscribeFactory
+import ru.justd.cryptobot.handler.unsubscribe.UnsubscribeHandlerFactory
 import ru.justd.cryptobot.handler.update.UpdateCommandHandler
 import ru.justd.cryptobot.handler.wallet.WalletInfoHandlerFactory
 import ru.justd.cryptobot.persistance.Storage
@@ -34,6 +35,7 @@ class MainModule {
                     InstantFactory("/update", UpdateCommandHandler),
                     PriceCommandHandlerFactory(exchangeFacade),
                     SubscribeFactory(storage),
+                    UnsubscribeHandlerFactory(storage),
                     WalletInfoHandlerFactory(blockchainApi)
             )
     )

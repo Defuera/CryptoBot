@@ -13,10 +13,9 @@ class SubscribeFactory(val storage: Storage) : CommandHandlerFactory<SubscribeHa
 
     @Throws(InvalidCommand::class)
     override fun create(channelId: String, request: String): SubscribeHandler {
-        println("SubscribeHandler#create $request")
+        println("SubscribeHandler#create $request") //todo log
 
         return SubscribeHandler(
-                channelId,
                 storage,
                 retrieveArg(request, ARG_INDEX_BASE),
                 retrieveArg(request, ARG_INDEX_TARGET),

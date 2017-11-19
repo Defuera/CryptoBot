@@ -17,48 +17,9 @@ class MongoStorageImpl(private val mongo: MongoDatabase) : Storage {
 
     private val updateSubject = BehaviorSubject.create<PreferenceUpdate>()
 
-    override fun getBaseCurrency(channelId: String): String =
-            getPreferences(channelId)?.base
-                    ?: DEFAULT_BASE_CURRENCY
 
-    override fun setBaseCurrency(channelId: String, base: String) {
-        updateProperty(
-                channelId,
-                { it.copy(base = base) }
-        )
-    }
-
-    override fun getTargetCurrency(channelId: String): String =
-            getPreferences(channelId)?.target
-                    ?: DEFAULT_TARGET_CURRENCY
-
-    override fun setTargetCurrency(channelId: String, target: String) {
-        updateProperty(
-                channelId,
-                { it.copy(target = target) }
-        )
-    }
-
-    override fun getExchangeApi(channelId: String): String =
-            getPreferences(channelId)?.exchangeCode
-                    ?: DEFAULT_EXCHANGE
-
-    override fun setExchangeApi(channelId: String, exchangeApiName: String) {
-        updateProperty(
-                channelId,
-                { it.copy(exchangeCode = exchangeApiName) }
-        )
-    }
-
-    override fun getLocale(channelId: String): Locale =
-            getPreferences(channelId)?.locale
-                    ?: DEFAULT_LOCALE
-
-    override fun setLocale(channelId: String, locale: Locale) {
-        updateProperty(
-                channelId,
-                { it.copy(locale = locale) }
-        )
+    override fun removeSubscription(channelId: String, subscriptionId: String) {
+        //todo
     }
 
     override fun getSubscriptions(channelId: String): List<Subscription>? =
