@@ -46,7 +46,7 @@ class CryptoCore private constructor(debug : Boolean){
 
     fun setUpdateListener(listener: (update: Update) -> Unit) {
         publisher
-                .observeUpdates()
+                .updatesObservable()
                 .subscribe { listener(it) }
     }
 

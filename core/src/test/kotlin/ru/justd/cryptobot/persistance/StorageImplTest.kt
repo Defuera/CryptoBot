@@ -23,8 +23,8 @@ internal class StorageImplTest {
     @Test
     fun `test multiple subscriptions`() {
         //setup
-        val subscription1 = Subscription("uuid1", BASE_LTC, TARGET_GBP, EXCHANGE_GDAX, 5)
-        val subscription2 = Subscription("uuid2", BASE_BCC, TARGET_EUR, EXCHANGE_CRYPTONATOR, 15)
+        val subscription1 = Subscription("uuid1", "channelId", TARGET_GBP, EXCHANGE_GDAX, 5, BASE_LTC)
+        val subscription2 = Subscription("uuid2", "channelId", TARGET_EUR, EXCHANGE_CRYPTONATOR, 15, BASE_BCC)
 
         //action
         testInstance.addSubscription(channelId, subscription1)
@@ -42,7 +42,7 @@ internal class StorageImplTest {
         testInstance.removeSubscription(channelId, "uuid2")
         assertThat(testInstance.getSubscriptions(channelId))
                 .isEqualTo(listOf(
-                        Subscription("uuid1", BASE_LTC, TARGET_GBP, EXCHANGE_GDAX, 5)
+                        Subscription("uuid1", "channelId", TARGET_GBP, EXCHANGE_GDAX, 5, BASE_LTC)
                 ))
     }
 }

@@ -31,7 +31,7 @@ class UnsubscribeHandler(
                             subscriptions
                                     .map {
                                         Option(
-                                                "${it.base} ${it.target} ${it.exchange} ${it.periodicityMins}",
+                                                "${it.base} ${it.target} ${it.exchange} ${it.publishTimes}", //todo instead of publishTImes display to user the period
                                                 it.uuid
                                         )
                                     }

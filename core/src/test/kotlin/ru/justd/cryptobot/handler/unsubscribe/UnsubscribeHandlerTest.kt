@@ -54,7 +54,7 @@ class UnsubscribeHandlerTest {
     @Test
     fun `remove existing subscription successfully`() {
         //setup
-        val stubSubscription = Subscription("uuid", "base", "target", "exchange", 5)
+        val stubSubscription = Subscription("uuid", "channelId", "target", "exchange", 5, "base")
         whenever(storageMock.getSubscriptions(channelId)).thenReturn(listOf(stubSubscription))
 
         //action
@@ -71,7 +71,7 @@ class UnsubscribeHandlerTest {
 
         //test
         assertThat(reply.text).isEqualTo("subscriptions created")
-        verify(storageMock, times(1)).addSubscription(channelId, Subscription("uuid", BASE_LTC, TARGET_GBP, EXCHANGE_CRYPTONATOR, 5))
+        verify(storageMock, times(1)).addSubscription(channelId, Subscription("uuid", "channelId", TARGET_GBP, EXCHANGE_CRYPTONATOR, 5, BASE_LTC))
     }
 
     @Test
@@ -81,7 +81,7 @@ class UnsubscribeHandlerTest {
         testInstance.handle(channelId, "/subscribe $BASE_BCC $TARGET_EUR $EXCHANGE_CRYPTONATOR $PERIODICITY")
 
         //test
-        verify(storageMock, times(1)).addSubscription(channelId, Subscription("uuid", BASE_LTC, TARGET_GBP, EXCHANGE_GDAX, 5))
-        verify(storageMock, times(1)).addSubscription(channelId, Subscription("uuid", BASE_BCC, TARGET_EUR, EXCHANGE_CRYPTONATOR, 5))
+        verify(storageMock, times(1)).addSubscription(channelId, Subscription("uuid", "channelId", TARGET_GBP, EXCHANGE_GDAX, 5, BASE_LTC))
+        verify(storageMock, times(1)).addSubscription(channelId, Subscription("uuid", "channelId", TARGET_EUR, EXCHANGE_CRYPTONATOR, 5, BASE_BCC))
     }
 }

@@ -8,6 +8,8 @@ import ru.justd.cryptobot.messenger.model.Dialog
 import ru.justd.cryptobot.messenger.model.Option
 import ru.justd.cryptobot.messenger.model.Reply
 import ru.justd.cryptobot.persistance.Storage
+import utils.DateManager
+import utils.DateManagerImpl.MILLIS_IN_MINUTE
 import java.util.*
 
 /**
@@ -30,30 +32,36 @@ import java.util.*
  */
 class SubscribeHandler constructor(
         private val storage: Storage,
-        val exchangeApiFacade: ExchangeApiFacade,
+        private val exchangeApiFacade: ExchangeApiFacade,
+        private val dateManager: DateManager,
         val base: String?,
         val target: String?,
         val exchange: String?,
         val period: String?
 ) : CommandHandler {
 
-    private val PERIOD_1_MINS = "every_1_minute"
-    private val PERIOD_5_MINS = "every_5_minutes"
-    private val PERIOD_30_MINS = "every_30_minutes"
-    private val PERIOD_1_HOUR = "every_hour"
-    private val PERIOD_2_HOURS = "every_2_hours"
-    private val PERIOD_12_HOURS = "every_12_hours"
-    private val PERIOD_1_DAY = "once_a_day"
 
-    private val SET_PERIODS = listOf(
-            Option("Every minute", PERIOD_1_MINS),
-            Option("Every 5 minutes", PERIOD_5_MINS),
-            Option("Every 30 minutes", PERIOD_30_MINS),
-            Option("Every hour", PERIOD_1_HOUR),
-            Option("Every two hours", PERIOD_2_HOURS),
-            Option("Every 12 hours", PERIOD_12_HOURS),
-            Option("Every day", PERIOD_1_DAY)
-    )
+    companion object {
+
+         const val PERIOD_1_MINS = "every_1_minute"
+         const val PERIOD_5_MINS = "every_5_minutes"
+         const val PERIOD_30_MINS = "every_30_minutes"
+         const val PERIOD_1_HOUR = "every_hour"
+         const val PERIOD_2_HOURS = "every_2_hours"
+         const val PERIOD_12_HOURS = "every_12_hours"
+         const val PERIOD_1_DAY = "once_a_day"
+
+        private val SET_PERIODS = listOf(
+                Option("Every minute", PERIOD_1_MINS),
+                Option("Every 5 minutes", PERIOD_5_MINS),
+                Option("Every 30 minutes", PERIOD_30_MINS),
+                Option("Every hour", PERIOD_1_HOUR),
+                Option("Every two hours", PERIOD_2_HOURS),
+                Option("Every 12 hours", PERIOD_12_HOURS),
+                Option("Every day", PERIOD_1_DAY)
+        )
+
+    }
 
     override fun createReply(channelId: String): Reply { //todo magic strings
 
@@ -81,7 +89,7 @@ class SubscribeHandler constructor(
             )
         }
 
-        if (period.isNullOrBlank()) {
+        if (period == null || period.isNullOrBlank()) {
             return Reply(
                     channelId,
                     "How often do you want to get updates",
@@ -96,10 +104,11 @@ class SubscribeHandler constructor(
                 channelId,
                 Subscription(
                         UUID.randomUUID().toString(),
-                        base,
+                        channelId,
                         target,
                         exchange,
-                        periodToDate(period!!)
+                        dateManager.periodToDateTimesList(System.currentTimeMillis(), periodToMillis(period)),
+                        base
                 )
         )
 
@@ -107,7 +116,7 @@ class SubscribeHandler constructor(
 
     }
 
-    private fun periodToDate(period: String): Long {
+    private fun periodToMillis(period: String): Long {
         return when (period) {
             PERIOD_1_MINS -> 1
             PERIOD_5_MINS -> 5
@@ -117,7 +126,7 @@ class SubscribeHandler constructor(
             PERIOD_12_HOURS -> 60 * 12
             PERIOD_1_DAY -> 60 * 24
             else -> throw InvalidCommand("Unknown period")
-        }
+        } * MILLIS_IN_MINUTE
 
     }
 

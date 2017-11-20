@@ -28,7 +28,7 @@ class PriceCommandHandler (
         val message = try {
             val rate = exchangeFacade.getRate(base, target, exchange ?: DEFAULT_EXCHANGE)
             val exchangeInfo = if (exchange == null) "" else "(via $exchange)"
-            "${rate.base} price is ${rate.amount} ${rate.target} $exchangeInfo" //todo localize
+            "${rate.base} price is ${rate.amount} ${rate.target} $exchangeInfo"
         } catch (error: ExchangeNotSupported) {
             "${error.exchange} exchange not supported" //todo log to be aware what exchanges customers are waiting the most, localize
         } catch (error: RequestFailed) {

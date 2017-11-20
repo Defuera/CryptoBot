@@ -32,8 +32,20 @@ class StorageImpl constructor(private val storageDataSource: HashMap<String, Use
 
     override fun getSubscriptions(channelId: String): List<Subscription>? = storageDataSource[channelId]?.subscriptions
 
-    override fun observeSubscriptionUpdates(): Observable<PreferenceUpdate> = this.updateSubject
+    override fun getSubscriptions(): List<Subscription>? {
+        val subscriptionsLists = storageDataSource
+                .values
+                .map { it.subscriptions }
+                .filter { it != null && it.isNotEmpty() }
 
+
+        return when(subscriptionsLists.size){
+            0 -> null
+            else -> subscriptionsLists.reduce { left, right -> left!! + right!! }
+        }
+    }
+
+    override fun observeSubscriptionUpdates(): Observable<PreferenceUpdate> = this.updateSubject
 
     //region private helper methods
 

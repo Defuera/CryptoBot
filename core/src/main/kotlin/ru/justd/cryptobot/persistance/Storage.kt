@@ -11,6 +11,8 @@ interface Storage {
 
     fun getSubscriptions(channelId: String): List<Subscription>?
 
+    fun getSubscriptions(): List<Subscription>?
+
     fun observeSubscriptionUpdates(): Observable<PreferenceUpdate>
 
 }

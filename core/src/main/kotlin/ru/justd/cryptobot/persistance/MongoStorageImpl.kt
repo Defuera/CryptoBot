@@ -17,13 +17,13 @@ class MongoStorageImpl(private val mongo: MongoDatabase) : Storage {
 
     private val updateSubject = BehaviorSubject.create<PreferenceUpdate>()
 
-
-    override fun removeSubscription(channelId: String, subscriptionId: String) {
-        //todo
-    }
-
     override fun getSubscriptions(channelId: String): List<Subscription>? =
             getPreferences(channelId)?.subscriptions
+
+    override fun getSubscriptions(): List<Subscription>? {
+        //todo
+        return null
+    }
 
     override fun addSubscription(channelId: String, newSubscription: Subscription) {
         updateSubject.onNext(PreferenceUpdate(
@@ -33,6 +33,10 @@ class MongoStorageImpl(private val mongo: MongoDatabase) : Storage {
                         { it.copy(subscriptions = (it.subscriptions ?: ArrayList()) + newSubscription) }
                 )
         ))
+    }
+
+    override fun removeSubscription(channelId: String, subscriptionId: String) {
+        //todo
     }
 
     override fun observeSubscriptionUpdates(): Observable<PreferenceUpdate> = updateSubject

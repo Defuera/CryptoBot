@@ -12,7 +12,6 @@ import ru.justd.cryptobot.handler.subscribe.Subscription
 import ru.justd.cryptobot.persistance.PreferenceUpdate
 import ru.justd.cryptobot.persistance.Storage
 import ru.justd.cryptobot.persistance.UserPreferences
-import java.util.*
 
 internal class PublisherImplTest {
 
@@ -35,16 +34,16 @@ internal class PublisherImplTest {
         val rateResponse = RateResponse(amount, base, target)
         whenever(facadeMock.getRate(anyString(), anyString(), anyString())).thenReturn(rateResponse)
 
-        testInstance = PublisherImpl(facadeMock, storageMock)
+        testInstance = PublisherImpl(facadeMock, storageMock, dateManager)
 
         val testObserver = TestObserver.create<Update>()
-        testInstance.observeUpdates().subscribe(testObserver)
+        testInstance.updatesObservable().subscribe(testObserver)
 
         //action
         subject.onNext(PreferenceUpdate(
                 channelId,
                 UserPreferences(
-                        listOf(Subscription("uuid", base, target, exchange, 200))
+                        listOf(Subscription("uuid", "channelId", target, exchange, 200, base))
                 )
         ))
 
