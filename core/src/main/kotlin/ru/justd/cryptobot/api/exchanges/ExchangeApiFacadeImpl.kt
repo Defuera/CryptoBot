@@ -21,12 +21,11 @@ class ExchangeApiFacadeImpl(
         private val cryptonatorApi: ExchangeApi,
 
         @Named(BitfinexApi.NAME)
-        private val bitfinexApi: ExchangeApi,
+        private val bitfinexApi: ExchangeApi
 
-        private val storage: Storage
 ) : ExchangeApiFacade {
 
-    //todo make ExchangeApiFacade implement ExchangeApi, remove storage from this class
+    //todo make ExchangeApiFacade implement ExchangeApi and remove ExchangeApiFacade?
 
     @Throws(ExchangeNotSupported::class)
     override fun getRate(base: String?, target: String?, exchangeApiCode: String): RateResponse {

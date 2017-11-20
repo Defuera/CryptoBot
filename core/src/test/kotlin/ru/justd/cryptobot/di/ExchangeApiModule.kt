@@ -54,8 +54,7 @@ class ExchangeApiModule {
             @Named(GdaxApi.NAME) gdaxApi: ExchangeApi,
             @Named(CoinbaseApi.NAME) coinbaseApi: ExchangeApi,
             @Named(CryptonatorApi.NAME) cryptonatorApi: ExchangeApi,
-            @Named(BitfinexApi.NAME) bitfinexApi: ExchangeApi,
-            storage: Storage
+            @Named(BitfinexApi.NAME) bitfinexApi: ExchangeApi
     ) = exchangeFacade
 
 }
