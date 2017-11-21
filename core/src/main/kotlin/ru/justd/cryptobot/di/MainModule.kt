@@ -29,15 +29,14 @@ class MainModule {
     fun provideCommandHandlerFacade(
             exchangeFacade: ExchangeApiFacade,
             blockchainApi: BlockchainApi,
-            storage: Storage,
-            timeManager: TimeManager
+            storage: Storage
     ): CommandHandlerFacade = CommandHandlerFacadeImpl(
             mutableListOf(
                     InstantFactory("/about", AboutCommandHandler),
                     InstantFactory("/help", HelpCommandHandler),
                     InstantFactory("/update", UpdateCommandHandler),
                     PriceCommandHandlerFactory(exchangeFacade),
-                    SubscribeFactory(exchangeFacade, storage, timeManager),
+                    SubscribeFactory(exchangeFacade, storage, TimeManagerImpl),
                     UnsubscribeHandlerFactory(storage),
                     WalletInfoHandlerFactory(blockchainApi)
             )
@@ -47,12 +46,11 @@ class MainModule {
     @Singleton
     fun providePublisher(
             exchangeFacade: ExchangeApiFacade,
-            storage: Storage,
-            timeManager: TimeManager
-    ): Publisher = PublisherImpl(exchangeFacade, storage, timeManager)
+            storage: Storage
+    ): Publisher = PublisherImpl(exchangeFacade, storage, TimeManagerImpl)
 
-    @Provides
-    @Singleton
-    fun provideDateManager(): TimeManager = TimeManagerImpl
+//    @Provides
+//    @Singleton
+//    fun provideDateManager(): TimeManager = TimeManagerImpl
 
 }
