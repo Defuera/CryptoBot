@@ -5,6 +5,7 @@ import ru.justd.cryptobot.handler.CommandHandlerFactory
 import ru.justd.cryptobot.handler.exceptions.InvalidCommand
 import ru.justd.cryptobot.persistance.Storage
 import utils.TimeManager
+import utils.UuidGenerator
 
 private const val ARG_INDEX_BASE = 0
 private const val ARG_INDEX_TARGET = 1
@@ -14,17 +15,19 @@ private const val ARG_INDEX_PERIOD = 3
 class SubscribeFactory (
         private val exchangeApiFacade: ExchangeApiFacade,
         private val storage: Storage,
-        private val timeManager: TimeManager
+        private val timeManager: TimeManager,
+        private val uuidGenerator: UuidGenerator
 ) : CommandHandlerFactory<SubscribeHandler>("/subscribe") {
 
     @Throws(InvalidCommand::class)
     override fun create(channelId: String, request: String): SubscribeHandler {
-        println("SubscribeHandler#create $request") //todo log
+        println("SubscribeHandler#create $request")
 
         return SubscribeHandler(
                 storage,
                 exchangeApiFacade,
                 timeManager,
+                uuidGenerator,
                 retrieveArg(request, ARG_INDEX_BASE),
                 retrieveArg(request, ARG_INDEX_TARGET),
                 retrieveArg(request, ARG_INDEX_EXCHANGE),

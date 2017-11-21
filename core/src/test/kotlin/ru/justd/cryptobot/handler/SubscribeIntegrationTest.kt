@@ -13,9 +13,11 @@ import ru.justd.cryptobot.api.exchanges.RateResponse
 import ru.justd.cryptobot.api.exchanges.cryptonator.CryptonatorApi
 import ru.justd.cryptobot.api.exchanges.gdax.GdaxApi
 import ru.justd.cryptobot.di.ExchangeApiModule
-import ru.justd.cryptobot.di.MainModule
 import ru.justd.cryptobot.di.StorageModule
+import ru.justd.cryptobot.di.UtilsModule.Companion.timeManagerMock
+import ru.justd.cryptobot.di.UtilsModule.Companion.uuidGeneratorMock
 import ru.justd.cryptobot.handler.subscribe.Subscription
+import ru.justd.cryptobot.messenger.model.Option
 import ru.justd.cryptobot.persistance.Storage
 import utils.TimeManagerImpl.PERIOD_12_HOURS
 
@@ -37,13 +39,15 @@ internal class SubscribeIntegrationTest {
     @Before
     fun setup() {
         storageMock = StorageModule.storageMock
-//        whenever(MainModule.TIME_MANAGER_MOCK.createPublishTimes(anyLong(), anyLong())).thenReturn(listOf("12:00"))
+        whenever(timeManagerMock.getUpdatesPeriod()).thenReturn(1000L) //if you return 0L then update will be called more then once which leads to test failure
+        whenever(timeManagerMock.createPublishTimes(anyLong(), anyString())).thenReturn(listOf("12:00"))
+        whenever(uuidGeneratorMock.random()).thenReturn("uuid")
 
         testInstance = CryptoCore.start(true)
     }
 
     @Test
-    fun `test base is absent throws exception`() {
+    fun `test command without arguments returns returns cryptos list`() {
         val response = testInstance.handle(channelId, "/subscribe")
 
         assertThat(response.channelId).isEqualTo(channelId)
@@ -51,11 +55,18 @@ internal class SubscribeIntegrationTest {
 
         val dialog = response.dialog!!
         assertThat(dialog.callbackLabel).isEqualTo("/subscribe")
-        assertThat(dialog.dialogOptions).isEqualTo(arrayOf("BTC", "ETH", "BCC"))
+        checkOptions(dialog.dialogOptions, "BTC", "ETH", "BCC")
+    }
+
+    /**
+     * Assert given dialog options following options
+     */
+    private fun checkOptions(dialogOptions: List<Option>, vararg options: String) {
+        assertThat(dialogOptions.map { it.name }).isEqualTo(options.toList())
     }
 
     @Test
-    fun `test subscribe btc usd gdax`() {
+    fun `test subscribe btc usd gdax with 12 hours period`() {
         //setup
         whenever(ExchangeApiModule.exchangeFacade.getRate(anyString(), anyString(), anyString()))
                 .thenReturn(RateResponse(
@@ -80,14 +91,4 @@ internal class SubscribeIntegrationTest {
         )
     }
 
-    @Test
-    fun `test multiple subscriptions`() {
-        //action
-        testInstance.handle(channelId, "/subscribe $BASE_LTC $TARGET_GBP $EXCHANGE_GDAX $PERIODICITY")
-        testInstance.handle(channelId, "/subscribe $BASE_BCC $TARGET_EUR $EXCHANGE_CRYPTONATOR $PERIODICITY")
-
-        //test
-        verify(storageMock, times(1)).addSubscription(channelId, Subscription("uuid", "channelId", TARGET_GBP, EXCHANGE_GDAX, 5, BASE_LTC))
-        verify(storageMock, times(1)).addSubscription(channelId, Subscription("uuid", "channelId", TARGET_EUR, EXCHANGE_CRYPTONATOR, 5, BASE_BCC))
-    }
 }

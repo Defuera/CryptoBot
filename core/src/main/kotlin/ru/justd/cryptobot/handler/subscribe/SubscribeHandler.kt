@@ -7,6 +7,7 @@ import ru.justd.cryptobot.messenger.model.Dialog
 import ru.justd.cryptobot.messenger.model.Reply
 import ru.justd.cryptobot.persistance.Storage
 import utils.TimeManager
+import utils.UuidGenerator
 import java.util.*
 
 /**
@@ -31,6 +32,7 @@ class SubscribeHandler constructor(
         private val storage: Storage,
         private val exchangeApiFacade: ExchangeApiFacade,
         private val timeManager: TimeManager,
+        private val uuidGenerator: UuidGenerator,
         val base: String?,
         val target: String?,
         val exchange: String?,
@@ -77,7 +79,7 @@ class SubscribeHandler constructor(
         storage.addSubscription(
                 channelId,
                 Subscription(
-                        UUID.randomUUID().toString(),
+                        uuidGenerator.random(),
                         channelId,
                         base,
                         target,

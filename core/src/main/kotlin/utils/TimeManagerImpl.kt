@@ -32,6 +32,7 @@ object TimeManagerImpl : TimeManager {
             Option("Every day", PERIOD_1_DAY)
     )
 
+    @Deprecated("get rid of it")
     override fun createPublishTimes(currentTimeMillis : Long, periodMillis: Long): List<String> {
         val list = mutableListOf<String>()
 
