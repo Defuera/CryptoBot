@@ -1,7 +1,6 @@
 package ru.justd.cryptobot.handler
 
 import com.nhaarman.mockito_kotlin.whenever
-import io.reactivex.Observable
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
@@ -9,8 +8,6 @@ import org.mockito.ArgumentMatchers.anyString
 import ru.justd.cryptobot.CryptoCore
 import ru.justd.cryptobot.api.blockchain.bitcoin.BitcoinAddressInfo
 import ru.justd.cryptobot.di.BlockchainModule
-import ru.justd.cryptobot.di.StorageModule
-import ru.justd.cryptobot.persistance.PreferenceUpdate
 
 
 internal class WalletInfoHandlerTest {
@@ -20,7 +17,6 @@ internal class WalletInfoHandlerTest {
 
     @Before
     fun setup() {
-        whenever(StorageModule.storageMock.observeSubscriptionUpdates()).thenReturn(Observable.create<PreferenceUpdate> { })
         testInstance = CryptoCore.start(true)
     }
 

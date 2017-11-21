@@ -17,8 +17,8 @@ import ru.justd.cryptobot.handler.wallet.WalletInfoHandlerFactory
 import ru.justd.cryptobot.persistance.Storage
 import ru.justd.cryptobot.publisher.Publisher
 import ru.justd.cryptobot.publisher.PublisherImpl
-import utils.DateManager
-import utils.DateManagerImpl
+import utils.TimeManager
+import utils.TimeManagerImpl
 import javax.inject.Singleton
 
 @Module(includes = arrayOf(ExchangeApiModule::class, BlockchainModule::class, StorageModule::class))
@@ -30,14 +30,14 @@ class MainModule {
             exchangeFacade: ExchangeApiFacade,
             blockchainApi: BlockchainApi,
             storage: Storage,
-            dateManager: DateManager
+            timeManager: TimeManager
     ): CommandHandlerFacade = CommandHandlerFacadeImpl(
             mutableListOf(
                     InstantFactory("/about", AboutCommandHandler),
                     InstantFactory("/help", HelpCommandHandler),
                     InstantFactory("/update", UpdateCommandHandler),
                     PriceCommandHandlerFactory(exchangeFacade),
-                    SubscribeFactory(exchangeFacade, storage, dateManager),
+                    SubscribeFactory(exchangeFacade, storage, timeManager),
                     UnsubscribeHandlerFactory(storage),
                     WalletInfoHandlerFactory(blockchainApi)
             )
@@ -48,11 +48,11 @@ class MainModule {
     fun providePublisher(
             exchangeFacade: ExchangeApiFacade,
             storage: Storage,
-            dateManager: DateManager
-    ): Publisher = PublisherImpl(exchangeFacade, storage, dateManager)
+            timeManager: TimeManager
+    ): Publisher = PublisherImpl(exchangeFacade, storage, timeManager)
 
     @Provides
     @Singleton
-    fun provideDateManager(): DateManager = DateManagerImpl
+    fun provideDateManager(): TimeManager = TimeManagerImpl
 
 }

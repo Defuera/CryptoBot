@@ -3,7 +3,6 @@ package ru.justd.cryptobot.handler
 import com.nhaarman.mockito_kotlin.times
 import com.nhaarman.mockito_kotlin.verify
 import com.nhaarman.mockito_kotlin.whenever
-import io.reactivex.Observable
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
@@ -16,10 +15,9 @@ import ru.justd.cryptobot.api.exchanges.gdax.GdaxApi
 import ru.justd.cryptobot.di.ExchangeApiModule
 import ru.justd.cryptobot.di.MainModule
 import ru.justd.cryptobot.di.StorageModule
-import ru.justd.cryptobot.handler.subscribe.SubscribeHandler.Companion.PERIOD_12_HOURS
 import ru.justd.cryptobot.handler.subscribe.Subscription
-import ru.justd.cryptobot.persistance.PreferenceUpdate
 import ru.justd.cryptobot.persistance.Storage
+import utils.TimeManagerImpl.PERIOD_12_HOURS
 
 internal class SubscribeIntegrationTest {
 
@@ -39,8 +37,7 @@ internal class SubscribeIntegrationTest {
     @Before
     fun setup() {
         storageMock = StorageModule.storageMock
-        whenever(storageMock.observeSubscriptionUpdates()).thenReturn(Observable.create<PreferenceUpdate> { })
-        whenever(MainModule.dateManagerMock.periodToDateTimesList(anyLong(), anyLong())).thenReturn(listOf("12:00"))
+        whenever(MainModule.TIME_MANAGER_MOCK.createPublishTimes(anyLong(), anyLong())).thenReturn(listOf("12:00"))
 
         testInstance = CryptoCore.start(true)
     }
@@ -75,10 +72,10 @@ internal class SubscribeIntegrationTest {
                 Subscription(
                         "uuid",
                         "channelId",
+                        BASE_LTC,
                         TARGET_GBP,
                         EXCHANGE_CRYPTONATOR,
-                        listOf("12:00"),
-                        BASE_LTC
+                        listOf("12:00")
                 )
         )
     }

@@ -8,14 +8,14 @@ import ru.justd.cryptobot.api.exchanges.ExchangeApiFacade
 import ru.justd.cryptobot.handler.CommandHandlerFacade
 import ru.justd.cryptobot.persistance.Storage
 import ru.justd.cryptobot.publisher.Publisher
-import utils.DateManager
+import utils.TimeManager
 import javax.inject.Singleton
 
 @Module(includes = arrayOf(ExchangeApiModule::class, BlockchainModule::class, StorageModule::class))
 class MainModule {
 
     companion object {
-        val dateManagerMock: DateManager = mock()
+        val TIME_MANAGER_MOCK: TimeManager = mock()
     }
 
     @Provides
@@ -24,15 +24,15 @@ class MainModule {
             exchangeFacade: ExchangeApiFacade,
             blockchainApi: BlockchainApi,
             storage: Storage,
-            dateManager: DateManager
+            timeManager: TimeManager
     ): CommandHandlerFacade = mock()
 
     @Provides
     @Singleton
-    fun providePublisher(exchangeFacade: ExchangeApiFacade, storage: Storage, dateManager: DateManager): Publisher = mock()
+    fun providePublisher(exchangeFacade: ExchangeApiFacade, storage: Storage, timeManager: TimeManager): Publisher = mock()
 
     @Provides
     @Singleton
-    fun provideDateManager(): DateManager = dateManagerMock
+    fun provideDateManager(): TimeManager = TIME_MANAGER_MOCK
 
 }

@@ -1,6 +1,5 @@
 package ru.justd.cryptobot.persistance
 
-import io.reactivex.Observable
 import ru.justd.cryptobot.handler.subscribe.Subscription
 
 interface Storage {
@@ -12,7 +11,5 @@ interface Storage {
     fun getSubscriptions(channelId: String): List<Subscription>?
 
     fun getSubscriptions(): List<Subscription>?
-
-    fun observeSubscriptionUpdates(): Observable<PreferenceUpdate>
 
 }

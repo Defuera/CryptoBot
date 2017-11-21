@@ -5,7 +5,6 @@ import com.mongodb.client.MongoCollection
 import com.mongodb.client.MongoDatabase
 import com.mongodb.client.model.Filters.eq
 import com.mongodb.client.model.UpdateOptions
-import io.reactivex.Observable
 import io.reactivex.subjects.BehaviorSubject
 import org.bson.Document
 import ru.justd.cryptobot.api.exchanges.gdax.GdaxApi
@@ -38,8 +37,6 @@ class MongoStorageImpl(private val mongo: MongoDatabase) : Storage {
     override fun removeSubscription(channelId: String, subscriptionId: String) {
         //todo
     }
-
-    override fun observeSubscriptionUpdates(): Observable<PreferenceUpdate> = updateSubject
 
     private fun getPreferences(channelId: String): UserPreferences? =
             getPreferencesCollection()

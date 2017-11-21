@@ -1,6 +1,5 @@
 package ru.justd.cryptobot.persistance
 
-import io.reactivex.Observable
 import io.reactivex.subjects.BehaviorSubject
 import ru.justd.cryptobot.handler.subscribe.Subscription
 import java.util.*
@@ -39,13 +38,11 @@ class StorageImpl constructor(private val storageDataSource: HashMap<String, Use
                 .filter { it != null && it.isNotEmpty() }
 
 
-        return when(subscriptionsLists.size){
+        return when (subscriptionsLists.size) {
             0 -> null
             else -> subscriptionsLists.reduce { left, right -> left!! + right!! }
         }
     }
-
-    override fun observeSubscriptionUpdates(): Observable<PreferenceUpdate> = this.updateSubject
 
     //region private helper methods
 

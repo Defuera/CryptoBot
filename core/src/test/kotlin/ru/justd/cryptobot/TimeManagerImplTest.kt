@@ -3,13 +3,13 @@ package ru.justd.cryptobot
 import khronos.Dates
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Test
-import utils.DateManagerImpl
-import utils.DateManagerImpl.MILLIS_IN_MINUTE
+import utils.TimeManagerImpl
+import utils.TimeManagerImpl.MILLIS_IN_MINUTE
 
 
-internal class DateManagerImplTest {
+internal class TimeManagerImplTest {
 
-    val testInstance = DateManagerImpl
+    val testInstance = TimeManagerImpl
 
     @Test
     fun `test create 12 hours interval`() {
@@ -17,7 +17,7 @@ internal class DateManagerImplTest {
         val currentTime = Dates.of(2017, 9, 24, 13, 57, 12).time
 
         //action
-        val intervals = testInstance.periodToDateTimesList(currentTime, MILLIS_IN_MINUTE * 60 * 12)
+        val intervals = testInstance.createPublishTimes(currentTime, MILLIS_IN_MINUTE * 60 * 12)
 
         //assert
         assertThat(intervals).isEqualTo(listOf("13:57", "01:57"))
@@ -29,7 +29,7 @@ internal class DateManagerImplTest {
         val currentTime = Dates.of(2017, 9, 24, 9, 21, 57).time
 
         //action
-        val intervals = testInstance.periodToDateTimesList(currentTime, MILLIS_IN_MINUTE * 30)
+        val intervals = testInstance.createPublishTimes(currentTime, MILLIS_IN_MINUTE * 30)
 
         //assert
         assertThat(intervals).isEqualTo(
