@@ -36,7 +36,7 @@ internal class PublisherImplTest {
 
         Thread.sleep(50)
 
-        testObserver.assertValue(Update("chennelId", "btK price is 0.23 usde (via gdax)"))
+        testObserver.assertValue(Update("chennelId", "BTK price is 0.23 USDE (via gdax)"))
     }
 
 }

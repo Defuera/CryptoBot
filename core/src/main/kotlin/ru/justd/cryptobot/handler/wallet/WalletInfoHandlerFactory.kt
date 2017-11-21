@@ -6,7 +6,7 @@ import ru.justd.cryptobot.handler.exceptions.InvalidCommand
 
 class WalletInfoHandlerFactory(
         private val facade: BlockchainApi
-) : CommandHandlerFactory<WalletInfoHandler>("/info") {
+) : CommandHandlerFactory<WalletInfoHandler>("/addressinfo") {
 
     override fun create(channelId: String, request: String): WalletInfoHandler {
         val address = retrieveArg(request, 0) ?: throw InvalidCommand("please provide bitcoin ledger address")
