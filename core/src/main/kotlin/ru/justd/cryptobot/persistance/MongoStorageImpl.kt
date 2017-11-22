@@ -67,13 +67,7 @@ class MongoStorageImpl(private val mongo: MongoDatabase) : Storage {
 
     companion object {
         private const val COLLECTION_NAME = "preferences"
-
         private const val PROPERTY_ID = "_id"
-
-        private const val DEFAULT_BASE_CURRENCY = "BTC"
-        private const val DEFAULT_TARGET_CURRENCY = "USD"
-        private const val DEFAULT_EXCHANGE = GdaxApi.NAME
-        private val DEFAULT_LOCALE = Locale.getDefault()
     }
 
 }

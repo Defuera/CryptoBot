@@ -26,7 +26,12 @@ abstract class CommandHandlerFactory<out T : CommandHandler>(val scheme: String)
                 .trim()
                 .split(" ")
 
-        return if (index <= args.lastIndex) args[index] else null
+        val argument = if (index <= args.lastIndex) args[index] else null
+        return if (argument.isNullOrBlank()){
+            null
+        } else {
+            argument
+        }
     }
 
 }
