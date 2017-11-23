@@ -11,7 +11,6 @@ import ru.justd.cryptobot.api.exchanges.bitfinex.BitfinexApi
 import ru.justd.cryptobot.api.exchanges.coinbase.CoinbaseApi
 import ru.justd.cryptobot.api.exchanges.cryptonator.CryptonatorApi
 import ru.justd.cryptobot.api.exchanges.gdax.GdaxApi
-import ru.justd.cryptobot.persistance.Storage
 import javax.inject.Named
 import javax.inject.Singleton
 
@@ -51,14 +50,12 @@ class ExchangeApiModule {
             @Named(GdaxApi.NAME) gdaxApi: ExchangeApi,
             @Named(CoinbaseApi.NAME) coinbaseApi: ExchangeApi,
             @Named(CryptonatorApi.NAME) cryptonatorApi: ExchangeApi,
-            @Named(BitfinexApi.NAME) bitfinexApi: ExchangeApi,
-            storage: Storage
+            @Named(BitfinexApi.NAME) bitfinexApi: ExchangeApi
     ): ExchangeApiFacade = ExchangeApiFacadeImpl(
             gdaxApi,
             coinbaseApi,
             cryptonatorApi,
-            bitfinexApi,
-            storage
+            bitfinexApi
     )
 
 }

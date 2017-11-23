@@ -1,6 +1,8 @@
 package ru.justd.cryptobot
 
+import ru.justd.cryptobot.api.exchanges.gdax.GdaxApi
 import ru.justd.cryptobot.di.DaggerCryptoCoreComponent
+import ru.justd.cryptobot.di.StorageModule
 import ru.justd.cryptobot.handler.CommandHandlerFacade
 import ru.justd.cryptobot.handler.CommandHandlerFactory
 import ru.justd.cryptobot.messenger.model.Reply
@@ -8,7 +10,17 @@ import ru.justd.cryptobot.publisher.Publisher
 import ru.justd.cryptobot.publisher.Update
 import javax.inject.Inject
 
-class CryptoCore {
+
+const val DEFAULT_CURRENCY = "BTC"
+const val DEFAULT_FIAT = "USD"
+const val DEFAULT_EXCHANGE = GdaxApi.NAME
+
+class CryptoCore private constructor(debug : Boolean){
+
+    companion object {
+        fun start(debug : Boolean = true) = CryptoCore(debug)
+    }
+
 
     @Inject
     lateinit var publisher: Publisher
@@ -18,6 +30,7 @@ class CryptoCore {
 
     init {
         DaggerCryptoCoreComponent.builder()
+                .storageModule(StorageModule(debug))
                 .build()
                 .inject(this)
     }
@@ -33,7 +46,7 @@ class CryptoCore {
 
     fun setUpdateListener(listener: (update: Update) -> Unit) {
         publisher
-                .observeUpdates()
+                .updatesObservable()
                 .subscribe { listener(it) }
     }
 

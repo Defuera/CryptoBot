@@ -1,5 +1,8 @@
 package ru.justd.cryptobot.handler.price
 
+import ru.justd.cryptobot.DEFAULT_CURRENCY
+import ru.justd.cryptobot.DEFAULT_EXCHANGE
+import ru.justd.cryptobot.DEFAULT_FIAT
 import ru.justd.cryptobot.api.exchanges.ExchangeApiFacade
 import ru.justd.cryptobot.handler.CommandHandlerFactory
 
@@ -13,9 +16,9 @@ internal class PriceCommandHandlerFactory constructor(private val exchangeFacade
         println("PriceCommandHandlerFactory#create $request")
         return PriceCommandHandler(
                 exchangeFacade,
-                retrieveArg(request, ARG_INDEX_BASE),
-                retrieveArg(request, ARG_INDEX_TARGET),
-                retrieveArg(request, ARG_INDEX_EXCHANGE)
+                retrieveArg(request, ARG_INDEX_BASE) ?: DEFAULT_CURRENCY,
+                retrieveArg(request, ARG_INDEX_TARGET) ?: DEFAULT_FIAT,
+                retrieveArg(request, ARG_INDEX_EXCHANGE) ?: DEFAULT_EXCHANGE
         )
     }
 

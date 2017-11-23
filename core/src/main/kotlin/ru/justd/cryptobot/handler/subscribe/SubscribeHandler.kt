@@ -1,10 +1,13 @@
 package ru.justd.cryptobot.handler.subscribe
 
+import ru.justd.cryptobot.api.exchanges.ExchangeApiFacade
 import ru.justd.cryptobot.handler.CommandHandler
-import ru.justd.cryptobot.handler.exceptions.InvalidCommand
+import ru.justd.cryptobot.handler.price.PriceCommandHandler
 import ru.justd.cryptobot.messenger.model.Dialog
 import ru.justd.cryptobot.messenger.model.Reply
 import ru.justd.cryptobot.persistance.Storage
+import utils.TimeManager
+import utils.UuidGenerator
 import java.util.*
 
 /**
@@ -26,26 +29,19 @@ import java.util.*
  *
  */
 class SubscribeHandler constructor(
-        private val userId: String,
         private val storage: Storage,
+        private val exchangeApiFacade: ExchangeApiFacade,
+        private val timeManager: TimeManager,
+        private val uuidGenerator: UuidGenerator,
         val base: String?,
         val target: String?,
         val exchange: String?,
         val period: String?
 ) : CommandHandler {
 
-    private val PERIOD_5_MINS = "every_5_minutes" //todo
-    private val PERIOD_30_MINS = "every_30_minutes"
-    private val PERIOD_1_HOUR = "every_hour"
-    private val PERIOD_2_HOURS = "every_2_hours"
-    private val PERIOD_12_HOURS = "every_12_hours"
-    private val PERIOD_1_DAY = "once_a_day"
-
-    private val SET_PERIODS = arrayOf(PERIOD_5_MINS, PERIOD_30_MINS, PERIOD_1_HOUR, PERIOD_2_HOURS, PERIOD_12_HOURS, PERIOD_1_DAY)
-
     override fun createReply(channelId: String): Reply { //todo magic strings
 
-        if (base.isNullOrBlank()) {
+        if (base == null || base.isNullOrBlank()) {
             return Reply(
                     channelId,
                     "Choose crypto",
@@ -53,7 +49,7 @@ class SubscribeHandler constructor(
             )
         }
 
-        if (target.isNullOrBlank()) {
+        if (target == null || target.isNullOrBlank()) {
             return Reply(
                     channelId,
                     "Choose fiat",
@@ -61,39 +57,38 @@ class SubscribeHandler constructor(
             )
         }
 
-        if (exchange.isNullOrBlank()) {
+        if (exchange == null || exchange.isNullOrBlank()) {
             return Reply(
                     channelId,
                     "Choose exchange",
-                    Dialog("/subscribe $base $target", arrayOf("Coinbase", "Gdax", "Cryptonator", "Bitfinex", "Yobit"))
+                    Dialog("/subscribe $base $target", arrayOf("Coinbase", "Gdax", "Cryptonator", "Bitfinex"))
             )
         }
 
-        if (period.isNullOrBlank()) {
+        if (period == null || period.isNullOrBlank()) {
             return Reply(
                     channelId,
                     "How often do you want to get updates",
-                    Dialog("/subscribe $base $target $exchange", SET_PERIODS)
+                    Dialog("/subscribe $base $target $exchange", timeManager.getUpdatePeriods())
             )
         }
 
-        //todo looks like it action should not be result of invoking createReply fun..
-        storage.addSubscription(userId, Subscription(base!!, target!!, exchange!!, periodToDate(period!!)))
-        return Reply(channelId, "subscriptions created")
 
-    }
+        val priceResponse = PriceCommandHandler(exchangeApiFacade, base, target, exchange).createReply(channelId)
 
-    private fun periodToDate(period: String): Long {
-        return when (period) {
-            PERIOD_5_MINS -> 5
-            PERIOD_30_MINS -> 30
-            PERIOD_1_HOUR -> 60
-            PERIOD_2_HOURS -> 120
-            PERIOD_12_HOURS -> 60 * 12
-            PERIOD_1_DAY -> 60 * 24
-            else -> throw InvalidCommand("Period shoud be in minutes from one of the following choises: \n${Arrays.toString(SET_PERIODS)}")
-        }
+        storage.addSubscription(
+                channelId,
+                Subscription(
+                        uuidGenerator.random(),
+                        channelId,
+                        base,
+                        target,
+                        exchange,
+                        timeManager.createPublishTimes(System.currentTimeMillis(), period)
+                )
+        )
 
+        return Reply(channelId, "Subscription created successfully!\n${priceResponse.text}")
     }
 
 }

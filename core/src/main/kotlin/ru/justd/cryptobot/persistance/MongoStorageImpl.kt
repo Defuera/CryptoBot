@@ -5,7 +5,7 @@ import com.mongodb.client.MongoCollection
 import com.mongodb.client.MongoDatabase
 import com.mongodb.client.model.Filters.eq
 import com.mongodb.client.model.UpdateOptions
-import io.reactivex.Observable
+import io.reactivex.subjects.BehaviorSubject
 import org.bson.Document
 import ru.justd.cryptobot.api.exchanges.gdax.GdaxApi
 import ru.justd.cryptobot.handler.subscribe.Subscription
@@ -14,61 +14,29 @@ import kotlin.collections.ArrayList
 
 class MongoStorageImpl(private val mongo: MongoDatabase) : Storage {
 
-    override fun getBaseCurrency(channelId: String): String =
-            getPreferences(channelId)?.base
-                    ?: DEFAULT_BASE_CURRENCY
-
-    override fun setBaseCurrency(channelId: String, base: String) {
-        updateProperty(
-                channelId,
-                { it.copy(base = base) }
-        )
-    }
-
-    override fun getTargetCurrency(channelId: String): String =
-            getPreferences(channelId)?.target
-                    ?: DEFAULT_TARGET_CURRENCY
-
-    override fun setTargetCurrency(channelId: String, target: String) {
-        updateProperty(
-                channelId,
-                { it.copy(target = target) }
-        )
-    }
-
-    override fun getExchangeApi(channelId: String): String =
-            getPreferences(channelId)?.exchangeCode
-                    ?: DEFAULT_EXCHANGE
-
-    override fun setExchangeApi(channelId: String, exchangeApiName: String) {
-        updateProperty(
-                channelId,
-                { it.copy(exchangeCode = exchangeApiName) }
-        )
-    }
-
-    override fun getLocale(channelId: String): Locale =
-            getPreferences(channelId)?.locale
-                    ?: DEFAULT_LOCALE
-
-    override fun setLocale(channelId: String, locale: Locale) {
-        updateProperty(
-                channelId,
-                { it.copy(locale = locale) }
-        )
-    }
+    private val updateSubject = BehaviorSubject.create<PreferenceUpdate>()
 
     override fun getSubscriptions(channelId: String): List<Subscription>? =
-        getPreferences(channelId)?.subscriptions
+            getPreferences(channelId)?.subscriptions
 
-    override fun addSubscription(channelId: String, newSubscription: Subscription) {
-        updateProperty(
-                channelId,
-                { it.copy(subscriptions = (it.subscriptions ?: ArrayList()) + newSubscription) }
-        )
+    override fun getSubscriptions(): List<Subscription>? {
+        //todo
+        return null
     }
 
-    override fun observeUpdates(): Observable<PreferenceUpdate> = Observable.empty()
+    override fun addSubscription(channelId: String, newSubscription: Subscription) {
+        updateSubject.onNext(PreferenceUpdate(
+                channelId,
+                updateProperty(
+                        channelId,
+                        { it.copy(subscriptions = (it.subscriptions ?: ArrayList()) + newSubscription) }
+                )
+        ))
+    }
+
+    override fun removeSubscription(channelId: String, subscriptionId: String) {
+        //todo
+    }
 
     private fun getPreferences(channelId: String): UserPreferences? =
             getPreferencesCollection()
@@ -79,7 +47,7 @@ class MongoStorageImpl(private val mongo: MongoDatabase) : Storage {
 
     private fun getPreferencesCollection(): MongoCollection<Document> = mongo.getCollection(COLLECTION_NAME)
 
-    private inline fun updateProperty(channelId: String, preferencesUpdate: (UserPreferences) -> UserPreferences) {
+    private fun updateProperty(channelId: String, preferencesUpdate: (UserPreferences) -> UserPreferences): UserPreferences {
         val preferences = getPreferences(channelId) ?: UserPreferences()
         val updatedPreferences = preferencesUpdate.invoke(preferences)
         val update = Document().append(
@@ -93,17 +61,13 @@ class MongoStorageImpl(private val mongo: MongoDatabase) : Storage {
                         update,
                         UpdateOptions().upsert(true)
                 )
+
+        return updatedPreferences
     }
 
     companion object {
         private const val COLLECTION_NAME = "preferences"
-
         private const val PROPERTY_ID = "_id"
-
-        private const val DEFAULT_BASE_CURRENCY = "BTC"
-        private const val DEFAULT_TARGET_CURRENCY = "USD"
-        private const val DEFAULT_EXCHANGE = GdaxApi.NAME
-        private val DEFAULT_LOCALE = Locale.getDefault()
     }
 
 }

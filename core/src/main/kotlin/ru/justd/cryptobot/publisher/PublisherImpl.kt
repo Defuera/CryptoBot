@@ -3,60 +3,50 @@ package ru.justd.cryptobot.publisher
 
 import io.reactivex.Observable
 import io.reactivex.subjects.BehaviorSubject
+import kotlinx.coroutines.experimental.delay
+import kotlinx.coroutines.experimental.launch
 import ru.justd.cryptobot.api.exchanges.ExchangeApiFacade
-import ru.justd.cryptobot.api.exchanges.RateResponse
-import ru.justd.cryptobot.api.exchanges.exceptions.ExchangeNotSupported
-import ru.justd.cryptobot.api.exchanges.exceptions.RequestFailed
-import ru.justd.cryptobot.handler.subscribe.Subscription
+import ru.justd.cryptobot.handler.price.PriceCommandHandler
+import ru.justd.cryptobot.messenger.model.Reply
 import ru.justd.cryptobot.persistance.Storage
+import utils.TimeManager
 
-internal class PublisherImpl constructor(
+
+internal class PublisherImpl (
         private val exchangeFacade: ExchangeApiFacade,
-        storage: Storage
+        private val storage: Storage,
+        private val timeManager: TimeManager
 ) : Publisher {
 
     private val subject = BehaviorSubject.create<Update>()
 
     init {
-
-        val observeUpdates = storage.observeUpdates()
-        observeUpdates
-                .subscribe(
-                        { update ->
-                            val preferences = update.userPreferences
-                            preferences.subscriptions?.forEach {
-                                initWorker(update.userId, it)
-                            }
-                        }
-                )
+        initWorker()
     }
 
-    override fun observeUpdates(): Observable<Update> = subject //todo identify subscriber to filter messages (subscribers should not get messages of other subscribers)
+    override fun updatesObservable(): Observable<Update> = subject
 
-    private fun initWorker(channelId: String, subscription: Subscription) {
-        Thread(Runnable {
-            //todo rx worker
-            print("new thread started")
-            val response = exchangeFacade.getRate(subscription.base, subscription.target, subscription.exchange)
-            publishUpdate(channelId, response)
+    private fun initWorker() {
+        launch {
+            delay(timeManager.getUpdatesPeriod())
+            initWorker()
+        }
 
-            Thread.sleep(subscription.periodicityMins * 1000 * 60)
-            initWorker(channelId, subscription)
-        }).start()
+        storage
+                .getSubscriptions()
+                ?.filter { timeManager.isTimeToPublish(it) }
+                ?.forEach {
+
+                    launch {
+                        val resp = PriceCommandHandler(exchangeFacade, it.base, it.target, it.exchange).createReply(it.channelId)
+                        publishUpdate(it.channelId, resp)
+                    }
+                }
+
     }
 
-    private fun publishUpdate(channelId: String, rate: RateResponse) {
-        subject.onNext(Update(channelId, createMessage(rate)))
-    }
-
-    private fun createMessage(rate: RateResponse): String { //todo this is copied from PriceHandler
-        return try {
-            "${rate.base} price is ${rate.amount} ${rate.target}"
-        } catch (error: ExchangeNotSupported) {
-            "${error.exchange} exchange not supported" //todo log to be aware what exchanges customers are waiting the most, localize
-        } catch (error: RequestFailed) {
-            error.message
-        }.trim()
+    private fun publishUpdate(channelId: String, reply: Reply) {
+        subject.onNext(Update(channelId, reply.text))
     }
 
 }

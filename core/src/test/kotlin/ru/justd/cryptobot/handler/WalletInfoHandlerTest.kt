@@ -1,7 +1,6 @@
 package ru.justd.cryptobot.handler
 
 import com.nhaarman.mockito_kotlin.whenever
-import io.reactivex.Observable
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
@@ -9,8 +8,6 @@ import org.mockito.ArgumentMatchers.anyString
 import ru.justd.cryptobot.CryptoCore
 import ru.justd.cryptobot.api.blockchain.bitcoin.BitcoinAddressInfo
 import ru.justd.cryptobot.di.BlockchainModule
-import ru.justd.cryptobot.di.StorageModule
-import ru.justd.cryptobot.persistance.PreferenceUpdate
 
 
 internal class WalletInfoHandlerTest {
@@ -20,8 +17,7 @@ internal class WalletInfoHandlerTest {
 
     @Before
     fun setup() {
-        whenever(StorageModule.storageMock.observeUpdates()).thenReturn(Observable.create<PreferenceUpdate> { })
-        testInstance = CryptoCore()
+        testInstance = CryptoCore.start(true)
     }
 
 
@@ -35,7 +31,7 @@ internal class WalletInfoHandlerTest {
         )
 
         //action
-        val reply = testInstance.handle("chatId", "/info 1EuxvSVf5yWLYtHiDkzbcd7pp5cooqPfJD")
+        val reply = testInstance.handle("channelId", "/addressinfo 1EuxvSVf5yWLYtHiDkzbcd7pp5cooqPfJD")
 
         //test
         assertThat(reply.text).isEqualTo("You have 0.06917027 BTC")

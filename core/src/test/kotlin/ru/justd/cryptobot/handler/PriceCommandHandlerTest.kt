@@ -16,12 +16,6 @@ import ru.justd.cryptobot.handler.price.PriceCommandHandler
 @RunWith(MockitoJUnitRunner::class)
 class PriceCommandHandlerTest {
 
-    companion object {
-
-        private const val FLOAT_REGEX = "[+-]?([0-9]*[.])?[0-9]+"
-
-    }
-
     @Mock
     lateinit var exchangeFacade: ExchangeApiFacade
 
@@ -31,34 +25,19 @@ class PriceCommandHandlerTest {
     }
 
     @Test
-    fun testGetBtcPrice() {
+    fun `test get btc-usd pair from gdax`() {
         //setup
-        val base = "BTC"
-        whenever(exchangeFacade.getRate(base)).thenReturn(RateResponse(.0, base, "USD"))
+        val base = "btc"
+        val target = "usd"
+        val exchange = "gdax"
+        whenever(exchangeFacade.getRate(base, target, exchange)).thenReturn(RateResponse(.0, base, target))
 
         //test
-        val message = PriceCommandHandler(exchangeFacade, base, null, null).createReply("channelId")
+        val message = PriceCommandHandler(exchangeFacade, base, target, exchange).createReply("channelId")
 
         //assert
-        assertThat(message.text).matches(patternForPair(base, "USD"))
+        assertThat(message.text).isEqualTo("${base.toUpperCase()} price is 0.0 ${target.toUpperCase()} (via $exchange)")
     }
-
-    @Test
-    fun testGetBtcPriceInEur() {
-        //setup
-        val base = "BTC"
-        val target = "EUR"
-        whenever(exchangeFacade.getRate(base, target)).thenReturn(RateResponse(.0, base, target))
-
-        //test
-        val message = PriceCommandHandler(exchangeFacade, base, target, null).createReply("channelId")
-
-        //assert
-        assertThat(message.text).matches(patternForPair(base, target))
-    }
-
-    private fun patternForPair(base: String, target: String) = Regex("$base price is $FLOAT_REGEX $target").toPattern()
-
 
     @Test
     fun testFindPriceCommandHandlerInvalidExchange() {

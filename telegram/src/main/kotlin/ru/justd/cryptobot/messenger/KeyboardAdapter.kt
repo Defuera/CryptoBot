@@ -24,7 +24,7 @@ object KeyboardAdapter {
     private fun createButtonsMatrix(dialog: Dialog): Array<Array<InlineKeyboardButton>> {
         return dialog.dialogOptions
                 .map {
-                    arrayOf(InlineKeyboardButton(it).callbackData("${dialog.callbackLabel} $it"))
+                    arrayOf(InlineKeyboardButton(it.name).callbackData("${dialog.callbackLabel} ${it.callbackLabel}"))
                 }
                 .toTypedArray()
     }

@@ -29,13 +29,10 @@ internal class ExchangeFacadeImplTest {
     @Mock
     lateinit var bitfinexApi: ExchangeApi
 
-    @Mock
-    lateinit var storage: Storage
-
     @Before
     fun setup() {
         MockitoAnnotations.initMocks(this)
-        testInstance = ExchangeApiFacadeImpl(gdaxApi, coinbaseApi, cryptonatorApi, bitfinexApi, storage)
+        testInstance = ExchangeApiFacadeImpl(gdaxApi, coinbaseApi, cryptonatorApi, bitfinexApi)
     }
 
     @Test

@@ -7,6 +7,6 @@ import io.reactivex.Observable
  */
 interface Publisher {
 
-    fun observeUpdates() : Observable<Update>
+    fun updatesObservable() : Observable<Update>
 
 }
