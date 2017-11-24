@@ -4,24 +4,34 @@ import com.google.gson.Gson
 import com.mongodb.client.MongoCollection
 import com.mongodb.client.MongoDatabase
 import com.mongodb.client.model.Filters.eq
+import com.mongodb.client.model.Filters.ne
 import com.mongodb.client.model.UpdateOptions
 import io.reactivex.subjects.BehaviorSubject
 import org.bson.Document
-import ru.justd.cryptobot.api.exchanges.gdax.GdaxApi
 import ru.justd.cryptobot.handler.subscribe.Subscription
-import java.util.*
-import kotlin.collections.ArrayList
 
 class MongoStorageImpl(private val mongo: MongoDatabase) : Storage {
 
     private val updateSubject = BehaviorSubject.create<PreferenceUpdate>()
+    private val gson = Gson()
 
     override fun getSubscriptions(channelId: String): List<Subscription>? =
             getPreferences(channelId)?.subscriptions
 
-    override fun getSubscriptions(): List<Subscription>? {
-        //todo
-        return null
+    override fun getSubscriptions(): List<Subscription>? { //todo this needs to be optimized
+        return getPreferencesCollection()
+                .find()
+                .map { gson.fromJson(it.toJson(), UserPreferences::class.java).subscriptions }
+                .filter {
+                    it != null && it.isNotEmpty()
+                }
+                .let { listOfSubscriptions ->
+                    if (listOfSubscriptions.isEmpty()) {
+                        return null
+                    } else {
+                        listOfSubscriptions.reduce { list, acc -> list!! + acc!! }
+                    }
+                }
     }
 
     override fun addSubscription(channelId: String, newSubscription: Subscription) {
@@ -35,7 +45,7 @@ class MongoStorageImpl(private val mongo: MongoDatabase) : Storage {
     }
 
     override fun removeSubscription(channelId: String, subscriptionId: String) {
-        //todo
+        getPreferencesCollection().deleteMany(ne(PROPERTY_ID, "")) //this will remove all subscriptions
     }
 
     private fun getPreferences(channelId: String): UserPreferences? =
@@ -43,7 +53,7 @@ class MongoStorageImpl(private val mongo: MongoDatabase) : Storage {
                     .find(eq(PROPERTY_ID, channelId))
                     .firstOrNull()
                     ?.toJson()
-                    ?.let { Gson().fromJson(it, UserPreferences::class.java) }
+                    ?.let { gson.fromJson(it, UserPreferences::class.java) }
 
     private fun getPreferencesCollection(): MongoCollection<Document> = mongo.getCollection(COLLECTION_NAME)
 
