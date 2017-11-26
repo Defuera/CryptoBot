@@ -33,7 +33,7 @@ internal class PublisherImpl (
         }
 
         storage
-                .getSubscriptions()
+                .getAllSubscriptions()
                 ?.filter { timeManager.isTimeToPublish(it) }
                 ?.forEach {
 

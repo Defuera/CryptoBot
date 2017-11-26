@@ -8,7 +8,6 @@ import ru.justd.cryptobot.messenger.model.Reply
 import ru.justd.cryptobot.persistance.Storage
 import utils.TimeManager
 import utils.UuidGenerator
-import java.util.*
 
 /**
  *
@@ -77,7 +76,6 @@ class SubscribeHandler constructor(
         val priceResponse = PriceCommandHandler(exchangeApiFacade, base, target, exchange).createReply(channelId)
 
         storage.addSubscription(
-                channelId,
                 Subscription(
                         uuidGenerator.random(),
                         channelId,

@@ -11,7 +11,6 @@ import org.mockito.ArgumentMatchers.anyString
 import ru.justd.cryptobot.CryptoCore
 import ru.justd.cryptobot.api.exchanges.RateResponse
 import ru.justd.cryptobot.api.exchanges.cryptonator.CryptonatorApi
-import ru.justd.cryptobot.api.exchanges.gdax.GdaxApi
 import ru.justd.cryptobot.di.ExchangeApiModule
 import ru.justd.cryptobot.di.StorageModule
 import ru.justd.cryptobot.di.UtilsModule.Companion.timeManagerMock
@@ -29,12 +28,8 @@ internal class SubscribeIntegrationTest {
 
     private val channelId = "channelId"
     private val BASE_LTC = "LTC"
-    private val BASE_BCC = "BCC"
     private val TARGET_GBP = "GBP"
-    private val TARGET_EUR = "EUR"
-    private val EXCHANGE_GDAX = GdaxApi.NAME
     private val EXCHANGE_CRYPTONATOR = CryptonatorApi.NAME
-    private val PERIODICITY = "every_5_minutes"
 
     @Before
     fun setup() {
@@ -43,7 +38,7 @@ internal class SubscribeIntegrationTest {
         whenever(timeManagerMock.createPublishTimes(anyLong(), anyString())).thenReturn(listOf("12:00"))
         whenever(uuidGeneratorMock.random()).thenReturn("uuid")
 
-        testInstance = CryptoCore.start(true)
+        testInstance = CryptoCore.start("", true)
     }
 
     @Test
@@ -79,7 +74,6 @@ internal class SubscribeIntegrationTest {
         //test
         assertThat(reply.text).isEqualTo("Subscription created successfully!\nLTC price is 300.0 GBP (via CRYPTONATOR)")
         verify(storageMock, times(1)).addSubscription(
-                channelId,
                 Subscription(
                         "uuid",
                         "channelId",

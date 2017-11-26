@@ -15,10 +15,10 @@ const val DEFAULT_CURRENCY = "BTC"
 const val DEFAULT_FIAT = "USD"
 const val DEFAULT_EXCHANGE = GdaxApi.NAME
 
-class CryptoCore private constructor(debug : Boolean){
+class CryptoCore private constructor(clientName : String, debug : Boolean){
 
     companion object {
-        fun start(debug : Boolean = true) = CryptoCore(debug)
+        fun start(clientName : String, debug : Boolean = true) = CryptoCore(clientName, debug)
     }
 
 
@@ -30,7 +30,7 @@ class CryptoCore private constructor(debug : Boolean){
 
     init {
         DaggerCryptoCoreComponent.builder()
-                .storageModule(StorageModule(debug))
+                .storageModule(StorageModule(clientName, debug))
                 .build()
                 .inject(this)
     }

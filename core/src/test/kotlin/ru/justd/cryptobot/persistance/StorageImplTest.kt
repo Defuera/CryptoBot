@@ -27,8 +27,8 @@ internal class StorageImplTest {
         val subscription2 = Subscription("uuid2", "channelId", TARGET_EUR, EXCHANGE_CRYPTONATOR, 15, BASE_BCC)
 
         //action
-        testInstance.addSubscription(channelId, subscription1)
-        testInstance.addSubscription(channelId, subscription2)
+        testInstance.addSubscription(subscription1)
+        testInstance.addSubscription(subscription2)
 
         //test
         assertThat(testInstance.getSubscriptions(channelId)).isEqualTo(listOf(subscription1, subscription2))

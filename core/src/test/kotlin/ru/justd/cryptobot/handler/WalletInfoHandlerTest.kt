@@ -17,7 +17,7 @@ internal class WalletInfoHandlerTest {
 
     @Before
     fun setup() {
-        testInstance = CryptoCore.start(true)
+        testInstance = CryptoCore.start("", true)
     }
 
 

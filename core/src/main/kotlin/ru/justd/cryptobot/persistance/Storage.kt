@@ -4,12 +4,12 @@ import ru.justd.cryptobot.handler.subscribe.Subscription
 
 interface Storage {
 
-    fun addSubscription(channelId: String, newSubscription: Subscription)
+    fun addSubscription(newSubscription: Subscription)
 
     fun removeSubscription(channelId: String, subscriptionId: String)
 
     fun getSubscriptions(channelId: String): List<Subscription>?
 
-    fun getSubscriptions(): List<Subscription>?
+    fun getAllSubscriptions(): List<Subscription>?
 
 }

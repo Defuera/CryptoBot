@@ -21,7 +21,7 @@ class UnsubscribeHandlerTest {
     @Before
     fun setup() {
         storageMock = StorageModule.storageMock
-        testInstance = CryptoCore.start(true)
+        testInstance = CryptoCore.start("", true)
     }
 
     @Test

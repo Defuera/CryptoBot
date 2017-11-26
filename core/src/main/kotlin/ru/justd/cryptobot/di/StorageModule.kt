@@ -10,17 +10,17 @@ import ru.justd.cryptobot.persistance.StorageImpl
 import javax.inject.Singleton
 
 @Module
-class StorageModule(val debug: Boolean) {
+class StorageModule constructor(val clientName : String, val debug: Boolean) {
 
     @Provides
     @Singleton
-    fun provideMongo(): MongoDatabase = MongoClient("52.91.229.51").getDatabase("db")
+    fun provideMongo(): MongoDatabase = MongoClient("52.91.229.51").getDatabase(clientName)
 
     @Provides
     @Singleton
     fun provideUserPreferences(mongo: MongoDatabase): Storage =
             if (debug)
-                StorageImpl(HashMap())
+                StorageImpl()
             else
                 MongoStorageImpl(mongo)
 

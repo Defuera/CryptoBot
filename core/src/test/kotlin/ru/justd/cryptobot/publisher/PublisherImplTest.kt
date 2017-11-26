@@ -24,7 +24,7 @@ internal class PublisherImplTest {
     @Test
     fun `test updates published periodically`() {
         //setup
-        whenever(storageMock.getSubscriptions()).thenReturn(listOf(SUBSCRIPTION_1))
+        whenever(storageMock.getAllSubscriptions()).thenReturn(listOf(SUBSCRIPTION_1))
         whenever(timeManagerMock.getUpdatesPeriod()).thenReturn(100L)
         whenever(timeManagerMock.isTimeToPublish(SUBSCRIPTION_1)).thenReturn(true)
         whenever(facadeMock.getRate(anyString(), anyString(), anyString())).thenReturn(RateResponse(0.23, "btK", "usde"))
