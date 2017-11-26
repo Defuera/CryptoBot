@@ -9,7 +9,7 @@ import ru.justd.cryptobot.persistance.Storage
 import javax.inject.Singleton
 
 @Module
-class StorageModule(debug : Boolean) {
+class StorageModule(clientName : String, debug : Boolean) {
 
     companion object {
         val storageMock = mock(Storage::class.java)
