@@ -4,6 +4,7 @@ import com.pengrad.telegrambot.model.CallbackQuery
 import com.pengrad.telegrambot.model.Message
 import com.pengrad.telegrambot.model.MessageEntity
 import com.pengrad.telegrambot.model.Update
+import ru.justd.cryptobot.BuildConfig
 import ru.justd.cryptobot.CryptoCore
 import ru.justd.cryptobot.handler.exceptions.InvalidCommand
 import ru.justd.cryptobot.messenger.model.Reply
@@ -57,9 +58,10 @@ class RequestProcessor(
     }
 
     private fun handleBotCommand(channelId: String, inquiry: String): Reply {
-        println("bot command recognized: $inquiry")
+        val filteredInquiry = inquiry.replace("@${BuildConfig.BOT_NAME}", "")
+        println("incoming bot command: $filteredInquiry")
         return try {
-            cryptoCore.handle(channelId, inquiry)
+            cryptoCore.handle(channelId, filteredInquiry)
         } catch (invalidCommand: InvalidCommand) {
             Reply(channelId, invalidCommand.message)
         }

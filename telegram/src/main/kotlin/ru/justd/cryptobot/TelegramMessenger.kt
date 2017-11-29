@@ -18,7 +18,7 @@ class TelegramMessenger(private val uuid: String) { //todo https://core.telegram
     private val telegramBot: TelegramBot = TelegramBotAdapter.build(BuildConfig.BOT_TOKEN)
     private val messageSender = MessageSender(uuid, telegramBot)
 
-    val cryptoCore = CryptoCore.start("telegram", BuildConfig.IS_DEBUG)
+    val cryptoCore = CryptoCore.start(BuildConfig.NAME, BuildConfig.IS_DEBUG)
 
     init {
         if (BuildConfig.IS_DEBUG) {
