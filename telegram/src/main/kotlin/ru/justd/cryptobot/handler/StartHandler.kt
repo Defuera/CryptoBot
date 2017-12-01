@@ -3,6 +3,9 @@ package ru.justd.cryptobot.handler
 import ru.justd.cryptobot.BuildConfig
 import ru.justd.cryptobot.messenger.model.Reply
 
+/**
+ * /start command is a required global command https://core.telegram.org/bots#global-commands
+ */
 object StartHandler : CommandHandler {
     override fun createReply(channelId: String) =
             Reply(channelId,
