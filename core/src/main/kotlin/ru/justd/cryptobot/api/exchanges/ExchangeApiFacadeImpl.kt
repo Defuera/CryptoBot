@@ -6,8 +6,8 @@ import ru.justd.cryptobot.api.exchanges.bitfinex.BitfinexApi
 import ru.justd.cryptobot.api.exchanges.coinbase.CoinbaseApi
 import ru.justd.cryptobot.api.exchanges.cryptonator.CryptonatorApi
 import ru.justd.cryptobot.api.exchanges.exceptions.ExchangeNotSupported
+import ru.justd.cryptobot.api.exchanges.exceptions.RequestFailed
 import ru.justd.cryptobot.api.exchanges.gdax.GdaxApi
-import ru.justd.cryptobot.persistance.Storage
 import javax.inject.Named
 
 class ExchangeApiFacadeImpl(
@@ -27,7 +27,7 @@ class ExchangeApiFacadeImpl(
 
     //todo make ExchangeApiFacade implement ExchangeApi and remove ExchangeApiFacade?
 
-    @Throws(ExchangeNotSupported::class)
+    @Throws(ExchangeNotSupported::class, RequestFailed::class)
     override fun getRate(base: String?, target: String?, exchangeApiCode: String): RateResponse {
         return getApi(exchangeApiCode)
                 .getRate(

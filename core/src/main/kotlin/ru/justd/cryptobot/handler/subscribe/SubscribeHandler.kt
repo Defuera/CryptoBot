@@ -1,8 +1,9 @@
 package ru.justd.cryptobot.handler.subscribe
 
 import ru.justd.cryptobot.api.exchanges.ExchangeApiFacade
+import ru.justd.cryptobot.api.exchanges.exceptions.ExchangeNotSupported
+import ru.justd.cryptobot.api.exchanges.exceptions.RequestFailed
 import ru.justd.cryptobot.handler.CommandHandler
-import ru.justd.cryptobot.handler.price.PriceCommandHandler
 import ru.justd.cryptobot.messenger.model.Dialog
 import ru.justd.cryptobot.messenger.model.Reply
 import ru.justd.cryptobot.persistance.Storage
@@ -38,7 +39,7 @@ class SubscribeHandler constructor(
         val period: String?
 ) : CommandHandler {
 
-    override fun createReply(channelId: String): Reply { //todo magic strings
+    override fun createReply(channelId: String): Reply {
 
         if (base == null || base.isNullOrBlank()) {
             return Reply(
@@ -72,21 +73,29 @@ class SubscribeHandler constructor(
             )
         }
 
+        val reply = try {
+            val rate = exchangeApiFacade.getRate(base, target, exchange)
+            val priceMessage = "${base.toUpperCase()} price is ${rate.amount} ${target.toUpperCase()} (via $exchange)"
 
-        val priceResponse = PriceCommandHandler(exchangeApiFacade, base, target, exchange).createReply(channelId)
+            storage.addSubscription(
+                    Subscription(
+                            uuidGenerator.random(),
+                            channelId,
+                            base,
+                            target,
+                            exchange,
+                            timeManager.createPublishTimes(System.currentTimeMillis(), period)
+                    )
+            )
 
-        storage.addSubscription(
-                Subscription(
-                        uuidGenerator.random(),
-                        channelId,
-                        base,
-                        target,
-                        exchange,
-                        timeManager.createPublishTimes(System.currentTimeMillis(), period)
-                )
-        )
+            "Subscription created successfully!\n$priceMessage"
+        } catch (error: ExchangeNotSupported) {
+            "${error.exchange} exchange not supported"
+        } catch (error: RequestFailed) {
+            error.message
+        }.trim()
 
-        return Reply(channelId, "Subscription created successfully!\n${priceResponse.text}")
+        return Reply(channelId, reply)
     }
 
 }

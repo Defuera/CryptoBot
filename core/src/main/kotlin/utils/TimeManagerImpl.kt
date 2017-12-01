@@ -23,7 +23,7 @@ object TimeManagerImpl : TimeManager {
     const val PERIOD_1_DAY = "once_a_day"
 
     val UPDATE_PERIODS = listOf(
-            Option("Every minute", PERIOD_1_MINS),
+//            Option("Every minute", PERIOD_1_MINS),
             Option("Every 5 minutes", PERIOD_5_MINS),
             Option("Every 30 minutes", PERIOD_30_MINS),
             Option("Every hour", PERIOD_1_HOUR),

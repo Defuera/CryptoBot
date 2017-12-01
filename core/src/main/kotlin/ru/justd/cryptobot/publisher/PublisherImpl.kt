@@ -6,13 +6,14 @@ import io.reactivex.subjects.BehaviorSubject
 import kotlinx.coroutines.experimental.delay
 import kotlinx.coroutines.experimental.launch
 import ru.justd.cryptobot.api.exchanges.ExchangeApiFacade
-import ru.justd.cryptobot.handler.price.PriceCommandHandler
+import ru.justd.cryptobot.api.exchanges.exceptions.ExchangeNotSupported
+import ru.justd.cryptobot.api.exchanges.exceptions.RequestFailed
 import ru.justd.cryptobot.messenger.model.Reply
 import ru.justd.cryptobot.persistance.Storage
 import utils.TimeManager
 
 
-internal class PublisherImpl (
+internal class PublisherImpl(
         private val exchangeFacade: ExchangeApiFacade,
         private val storage: Storage,
         private val timeManager: TimeManager
@@ -38,9 +39,19 @@ internal class PublisherImpl (
                 ?.forEach {
 
                     launch {
-                        val resp = PriceCommandHandler(exchangeFacade, it.base, it.target, it.exchange).createReply(it.channelId)
-                        publishUpdate(it.channelId, resp)
+
+                        try {
+                            val rate = exchangeFacade.getRate(it.base, it.target, it.exchange)
+                            val priceMessage = "${it.base.toUpperCase()} price is ${rate.amount} ${it.target.toUpperCase()} (via ${it.exchange})"
+                            publishUpdate(it.channelId, Reply(it.channelId , priceMessage))
+                        } catch (error: ExchangeNotSupported) {
+                            //no op
+                        } catch (error: RequestFailed) {
+                            //no op
+                        }
+
                     }
+
                 }
 
     }

@@ -12,16 +12,17 @@ abstract class PollingExchange(private val okHttpClient: OkHttpClient) : Exchang
     /**
      * https://docs.gdax.com/#get-product-order-book
      */
+    @Throws(RequestFailed::class)
     override fun getRate(base: String, target: String): RateResponse {
         val response = okHttpClient
                 .newCall(requestBuilder(base, target).build())
                 .execute()
 
         val bodyString = response.body()?.string()
-        if (!bodyString.isNullOrBlank()) {
-            return parseResponseBody(bodyString!!, base, target) //todo why !! ?
+        if (bodyString != null && !bodyString.isNullOrBlank()) {
+            return parseResponseBody(bodyString, base, target)
         } else {
-            throw RuntimeException("oioi") //todo unexpected error together with failed request (newCall.execute())?
+            throw RuntimeException("Unexpected error occured")
         }
     }
 
