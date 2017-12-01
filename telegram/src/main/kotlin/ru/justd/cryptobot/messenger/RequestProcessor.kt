@@ -51,10 +51,10 @@ class RequestProcessor(
             //greeting message
             cryptoCore.handle(channelId, "/help")
         } else {
-            Reply(channelId, "message with no entities not supported")
+            null
         }
 
-        messageSender.sendMessage(reply)
+        reply?.let { messageSender.sendMessage(it) }
     }
 
     private fun handleBotCommand(channelId: String, inquiry: String): Reply {
