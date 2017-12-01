@@ -31,6 +31,7 @@ buildConfig {
     if (file.exists()) {
         properties.load(file.newDataInputStream())
     } else {
+        //parameters so tests could run on ci
         properties.put("BOT_TOKEN", "ci_tests_token")
         properties.put("BOT_NAME", "ci_tests_bot_name")
         properties.put("IS_DEBUG", "true")
