@@ -113,10 +113,10 @@ files:
 
 # During the ApplicationInstall deployment lifecycle event, run the commands
 #   in the script specified in "location".
-  ApplicationStart:
-    - location: scripts/app_start.sh
-      timeout: 60
-      runas: ec2-user
+ApplicationStart:
+  - location: scripts/app_start.sh
+    timeout: 60
+    runas: ec2-user
 
 # During the ValidateService deployment lifecycle event, run the commands
 #   in the script specified in "location".
