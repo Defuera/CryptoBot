@@ -42,7 +42,7 @@ internal class SubscribeIntegrationTest {
     }
 
     @Test
-    fun `test command without arguments returns returns cryptos list`() {
+    fun `test command without arguments returns coins list`() {
         val response = testInstance.handle(channelId, "/subscribe")
 
         assertThat(response.channelId).isEqualTo(channelId)
@@ -50,7 +50,7 @@ internal class SubscribeIntegrationTest {
 
         val dialog = response.dialog!!
         assertThat(dialog.callbackLabel).isEqualTo("/subscribe")
-        checkOptions(dialog.dialogOptions, "BTC", "ETH", "BCC")
+        checkOptions(dialog.dialogOptions, "BTC", "ETH")
     }
 
     /**

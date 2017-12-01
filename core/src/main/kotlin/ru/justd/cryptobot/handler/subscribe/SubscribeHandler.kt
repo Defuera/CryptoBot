@@ -45,7 +45,7 @@ class SubscribeHandler constructor(
             return Reply(
                     channelId,
                     "Choose crypto",
-                    Dialog("/subscribe", arrayOf("BTC", "ETH", "BCC"))
+                    Dialog("/subscribe", arrayOf("BTC", "ETH"))
             )
         }
 
