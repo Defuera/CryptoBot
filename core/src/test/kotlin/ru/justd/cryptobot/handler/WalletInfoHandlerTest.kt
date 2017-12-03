@@ -1,5 +1,6 @@
 package ru.justd.cryptobot.handler
 
+import com.nhaarman.mockito_kotlin.mock
 import com.nhaarman.mockito_kotlin.whenever
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
@@ -17,7 +18,7 @@ internal class WalletInfoHandlerTest {
 
     @Before
     fun setup() {
-        testInstance = CryptoCore.start("", true)
+        testInstance = CryptoCore.start("", true, mock())
     }
 
 
