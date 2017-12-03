@@ -10,7 +10,7 @@ class FeedbackHandler(
 ) : CommandHandler {
 
     override fun createReply(channelId: String): Reply {
-        feedbackStorage.store(feedback)
+        feedbackStorage.store("feedback from $channelId:\n\n\"$feedback\"")
         return Reply(channelId, "Thank you for your feedback!")
     }
 
