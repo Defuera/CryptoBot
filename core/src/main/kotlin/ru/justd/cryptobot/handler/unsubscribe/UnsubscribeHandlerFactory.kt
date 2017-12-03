@@ -11,7 +11,6 @@ class UnsubscribeHandlerFactory(val storage: Storage) : CommandHandlerFactory<Un
         println("UnsubscribeHandlerFactory#create $request")
 
         return UnsubscribeHandler(
-                channelId,
                 storage,
                 retrieveArg(request, ARG_INDEX_SUBSCRIPTION_ID)
         )

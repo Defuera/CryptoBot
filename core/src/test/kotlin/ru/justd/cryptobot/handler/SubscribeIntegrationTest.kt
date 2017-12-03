@@ -43,15 +43,15 @@ internal class SubscribeIntegrationTest {
     }
 
     @Test
-    fun `test command without arguments returns coins list`() {
+    fun `test command without arguments returns exchanges list`() {
         val response = testInstance.handle(channelId, "/subscribe")
 
         assertThat(response.channelId).isEqualTo(channelId)
-        assertThat(response.text).isEqualTo("Choose crypto")
+        assertThat(response.text).isEqualTo("Choose exchange")
 
         val dialog = response.dialog!!
         assertThat(dialog.callbackLabel).isEqualTo("/subscribe")
-        checkOptions(dialog.dialogOptions, "BTC", "ETH")
+        checkOptions(dialog.dialogOptions, "Coinbase", "Gdax", "Cryptonator", "Bitfinex")
     }
 
     /**
@@ -70,7 +70,7 @@ internal class SubscribeIntegrationTest {
                 ))
 
         //action
-        val reply = testInstance.handle(channelId, "/subscribe $BASE_LTC $TARGET_GBP $EXCHANGE_CRYPTONATOR $PERIOD_12_HOURS")
+        val reply = testInstance.handle(channelId, "/subscribe $EXCHANGE_CRYPTONATOR $BASE_LTC $TARGET_GBP $PERIOD_12_HOURS")
 
         //test
         assertThat(reply.text).isEqualTo("Subscription created successfully!\nLTC price is 300.0 GBP (via CRYPTONATOR)")

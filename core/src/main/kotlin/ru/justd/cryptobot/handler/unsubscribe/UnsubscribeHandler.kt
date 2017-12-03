@@ -7,9 +7,8 @@ import ru.justd.cryptobot.messenger.model.Reply
 import ru.justd.cryptobot.persistance.Storage
 
 class UnsubscribeHandler(
-        val channelId: String,
-        val storage: Storage,
-        val subscriptionId: String?
+        private val storage: Storage,
+        private val subscriptionId: String?
 ) : CommandHandler {
 
     override fun createReply(channelId: String): Reply {

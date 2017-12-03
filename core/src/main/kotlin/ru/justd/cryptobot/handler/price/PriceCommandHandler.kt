@@ -16,13 +16,18 @@ import ru.justd.cryptobot.messenger.model.Reply
  */
 class PriceCommandHandler constructor(
         private val exchangeFacade: ExchangeApiFacade,
-        private val base: String,
-        private val target: String,
-        private val exchange: String
+        private val base: String?,
+        private val target: String?,
+        private val exchange: String?
 ) : CommandHandler {
 
     override fun createReply(channelId: String): Reply {
         println("PriceCommandHandler#createReply $base $target $exchange")
+
+        val delegate = PriceClarificatorDelegate("/price", exchange, base, target)
+        if (base == null || target == null || exchange == null) {
+            return delegate.createClarificationRequest(channelId)
+        }
 
         val message = try {
             val rate = exchangeFacade.getRate(base, target, exchange)

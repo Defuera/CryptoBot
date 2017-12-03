@@ -4,6 +4,7 @@ import ru.justd.cryptobot.api.exchanges.ExchangeApiFacade
 import ru.justd.cryptobot.api.exchanges.exceptions.ExchangeNotSupported
 import ru.justd.cryptobot.api.exchanges.exceptions.RequestFailed
 import ru.justd.cryptobot.handler.CommandHandler
+import ru.justd.cryptobot.handler.price.PriceClarificatorDelegate
 import ru.justd.cryptobot.messenger.model.Dialog
 import ru.justd.cryptobot.messenger.model.Reply
 import ru.justd.cryptobot.persistance.Storage
@@ -40,36 +41,16 @@ class SubscribeHandler constructor(
 ) : CommandHandler {
 
     override fun createReply(channelId: String): Reply {
-
-        if (base == null || base.isNullOrBlank()) {
-            return Reply(
-                    channelId,
-                    "Choose crypto",
-                    Dialog("/subscribe", arrayOf("BTC", "ETH"))
-            )
+        val delegate = PriceClarificatorDelegate("/subscribe", exchange, base, target)
+        if (base == null || target == null || exchange == null) {
+            return delegate.createClarificationRequest(channelId)
         }
 
-        if (target == null || target.isNullOrBlank()) {
-            return Reply(
-                    channelId,
-                    "Choose fiat",
-                    Dialog("/subscribe $base", arrayOf("USD", "EUR", "GBP"))
-            )
-        }
-
-        if (exchange == null || exchange.isNullOrBlank()) {
-            return Reply(
-                    channelId,
-                    "Choose exchange",
-                    Dialog("/subscribe $base $target", arrayOf("Coinbase", "Gdax", "Cryptonator", "Bitfinex"))
-            )
-        }
-
-        if (period == null || period.isNullOrBlank()) {
+        if (period == null || period.isBlank()) {
             return Reply(
                     channelId,
                     "How often do you want to get updates",
-                    Dialog("/subscribe $base $target $exchange", timeManager.getUpdatePeriods())
+                    Dialog("/subscribe $exchange $base $target", timeManager.getUpdatePeriods())
             )
         }
 

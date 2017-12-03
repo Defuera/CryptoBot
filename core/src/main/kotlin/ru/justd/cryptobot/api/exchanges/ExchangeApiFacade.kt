@@ -2,6 +2,6 @@ package ru.justd.cryptobot.api.exchanges
 
 interface ExchangeApiFacade {
 
-    fun getRate(base: String?, target: String? = null, exchangeApiCode: String): RateResponse
+    fun getRate(base: String, target: String, exchangeApiCode: String): RateResponse
 
 }
