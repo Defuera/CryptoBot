@@ -4,13 +4,18 @@ import com.mongodb.MongoClient
 import com.mongodb.client.MongoDatabase
 import dagger.Module
 import dagger.Provides
+import ru.justd.cryptobot.persistance.FeedbackStorage
 import ru.justd.cryptobot.persistance.MongoStorageImpl
 import ru.justd.cryptobot.persistance.Storage
 import ru.justd.cryptobot.persistance.StorageImpl
 import javax.inject.Singleton
 
 @Module
-class StorageModule constructor(val clientName : String, val debug: Boolean) {
+class StorageModule(
+        val clientName: String,
+        val debug: Boolean,
+        val feedbackStorage: FeedbackStorage
+) {
 
     @Provides
     @Singleton
@@ -23,5 +28,9 @@ class StorageModule constructor(val clientName : String, val debug: Boolean) {
                 StorageImpl()
             else
                 MongoStorageImpl(mongo)
+
+    @Provides
+    @Singleton
+    fun provideFeedbackStorage(): FeedbackStorage = feedbackStorage
 
 }

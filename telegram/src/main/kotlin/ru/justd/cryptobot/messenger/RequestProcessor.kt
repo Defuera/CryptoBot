@@ -24,7 +24,6 @@ class RequestProcessor(
             handleCallback(it)
         }
 
-        messageSender.sendMessage(Reply("", "Unable to resolve request")) //todo chat id
     }
 
     private fun handleCallback(callbackQuery: CallbackQuery): Reply {

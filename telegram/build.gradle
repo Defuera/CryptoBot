@@ -35,6 +35,7 @@ buildConfig {
         properties.put("BOT_TOKEN", "ci_tests_token")
         properties.put("BOT_NAME", "ci_tests_bot_name")
         properties.put("IS_DEBUG", "true")
+        properties.put("FEEDBACK_CHANNEL_ID", "")
     }
 
     properties.each { key, value ->

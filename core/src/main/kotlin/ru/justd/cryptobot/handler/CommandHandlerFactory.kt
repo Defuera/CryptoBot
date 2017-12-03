@@ -21,10 +21,7 @@ abstract class CommandHandlerFactory<out T : CommandHandler>(val scheme: String)
     abstract fun create(channelId: String, request: String): T
 
     fun retrieveArg(request: String, index: Int): String? {
-        val args = request
-                .replace(scheme, "")
-                .trim()
-                .split(" ")
+        val args = trimScheme(request).split(" ")
 
         val argument = if (index <= args.lastIndex) args[index] else null
         return if (argument.isNullOrBlank()){
@@ -32,6 +29,12 @@ abstract class CommandHandlerFactory<out T : CommandHandler>(val scheme: String)
         } else {
             argument
         }
+    }
+
+    fun trimScheme(request: String): String {
+        return request
+                .replace(scheme, "")
+                .trim()
     }
 
 }

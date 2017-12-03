@@ -8,12 +8,14 @@ import ru.justd.cryptobot.handler.CommandHandlerFacade
 import ru.justd.cryptobot.handler.CommandHandlerFacadeImpl
 import ru.justd.cryptobot.handler.InstantFactory
 import ru.justd.cryptobot.handler.about.AboutCommandHandler
+import ru.justd.cryptobot.handler.feedback.FeedbackHandlerFactory
 import ru.justd.cryptobot.handler.help.HelpCommandHandler
 import ru.justd.cryptobot.handler.price.PriceCommandHandlerFactory
 import ru.justd.cryptobot.handler.subscribe.SubscribeFactory
 import ru.justd.cryptobot.handler.unsubscribe.UnsubscribeHandlerFactory
 import ru.justd.cryptobot.handler.update.UpdateCommandHandler
 import ru.justd.cryptobot.handler.wallet.WalletInfoHandlerFactory
+import ru.justd.cryptobot.persistance.FeedbackStorage
 import ru.justd.cryptobot.persistance.Storage
 import ru.justd.cryptobot.publisher.Publisher
 import ru.justd.cryptobot.publisher.PublisherImpl
@@ -31,7 +33,8 @@ class MainModule {
             blockchainApi: BlockchainApi,
             storage: Storage,
             timeManager: TimeManager,
-            uuidGenerator: UuidGenerator
+            uuidGenerator: UuidGenerator,
+            feedbackStorage: FeedbackStorage
     ): CommandHandlerFacade = CommandHandlerFacadeImpl(
             mutableListOf(
                     InstantFactory("/about", AboutCommandHandler),
@@ -40,7 +43,8 @@ class MainModule {
                     PriceCommandHandlerFactory(exchangeFacade),
                     SubscribeFactory(exchangeFacade, storage, timeManager, uuidGenerator),
                     UnsubscribeHandlerFactory(storage),
-                    WalletInfoHandlerFactory(blockchainApi)
+                    WalletInfoHandlerFactory(blockchainApi),
+                    FeedbackHandlerFactory(feedbackStorage)
             )
     )
 

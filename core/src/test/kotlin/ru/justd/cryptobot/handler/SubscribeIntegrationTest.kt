@@ -1,5 +1,6 @@
 package ru.justd.cryptobot.handler
 
+import com.nhaarman.mockito_kotlin.mock
 import com.nhaarman.mockito_kotlin.times
 import com.nhaarman.mockito_kotlin.verify
 import com.nhaarman.mockito_kotlin.whenever
@@ -38,7 +39,7 @@ internal class SubscribeIntegrationTest {
         whenever(timeManagerMock.createPublishTimes(anyLong(), anyString())).thenReturn(listOf("12:00"))
         whenever(uuidGeneratorMock.random()).thenReturn("uuid")
 
-        testInstance = CryptoCore.start("", true)
+        testInstance = CryptoCore.start("", true, mock())
     }
 
     @Test
