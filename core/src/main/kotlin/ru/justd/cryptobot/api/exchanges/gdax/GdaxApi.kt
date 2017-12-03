@@ -19,7 +19,7 @@ class GdaxApi(okHttpClient: OkHttpClient) : PollingExchange(okHttpClient) {
      * https://docs.gdax.com/#get-product-order-book
      */
 
-    override fun getRateUrl(base: String, target: String) = "$BASE_URL/products/$base-$target/book" //todo extract to exchangeApi
+    override fun getRateUrl(base: String, target: String) = "$BASE_URL/products/$base-$target/book"
 
     @Throws(RequestFailed::class)
     override fun parseResponseBody(bodyString: String, base: String, target: String): RateResponse {
@@ -31,6 +31,7 @@ class GdaxApi(okHttpClient: OkHttpClient) : PollingExchange(okHttpClient) {
         }
     }
 
+    @Suppress("ArrayInDataClass")
     private data class Envelope(
 
             @SerializedName("message")

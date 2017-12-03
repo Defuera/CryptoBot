@@ -41,7 +41,7 @@ class SubscribeHandler constructor(
 
     override fun createReply(channelId: String): Reply {
 
-        if (base == null || base.isNullOrBlank()) {
+        if (base == null || base.isBlank()) {
             return Reply(
                     channelId,
                     "Choose crypto",
@@ -49,7 +49,7 @@ class SubscribeHandler constructor(
             )
         }
 
-        if (target == null || target.isNullOrBlank()) {
+        if (target == null || target.isBlank()) {
             return Reply(
                     channelId,
                     "Choose fiat",
@@ -57,7 +57,7 @@ class SubscribeHandler constructor(
             )
         }
 
-        if (exchange == null || exchange.isNullOrBlank()) {
+        if (exchange == null || exchange.isBlank()) {
             return Reply(
                     channelId,
                     "Choose exchange",
@@ -65,7 +65,7 @@ class SubscribeHandler constructor(
             )
         }
 
-        if (period == null || period.isNullOrBlank()) {
+        if (period == null || period.isBlank()) {
             return Reply(
                     channelId,
                     "How often do you want to get updates",
