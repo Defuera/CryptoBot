@@ -4,7 +4,6 @@ import ru.justd.cryptobot.api.exchanges.ExchangeApiFacade
 import ru.justd.cryptobot.api.exchanges.exceptions.ExchangeNotSupported
 import ru.justd.cryptobot.api.exchanges.exceptions.RequestFailed
 import ru.justd.cryptobot.handler.CommandHandler
-import ru.justd.cryptobot.messenger.model.Dialog
 import ru.justd.cryptobot.messenger.model.Reply
 
 /**
@@ -22,32 +21,13 @@ class PriceCommandHandler constructor(
         private val exchange: String?
 ) : CommandHandler {
 
+
     override fun createReply(channelId: String): Reply {
         println("PriceCommandHandler#createReply $base $target $exchange")
 
-        if (exchange == null || exchange.isBlank()) {
-            val dialogOptions = arrayOf("Coinbase", "Gdax", "Cryptonator", "Bitfinex")
-            return Reply(
-                    channelId,
-                    "Choose exchange",
-                    Dialog("/price", dialogOptions)
-            )
-        }
-
-        if (base == null || base.isBlank()) {
-            return Reply(
-                    channelId,
-                    "Choose crypto",
-                    Dialog("/price $exchange", arrayOf("BTC", "ETH"))
-            )
-        }
-
-        if (target == null || target.isBlank()) {
-            return Reply(
-                    channelId,
-                    "Choose fiat",
-                    Dialog("/price $exchange $base", arrayOf("USD", "EUR", "GBP"))
-            )
+        val delegate = PriceClarificatorDelegate("/price", exchange, base, target)
+        if (base == null || target == null || exchange == null) {
+            return delegate.createClarificationRequest(channelId)
         }
 
         val message = try {

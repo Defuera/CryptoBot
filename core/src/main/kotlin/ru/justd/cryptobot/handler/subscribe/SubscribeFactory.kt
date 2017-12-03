@@ -7,9 +7,9 @@ import ru.justd.cryptobot.persistance.Storage
 import utils.TimeManager
 import utils.UuidGenerator
 
-private const val ARG_INDEX_BASE = 0
-private const val ARG_INDEX_TARGET = 1
-private const val ARG_INDEX_EXCHANGE = 2
+private const val ARG_INDEX_EXCHANGE = 0
+private const val ARG_INDEX_BASE = 1
+private const val ARG_INDEX_TARGET = 2
 private const val ARG_INDEX_PERIOD = 3
 
 class SubscribeFactory (
