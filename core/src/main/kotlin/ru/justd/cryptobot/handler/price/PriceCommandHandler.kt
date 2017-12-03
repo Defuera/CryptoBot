@@ -21,7 +21,6 @@ class PriceCommandHandler constructor(
         private val exchange: String?
 ) : CommandHandler {
 
-
     override fun createReply(channelId: String): Reply {
         println("PriceCommandHandler#createReply $base $target $exchange")
 
