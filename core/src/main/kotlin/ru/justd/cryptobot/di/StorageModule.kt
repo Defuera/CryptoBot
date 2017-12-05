@@ -8,12 +8,12 @@ import ru.justd.cryptobot.persistance.FeedbackStorage
 import ru.justd.cryptobot.persistance.MongoStorageImpl
 import ru.justd.cryptobot.persistance.Storage
 import ru.justd.cryptobot.persistance.StorageImpl
+import javax.inject.Named
 import javax.inject.Singleton
 
 @Module
-class StorageModule(
+class StorageModule constructor(
         val clientName: String,
-        val debug: Boolean,
         val feedbackStorage: FeedbackStorage
 ) {
 
@@ -23,7 +23,7 @@ class StorageModule(
 
     @Provides
     @Singleton
-    fun provideUserPreferences(mongo: MongoDatabase): Storage =
+    fun provideUserPreferences(mongo: MongoDatabase, @Named("IsDebug") debug: Boolean): Storage =
             if (debug)
                 StorageImpl()
             else

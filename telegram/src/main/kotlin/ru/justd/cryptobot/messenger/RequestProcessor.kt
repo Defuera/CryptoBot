@@ -58,7 +58,7 @@ class RequestProcessor(
 
     private fun handleBotCommand(channelId: String, inquiry: String): Reply {
         val filteredInquiry = inquiry.replace("@${BuildConfig.BOT_NAME}", "")
-        println("incoming bot command: $filteredInquiry")
+
         return try {
             cryptoCore.handle(channelId, filteredInquiry)
         } catch (invalidCommand: InvalidCommand) {

@@ -2,29 +2,32 @@ package ru.justd.cryptobot.di
 
 import dagger.Module
 import dagger.Provides
+import ru.justd.cryptobot.analytics.Analytics
 import ru.justd.cryptobot.api.blockchain.BlockchainApi
 import ru.justd.cryptobot.api.exchanges.ExchangeApiFacade
 import ru.justd.cryptobot.handler.CommandHandlerFacade
 import ru.justd.cryptobot.handler.CommandHandlerFacadeImpl
-import ru.justd.cryptobot.handler.InstantFactory
-import ru.justd.cryptobot.handler.about.AboutCommandHandler
 import ru.justd.cryptobot.handler.feedback.FeedbackHandlerFactory
-import ru.justd.cryptobot.handler.help.HelpCommandHandler
 import ru.justd.cryptobot.handler.price.PriceCommandHandlerFactory
 import ru.justd.cryptobot.handler.subscribe.SubscribeFactory
 import ru.justd.cryptobot.handler.unsubscribe.UnsubscribeHandlerFactory
-import ru.justd.cryptobot.handler.update.UpdateCommandHandler
-import ru.justd.cryptobot.handler.wallet.WalletInfoHandlerFactory
+import ru.justd.cryptobot.handler.wallet.AddressInfoHandlerFactory
 import ru.justd.cryptobot.persistance.FeedbackStorage
 import ru.justd.cryptobot.persistance.Storage
 import ru.justd.cryptobot.publisher.Publisher
 import ru.justd.cryptobot.publisher.PublisherImpl
 import utils.TimeManager
 import utils.UuidGenerator
+import javax.inject.Named
 import javax.inject.Singleton
 
-@Module(includes = arrayOf(ExchangeApiModule::class, BlockchainModule::class, StorageModule::class, UtilsModule::class))
-class MainModule {
+@Module(includes = arrayOf(ExchangeApiModule::class, BlockchainModule::class, StorageModule::class, UtilsModule::class, AnalyticsModule::class))
+class MainModule(val debug: Boolean) {
+
+    @Provides
+    @Singleton
+    @Named("IsDebug")
+    fun provideIsDebug() = debug
 
     @Provides
     @Singleton
@@ -34,17 +37,15 @@ class MainModule {
             storage: Storage,
             timeManager: TimeManager,
             uuidGenerator: UuidGenerator,
-            feedbackStorage: FeedbackStorage
+            feedbackStorage: FeedbackStorage,
+            analytics: Analytics
     ): CommandHandlerFacade = CommandHandlerFacadeImpl(
             mutableListOf(
-                    InstantFactory("/about", AboutCommandHandler),
-                    InstantFactory("/help", HelpCommandHandler),
-                    InstantFactory("/update", UpdateCommandHandler),
-                    PriceCommandHandlerFactory(exchangeFacade),
-                    SubscribeFactory(exchangeFacade, storage, timeManager, uuidGenerator),
-                    UnsubscribeHandlerFactory(storage),
-                    WalletInfoHandlerFactory(blockchainApi),
-                    FeedbackHandlerFactory(feedbackStorage)
+                    PriceCommandHandlerFactory(analytics, exchangeFacade),
+                    SubscribeFactory(analytics, exchangeFacade, storage, timeManager, uuidGenerator),
+                    UnsubscribeHandlerFactory(analytics, storage),
+                    AddressInfoHandlerFactory(analytics, blockchainApi),
+                    FeedbackHandlerFactory(analytics, feedbackStorage)
             )
     )
 

@@ -5,7 +5,7 @@ buildscript {
     project.group = 'ru.justd.cryptobot'
 
     ext {
-        kotlin_version = '1.1.60'
+        kotlin_version = '1.2.0'
         kotlin_coroutines_version = '0.19.1'
         daggerVersion = "2.11"
         okHttpVersion = '3.9.0'

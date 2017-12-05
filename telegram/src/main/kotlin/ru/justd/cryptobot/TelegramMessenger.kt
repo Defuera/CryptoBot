@@ -35,7 +35,7 @@ class TelegramMessenger(private val uuid: String) {
         if (BuildConfig.IS_DEBUG) {
             cryptoCore.addCommandHandler(KillCommandHandlerFactory(uuid))
         }
-        cryptoCore.addCommandHandler(InstantFactory("/start", StartHandler))
+        cryptoCore.addCommandHandler(InstantFactory("/start", StartHandler(cryptoCore.analytics)))
         cryptoCore.setUpdateListener { sendMessage(Reply(it.channelId, it.message)) }
     }
 

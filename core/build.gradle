@@ -49,6 +49,10 @@ dependencies {
     //dagger
     implementation "com.google.dagger:dagger:$daggerVersion"
     kapt "com.google.dagger:dagger-compiler:$daggerVersion"
+
+    //analytics
+    compile 'io.keen:keen-client-api-java:5.2.0'
+
 }
 
 //tests

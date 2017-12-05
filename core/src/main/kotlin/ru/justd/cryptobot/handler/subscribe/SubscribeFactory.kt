@@ -1,5 +1,6 @@
 package ru.justd.cryptobot.handler.subscribe
 
+import ru.justd.cryptobot.analytics.Analytics
 import ru.justd.cryptobot.api.exchanges.ExchangeApiFacade
 import ru.justd.cryptobot.handler.CommandHandlerFactory
 import ru.justd.cryptobot.handler.exceptions.InvalidCommand
@@ -13,6 +14,7 @@ private const val ARG_INDEX_TARGET = 2
 private const val ARG_INDEX_PERIOD = 3
 
 class SubscribeFactory (
+        private val analytics: Analytics,
         private val exchangeApiFacade: ExchangeApiFacade,
         private val storage: Storage,
         private val timeManager: TimeManager,
@@ -24,6 +26,7 @@ class SubscribeFactory (
         println("SubscribeHandler#create $request")
 
         return SubscribeHandler(
+                analytics,
                 storage,
                 exchangeApiFacade,
                 timeManager,

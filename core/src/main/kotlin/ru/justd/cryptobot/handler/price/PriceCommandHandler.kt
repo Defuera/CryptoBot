@@ -1,5 +1,6 @@
 package ru.justd.cryptobot.handler.price
 
+import ru.justd.cryptobot.analytics.Analytics
 import ru.justd.cryptobot.api.exchanges.ExchangeApiFacade
 import ru.justd.cryptobot.api.exchanges.exceptions.ExchangeNotSupported
 import ru.justd.cryptobot.api.exchanges.exceptions.RequestFailed
@@ -15,6 +16,7 @@ import ru.justd.cryptobot.messenger.model.Reply
  * 1. EXCHANGE_CODE - optional, as for now Gdax, Coinbase and Cryptonator exchanges are supported
  */
 class PriceCommandHandler constructor(
+        private val analytics: Analytics,
         private val exchangeFacade: ExchangeApiFacade,
         private val base: String?,
         private val target: String?,
@@ -22,8 +24,6 @@ class PriceCommandHandler constructor(
 ) : CommandHandler {
 
     override fun createReply(channelId: String): Reply {
-        println("PriceCommandHandler#createReply $base $target $exchange")
-
         val delegate = PriceClarificatorDelegate("/price", exchange, base, target)
         if (base == null || target == null || exchange == null) {
             return delegate.createClarificationRequest(channelId)
@@ -38,6 +38,7 @@ class PriceCommandHandler constructor(
             error.message
         }.trim()
 
+        analytics.trackPrice(channelId, exchange, base, target)
         return Reply(channelId, message)
     }
 
