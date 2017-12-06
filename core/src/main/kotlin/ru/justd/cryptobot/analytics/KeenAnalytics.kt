@@ -1,5 +1,6 @@
 package ru.justd.cryptobot.analytics
 
+import CryptoBot.CoreConfig
 import io.keen.client.java.JavaKeenClientBuilder
 import io.keen.client.java.KeenClient
 import io.keen.client.java.KeenProject
@@ -11,7 +12,6 @@ class KeenAnalytics(
         private val debug: Boolean
 ) : Analytics {
 
-
     //common properties
     private val PROPERTY_CHANNEL_ID = "channel_id"
     private val PROPERTY_DATE_TIME = "date_time"
@@ -21,12 +21,8 @@ class KeenAnalytics(
     private val PROPERTY_TARGET = "target"
 
     init {
-        val client = JavaKeenClientBuilder().build()
-        KeenClient.initialize(client)
-
-        // This is your actual Project ID and Write Key
-//        val project = KeenProject("", "", null) //todo load keys
-//        KeenClient.client().defaultProject = project
+        KeenClient.initialize(JavaKeenClientBuilder().build())
+        KeenClient.client().defaultProject = KeenProject(CoreConfig.KEEN_PROJECT_ID, CoreConfig.KEEN_WRITE_KEY, null)
     }
 
     override fun trackStart(channelId: String) {

@@ -3,18 +3,39 @@ version '0.1'
 apply plugin: 'kotlin'
 apply plugin: 'idea'
 apply plugin: 'kotlin-kapt'
+apply plugin: 'de.fuerstenau.buildconfig'
+
+buildConfig {
+
+    packageName = project.group
+    clsName = 'CoreConfig'
+
+    Properties properties = new Properties()
+    def file = project.rootProject.file('./core/keystore.properties')
+    if (file.exists()) {
+        properties.load(file.newDataInputStream())
+    } else {
+        //parameters so tests could run on ci
+        properties.put("KEEN_PROJECT_ID", "")
+        properties.put("KEEN_WRITE_KEY", "")
+    }
+
+    properties.each { key, value ->
+        def fieldName = key.toString()
+        def fieldValue = value.toString()
+        buildConfigField 'String', fieldName, fieldValue
+    }
+
+}
 
 kotlin.experimental.coroutines 'enable'
 
 repositories {
-    mavenCentral()
-    jcenter()
     maven { url = 'https://raw.githubusercontent.com/blockchain/api-v1-client-java/mvn-repo' }
 }
 
 sourceSets {
     main.kotlin.srcDirs += "$buildDir/generated/source/kapt/main"
-
 }
 
 dependencies {
