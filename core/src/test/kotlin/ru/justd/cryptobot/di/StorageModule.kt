@@ -1,16 +1,17 @@
 package ru.justd.cryptobot.di
 
-import com.mongodb.MongoClient
 import com.mongodb.client.MongoDatabase
 import dagger.Module
 import dagger.Provides
 import org.mockito.Mockito.mock
 import ru.justd.cryptobot.persistance.FeedbackStorage
 import ru.justd.cryptobot.persistance.Storage
+import javax.inject.Named
 import javax.inject.Singleton
 
 @Module
-class StorageModule(clientName : String, debug : Boolean, feedbackStorage: FeedbackStorage) {
+@Suppress("UNUSED_PARAMETER")
+class StorageModule(clientName: String, feedbackStorage: FeedbackStorage) {
 
     companion object {
         val storageMock = mock(Storage::class.java)
@@ -18,11 +19,11 @@ class StorageModule(clientName : String, debug : Boolean, feedbackStorage: Feedb
 
     @Provides
     @Singleton
-    fun provideUserPreferences(mongo: MongoDatabase) = storageMock
+    fun provideUserPreferences(mongo: MongoDatabase, @Named("IsDebug") debug: Boolean) = storageMock
 
     @Provides
     @Singleton
-    fun provideMongo() = MongoClient().getDatabase("preferences")
+    fun provideMongo() = mock(MongoDatabase::class.java)
 
     @Provides
     @Singleton

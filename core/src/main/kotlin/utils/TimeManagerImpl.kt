@@ -8,6 +8,7 @@ import java.util.*
 
 object TimeManagerImpl : TimeManager {
 
+    const val READABLE_DATE_TIME = "dd.MM.yy HH:mm"
     const val FORMAT_TIME = "HH:mm"
 
     const val MILLIS_IN_MINUTE = 1000 * 60L
@@ -74,5 +75,7 @@ object TimeManagerImpl : TimeManager {
         } * MILLIS_IN_MINUTE
 
     }
+
+    override fun readableDateTime() = Date().toString(READABLE_DATE_TIME)
 
 }

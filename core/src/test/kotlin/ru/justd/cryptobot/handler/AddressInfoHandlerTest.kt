@@ -11,7 +11,7 @@ import ru.justd.cryptobot.api.blockchain.bitcoin.BitcoinAddressInfo
 import ru.justd.cryptobot.di.BlockchainModule
 
 
-internal class WalletInfoHandlerTest {
+internal class AddressInfoHandlerTest {
 
     val blockchainApi = BlockchainModule.blockchainApi
     lateinit var testInstance: CryptoCore

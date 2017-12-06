@@ -13,6 +13,7 @@ import ru.justd.cryptobot.messenger.MessageSender
 import ru.justd.cryptobot.messenger.RequestProcessor
 import ru.justd.cryptobot.messenger.model.Reply
 import ru.justd.cryptobot.persistance.FeedbackStorage
+import ru.justd.cryptobot.telegram.BuildConfig
 
 class TelegramMessenger(private val uuid: String) {
 
@@ -35,7 +36,7 @@ class TelegramMessenger(private val uuid: String) {
         if (BuildConfig.IS_DEBUG) {
             cryptoCore.addCommandHandler(KillCommandHandlerFactory(uuid))
         }
-        cryptoCore.addCommandHandler(InstantFactory("/start", StartHandler))
+        cryptoCore.addCommandHandler(InstantFactory("/start", StartHandler(cryptoCore.analytics)))
         cryptoCore.setUpdateListener { sendMessage(Reply(it.channelId, it.message)) }
     }
 

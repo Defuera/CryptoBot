@@ -1,5 +1,6 @@
 package ru.justd.cryptobot.handler.subscribe
 
+import ru.justd.cryptobot.analytics.Analytics
 import ru.justd.cryptobot.api.exchanges.ExchangeApiFacade
 import ru.justd.cryptobot.api.exchanges.exceptions.ExchangeNotSupported
 import ru.justd.cryptobot.api.exchanges.exceptions.RequestFailed
@@ -30,14 +31,15 @@ import utils.UuidGenerator
  *
  */
 class SubscribeHandler constructor(
+        private val analytics: Analytics,
         private val storage: Storage,
         private val exchangeApiFacade: ExchangeApiFacade,
         private val timeManager: TimeManager,
         private val uuidGenerator: UuidGenerator,
-        val base: String?,
-        val target: String?,
-        val exchange: String?,
-        val period: String?
+        private val base: String?,
+        private val target: String?,
+        private val exchange: String?,
+        private val period: String?
 ) : CommandHandler {
 
     override fun createReply(channelId: String): Reply {
@@ -69,6 +71,7 @@ class SubscribeHandler constructor(
                     )
             )
 
+            analytics.trackSubscribe(channelId, exchange, base, target, period)
             "Subscription created successfully!\n$priceMessage"
         } catch (error: ExchangeNotSupported) {
             "${error.exchange} exchange not supported"

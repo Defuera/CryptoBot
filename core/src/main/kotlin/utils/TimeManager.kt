@@ -15,4 +15,6 @@ interface TimeManager {
 
     fun getUpdatePeriods(): List<Option>
 
+    fun readableDateTime(): String
+
 }
