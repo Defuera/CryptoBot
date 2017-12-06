@@ -1,8 +1,8 @@
 package ru.justd.cryptobot.handler
 
-import ru.justd.cryptobot.BuildConfig
 import ru.justd.cryptobot.analytics.Analytics
 import ru.justd.cryptobot.messenger.model.Reply
+import ru.justd.cryptobot.telegram.BuildConfig
 
 /**
  * /start command is a required global command https://core.telegram.org/bots#global-commands

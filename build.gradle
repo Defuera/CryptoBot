@@ -2,8 +2,6 @@ apply plugin: 'kotlin'
 apply plugin: 'idea'
 
 buildscript {
-    project.group = 'ru.justd.cryptobot'
-
     ext {
         kotlin_version = '1.2.0'
         kotlin_coroutines_version = '0.19.1'
@@ -19,13 +17,10 @@ buildscript {
     dependencies {
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
         classpath("org.junit.platform:junit-platform-gradle-plugin:1.0.0")
+        classpath 'gradle.plugin.de.fuerstenau:BuildConfigPlugin:1.1.8'
+
     }
 
-}
-
-repositories {
-    mavenCentral()
-    jcenter()
 }
 
 sourceSets {
