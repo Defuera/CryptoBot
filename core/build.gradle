@@ -16,8 +16,8 @@ buildConfig {
         properties.load(file.newDataInputStream())
     } else {
         //parameters so tests could run on ci
-        properties.put("KEEN_PROJECT_ID", "")
-        properties.put("KEEN_WRITE_KEY", "")
+        properties.put("KEEN_PROJECT_ID", "test")
+        properties.put("KEEN_WRITE_KEY", "test")
     }
 
     properties.each { key, value ->
