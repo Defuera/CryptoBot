@@ -7,7 +7,7 @@ apply plugin: 'de.fuerstenau.buildconfig'
 
 buildConfig {
 
-    packageName = project.group
+    packageName = 'ru.justd.cryptobot'
     clsName = 'CoreConfig'
 
     Properties properties = new Properties()

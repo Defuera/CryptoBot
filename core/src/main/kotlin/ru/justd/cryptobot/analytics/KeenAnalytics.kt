@@ -1,9 +1,9 @@
 package ru.justd.cryptobot.analytics
 
-import CryptoBot.CoreConfig
 import io.keen.client.java.JavaKeenClientBuilder
 import io.keen.client.java.KeenClient
 import io.keen.client.java.KeenProject
+import ru.justd.cryptobot.CoreConfig
 import utils.TimeManager
 
 
