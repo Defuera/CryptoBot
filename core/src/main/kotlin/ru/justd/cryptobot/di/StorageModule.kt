@@ -4,6 +4,7 @@ import com.mongodb.MongoClient
 import com.mongodb.client.MongoDatabase
 import dagger.Module
 import dagger.Provides
+import ru.justd.cryptobot.CoreConfig
 import ru.justd.cryptobot.persistance.FeedbackStorage
 import ru.justd.cryptobot.persistance.MongoStorageImpl
 import ru.justd.cryptobot.persistance.Storage
@@ -13,13 +14,13 @@ import javax.inject.Singleton
 
 @Module
 class StorageModule constructor(
-        val clientName: String,
-        val feedbackStorage: FeedbackStorage
+        private val clientName: String,
+        private val feedbackStorage: FeedbackStorage
 ) {
 
     @Provides
     @Singleton
-    fun provideMongo(): MongoDatabase = MongoClient("52.91.229.51").getDatabase(clientName)
+    fun provideMongo(): MongoDatabase = MongoClient(CoreConfig.MONGO_ADDRESS).getDatabase(clientName)
 
     @Provides
     @Singleton

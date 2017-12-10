@@ -4,7 +4,6 @@ import ru.justd.cryptobot.api.exchanges.ExchangeApiFacade
 import ru.justd.cryptobot.handler.CommandHandler
 import ru.justd.cryptobot.messenger.model.Invoice
 import ru.justd.cryptobot.messenger.model.Reply
-import java.util.*
 
 /**
  * Allows user to retrieve cryptos price from supported exchanges.
@@ -16,7 +15,7 @@ import java.util.*
  */
 class PurchaseHandler constructor(
         private val exchangeFacade: ExchangeApiFacade,
-        private val base: String
+        private val base: String?
 ) : CommandHandler {
 
     override fun createReply(channelId: String): Reply {

@@ -1,6 +1,5 @@
 package ru.justd.cryptobot.handler.purchase
 
-import ru.justd.cryptobot.DEFAULT_CURRENCY
 import ru.justd.cryptobot.api.exchanges.ExchangeApiFacade
 import ru.justd.cryptobot.handler.CommandHandlerFactory
 
@@ -9,7 +8,7 @@ internal class PurchaseHandlerFactory constructor(private val exchangeFacade: Ex
     override fun create(channelId: String, request: String): PurchaseHandler {
         return PurchaseHandler(
                 exchangeFacade,
-                retrieveArg(request, 0) ?: DEFAULT_CURRENCY
+                retrieveArg(request, 0)
         )
     }
 
