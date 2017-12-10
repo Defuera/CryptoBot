@@ -2,32 +2,19 @@ version '0.1-SNAPSHOT'
 
 apply plugin: 'application'
 apply plugin: 'kotlin'
-apply plugin: 'de.fuerstenau.buildconfig'
 apply plugin: 'idea'
-
-kotlin.experimental.coroutines 'enable'
+apply plugin: 'de.fuerstenau.buildconfig'
 
 buildscript {
-    project.group = 'ru.justd.cryptobot'
-    ext.kotlin_version = '1.1.51'
-
-    repositories {
-        mavenCentral()
-        maven { url 'https://plugins.gradle.org/m2/' }
-    }
-
-    dependencies {
-        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
-        classpath("org.junit.platform:junit-platform-gradle-plugin:1.0.0")
-        classpath 'gradle.plugin.de.fuerstenau:BuildConfigPlugin:1.1.8'
-    }
-
+    project.group = 'ru.justd.cryptobot.telegram'
 }
 
 buildConfig {
 
+    packageName = project.group
+
     Properties properties = new Properties()
-    def file = project.rootProject.file('keystore.properties')
+    def file = project.rootProject.file('./telegram/keystore.properties')
     if (file.exists()) {
         properties.load(file.newDataInputStream())
     } else {
@@ -35,6 +22,7 @@ buildConfig {
         properties.put("BOT_TOKEN", "ci_tests_token")
         properties.put("BOT_NAME", "ci_tests_bot_name")
         properties.put("IS_DEBUG", "true")
+        properties.put("FEEDBACK_CHANNEL_ID", "")
     }
 
     properties.each { key, value ->
@@ -51,10 +39,7 @@ buildConfig {
 
 }
 
-repositories {
-    mavenCentral()
-    jcenter()
-}
+kotlin.experimental.coroutines 'enable'
 
 sourceSets {
     main.kotlin.srcDirs += "$buildDir/generated/source/kapt/main"

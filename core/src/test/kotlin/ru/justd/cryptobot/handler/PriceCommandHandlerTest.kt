@@ -8,6 +8,7 @@ import org.junit.runner.RunWith
 import org.mockito.Mock
 import org.mockito.MockitoAnnotations
 import org.mockito.junit.MockitoJUnitRunner
+import ru.justd.cryptobot.analytics.Analytics
 import ru.justd.cryptobot.api.exchanges.ExchangeApiFacade
 import ru.justd.cryptobot.api.exchanges.RateResponse
 import ru.justd.cryptobot.api.exchanges.exceptions.ExchangeNotSupported
@@ -18,6 +19,9 @@ class PriceCommandHandlerTest {
 
     @Mock
     lateinit var exchangeFacade: ExchangeApiFacade
+
+    @Mock
+    lateinit var analytics: Analytics
 
     @Before
     fun setup() {
@@ -33,7 +37,7 @@ class PriceCommandHandlerTest {
         whenever(exchangeFacade.getRate(base, target, exchange)).thenReturn(RateResponse(.0, base, target))
 
         //test
-        val message = PriceCommandHandler(exchangeFacade, base, target, exchange).createReply("channelId")
+        val message = PriceCommandHandler(analytics, exchangeFacade, base, target, exchange).createReply("channelId")
 
         //assert
         assertThat(message.text).isEqualTo("${base.toUpperCase()} price is 0.0 ${target.toUpperCase()} (via $exchange)")
@@ -48,7 +52,7 @@ class PriceCommandHandlerTest {
         whenever(exchangeFacade.getRate(base, target, invalidExchange)).thenThrow(ExchangeNotSupported(invalidExchange))
 
         //action
-        val message = PriceCommandHandler(exchangeFacade, base, target, invalidExchange).createReply("channelId")
+        val message = PriceCommandHandler(analytics, exchangeFacade, base, target, invalidExchange).createReply("channelId")
 
         //assert
         assertThat(message.text).isEqualTo("$invalidExchange exchange not supported")

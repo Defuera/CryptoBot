@@ -1,5 +1,6 @@
 package ru.justd.cryptobot.handler
 
+import com.nhaarman.mockito_kotlin.mock
 import com.nhaarman.mockito_kotlin.whenever
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
@@ -10,14 +11,14 @@ import ru.justd.cryptobot.api.blockchain.bitcoin.BitcoinAddressInfo
 import ru.justd.cryptobot.di.BlockchainModule
 
 
-internal class WalletInfoHandlerTest {
+internal class AddressInfoHandlerTest {
 
     val blockchainApi = BlockchainModule.blockchainApi
     lateinit var testInstance: CryptoCore
 
     @Before
     fun setup() {
-        testInstance = CryptoCore.start("", true)
+        testInstance = CryptoCore.start("", true, mock())
     }
 
 

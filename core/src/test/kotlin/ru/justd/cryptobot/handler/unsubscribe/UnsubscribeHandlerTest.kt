@@ -1,5 +1,6 @@
 package ru.justd.cryptobot.handler.unsubscribe
 
+import com.nhaarman.mockito_kotlin.mock
 import com.nhaarman.mockito_kotlin.whenever
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
@@ -21,7 +22,7 @@ class UnsubscribeHandlerTest {
     @Before
     fun setup() {
         storageMock = StorageModule.storageMock
-        testInstance = CryptoCore.start("", true)
+        testInstance = CryptoCore.start("", true, mock())
     }
 
     @Test

@@ -1,5 +1,6 @@
 package ru.justd.cryptobot.handler.unsubscribe
 
+import ru.justd.cryptobot.analytics.Analytics
 import ru.justd.cryptobot.handler.CommandHandler
 import ru.justd.cryptobot.messenger.model.Dialog
 import ru.justd.cryptobot.messenger.model.Option
@@ -7,9 +8,9 @@ import ru.justd.cryptobot.messenger.model.Reply
 import ru.justd.cryptobot.persistance.Storage
 
 class UnsubscribeHandler(
-        val channelId: String,
-        val storage: Storage,
-        val subscriptionId: String?
+        private val analytics: Analytics,
+        private val storage: Storage,
+        private val subscriptionId: String?
 ) : CommandHandler {
 
     override fun createReply(channelId: String): Reply {
@@ -40,6 +41,7 @@ class UnsubscribeHandler(
         }
 
         storage.removeSubscription(channelId, subscriptionId!!)
+        analytics.trackUnsubscribe(channelId)
         return Reply(
                 channelId,
                 "Subscription removed successfully"

@@ -1,5 +1,6 @@
 package ru.justd.cryptobot.handler
 
+import com.nhaarman.mockito_kotlin.mock
 import com.nhaarman.mockito_kotlin.times
 import com.nhaarman.mockito_kotlin.verify
 import com.nhaarman.mockito_kotlin.whenever
@@ -38,19 +39,19 @@ internal class SubscribeIntegrationTest {
         whenever(timeManagerMock.createPublishTimes(anyLong(), anyString())).thenReturn(listOf("12:00"))
         whenever(uuidGeneratorMock.random()).thenReturn("uuid")
 
-        testInstance = CryptoCore.start("", true)
+        testInstance = CryptoCore.start("", true, mock())
     }
 
     @Test
-    fun `test command without arguments returns coins list`() {
+    fun `test command without arguments returns exchanges list`() {
         val response = testInstance.handle(channelId, "/subscribe")
 
         assertThat(response.channelId).isEqualTo(channelId)
-        assertThat(response.text).isEqualTo("Choose crypto")
+        assertThat(response.text).isEqualTo("Choose exchange")
 
         val dialog = response.dialog!!
         assertThat(dialog.callbackLabel).isEqualTo("/subscribe")
-        checkOptions(dialog.dialogOptions, "BTC", "ETH")
+        checkOptions(dialog.dialogOptions, "Coinbase", "Gdax", "Cryptonator", "Bitfinex")
     }
 
     /**
@@ -69,7 +70,7 @@ internal class SubscribeIntegrationTest {
                 ))
 
         //action
-        val reply = testInstance.handle(channelId, "/subscribe $BASE_LTC $TARGET_GBP $EXCHANGE_CRYPTONATOR $PERIOD_12_HOURS")
+        val reply = testInstance.handle(channelId, "/subscribe $EXCHANGE_CRYPTONATOR $BASE_LTC $TARGET_GBP $PERIOD_12_HOURS")
 
         //test
         assertThat(reply.text).isEqualTo("Subscription created successfully!\nLTC price is 300.0 GBP (via CRYPTONATOR)")

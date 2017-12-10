@@ -3,9 +3,12 @@ package ru.justd.cryptobot.messenger
 import com.pengrad.telegrambot.TelegramBot
 import com.pengrad.telegrambot.model.request.LabeledPrice
 import com.pengrad.telegrambot.model.request.ParseMode
+import com.pengrad.telegrambot.request.BaseRequest
+import com.pengrad.telegrambot.request.EditMessageReplyMarkup
+import com.pengrad.telegrambot.request.EditMessageText
 import com.pengrad.telegrambot.request.*
-import ru.justd.cryptobot.BuildConfig
 import ru.justd.cryptobot.messenger.model.Reply
+import ru.justd.cryptobot.telegram.BuildConfig
 import ru.justd.cryptobot.toChatId
 import java.io.IOException
 
@@ -60,7 +63,7 @@ class MessageSender(
 
     }
 
-    private fun executeRequest(request: BaseRequest<*,*>) {
+    private fun executeRequest(request: BaseRequest<*, *>) {
         try {
             telegramBot.execute(request)
         } catch (io: IOException) {

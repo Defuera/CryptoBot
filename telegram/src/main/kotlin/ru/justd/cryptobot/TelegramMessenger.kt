@@ -12,21 +12,31 @@ import ru.justd.cryptobot.handler.StartHandler
 import ru.justd.cryptobot.messenger.MessageSender
 import ru.justd.cryptobot.messenger.RequestProcessor
 import ru.justd.cryptobot.messenger.model.Reply
+import ru.justd.cryptobot.persistance.FeedbackStorage
+import ru.justd.cryptobot.telegram.BuildConfig
 
-class TelegramMessenger(private val uuid: String) { //todo https://core.telegram.org/bots/faq#how-can-i-make-requests-in-response-to-updates
+class TelegramMessenger(private val uuid: String) {
 
     private lateinit var requestProcessor: RequestProcessor
 
     private val telegramBot: TelegramBot = TelegramBotAdapter.build(BuildConfig.BOT_TOKEN)
     private val messageSender = MessageSender(uuid, telegramBot)
 
-    val cryptoCore = CryptoCore.start(BuildConfig.NAME, BuildConfig.IS_DEBUG)
+    private val cryptoCore = CryptoCore.start(
+            BuildConfig.NAME,
+            BuildConfig.IS_DEBUG,
+            object : FeedbackStorage {
+                override fun store(feedback: String) {
+                    sendMessage(Reply(BuildConfig.FEEDBACK_CHANNEL_ID, feedback))
+                }
+
+            })
 
     init {
         if (BuildConfig.IS_DEBUG) {
             cryptoCore.addCommandHandler(KillCommandHandlerFactory(uuid))
         }
-        cryptoCore.addCommandHandler(InstantFactory("/start", StartHandler))
+        cryptoCore.addCommandHandler(InstantFactory("/start", StartHandler(cryptoCore.analytics)))
         cryptoCore.setUpdateListener { sendMessage(Reply(it.channelId, it.message)) }
     }
 

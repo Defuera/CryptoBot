@@ -1,7 +1,5 @@
 package ru.justd.cryptobot.api.exchanges
 
-import ru.justd.cryptobot.DEFAULT_CURRENCY
-import ru.justd.cryptobot.DEFAULT_FIAT
 import ru.justd.cryptobot.api.exchanges.bitfinex.BitfinexApi
 import ru.justd.cryptobot.api.exchanges.coinbase.CoinbaseApi
 import ru.justd.cryptobot.api.exchanges.cryptonator.CryptonatorApi
@@ -28,12 +26,8 @@ class ExchangeApiFacadeImpl(
     //todo make ExchangeApiFacade implement ExchangeApi and remove ExchangeApiFacade?
 
     @Throws(ExchangeNotSupported::class, RequestFailed::class)
-    override fun getRate(base: String?, target: String?, exchangeApiCode: String): RateResponse {
-        return getApi(exchangeApiCode)
-                .getRate(
-                        base ?: DEFAULT_CURRENCY,
-                        target ?: DEFAULT_FIAT
-                )
+    override fun getRate(base: String, target: String, exchangeApiCode: String): RateResponse {
+        return getApi(exchangeApiCode).getRate(base, target)
     }
 
     @Throws(ExchangeNotSupported::class)
