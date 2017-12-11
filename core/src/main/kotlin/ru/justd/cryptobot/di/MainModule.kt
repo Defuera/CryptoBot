@@ -5,11 +5,13 @@ import dagger.Provides
 import ru.justd.cryptobot.analytics.Analytics
 import ru.justd.cryptobot.api.blockchain.BlockchainApi
 import ru.justd.cryptobot.api.exchanges.ExchangeApiFacade
+import ru.justd.cryptobot.api.exchanges.ExchangeFeedFacade
 import ru.justd.cryptobot.handler.CommandHandlerFacade
 import ru.justd.cryptobot.handler.CommandHandlerFacadeImpl
 import ru.justd.cryptobot.handler.feedback.FeedbackHandlerFactory
 import ru.justd.cryptobot.handler.price.PriceCommandHandlerFactory
 import ru.justd.cryptobot.handler.subscribe.SubscribeFactory
+import ru.justd.cryptobot.handler.trader.TradeHandlerFactory
 import ru.justd.cryptobot.handler.unsubscribe.UnsubscribeHandlerFactory
 import ru.justd.cryptobot.handler.wallet.AddressInfoHandlerFactory
 import ru.justd.cryptobot.persistance.FeedbackStorage
@@ -21,7 +23,7 @@ import utils.UuidGenerator
 import javax.inject.Named
 import javax.inject.Singleton
 
-@Module(includes = arrayOf(ExchangeApiModule::class, BlockchainModule::class, StorageModule::class, UtilsModule::class, AnalyticsModule::class))
+@Module(includes = arrayOf(ExchangeApiModule::class, ExchangeFeedModule::class, BlockchainModule::class, StorageModule::class, UtilsModule::class, AnalyticsModule::class))
 class MainModule(val debug: Boolean) {
 
     @Provides
@@ -38,14 +40,16 @@ class MainModule(val debug: Boolean) {
             timeManager: TimeManager,
             uuidGenerator: UuidGenerator,
             feedbackStorage: FeedbackStorage,
-            analytics: Analytics
+            analytics: Analytics,
+            exchangeFeedFacade: ExchangeFeedFacade
     ): CommandHandlerFacade = CommandHandlerFacadeImpl(
             mutableListOf(
                     PriceCommandHandlerFactory(analytics, exchangeFacade),
                     SubscribeFactory(analytics, exchangeFacade, storage, timeManager, uuidGenerator),
                     UnsubscribeHandlerFactory(analytics, storage),
                     AddressInfoHandlerFactory(analytics, blockchainApi),
-                    FeedbackHandlerFactory(analytics, feedbackStorage)
+                    FeedbackHandlerFactory(analytics, feedbackStorage),
+                    TradeHandlerFactory(exchangeFeedFacade)
             )
     )
 

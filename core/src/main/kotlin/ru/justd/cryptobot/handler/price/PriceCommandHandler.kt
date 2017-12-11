@@ -24,7 +24,7 @@ class PriceCommandHandler constructor(
 ) : CommandHandler {
 
     override fun createReply(channelId: String): Reply {
-        val delegate = PriceClarificatorDelegate("/price", exchange, base, target)
+        val delegate = PriceRequestBuilderDelegate("/price", exchange, base, target)
         if (base == null || target == null || exchange == null) {
             return delegate.createClarificationRequest(channelId)
         }

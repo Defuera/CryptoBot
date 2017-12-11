@@ -3,7 +3,7 @@ package ru.justd.cryptobot.handler.price
 import ru.justd.cryptobot.messenger.model.Dialog
 import ru.justd.cryptobot.messenger.model.Reply
 
-class PriceClarificatorDelegate(
+class PriceRequestBuilderDelegate(
         private val scheme: String,
         private val exchange: String?,
         private val base: String?,
