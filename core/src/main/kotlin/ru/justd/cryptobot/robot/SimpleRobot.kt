@@ -3,9 +3,10 @@ package ru.justd.cryptobot.robot
 import io.reactivex.functions.Consumer
 import ru.justd.cryptobot.api.exchanges.ExchangeFeedFacade
 import ru.justd.cryptobot.api.exchanges.ShiffrTicker
+import ru.justd.cryptobot.api.exchanges.gdax.GdaxApi
 import utils.ShiffrLogger
 
-class SimpleRobot(exchangeFeedFacade: ExchangeFeedFacade) {
+class SimpleRobot(exchangeFeedFacade: ExchangeFeedFacade, private val gdaxApi: GdaxApi) {
 
     init {
         print("robot created")
@@ -16,7 +17,12 @@ class SimpleRobot(exchangeFeedFacade: ExchangeFeedFacade) {
     }
 
     private fun analyze(ticker: ShiffrTicker) {
-        print("take decision regarding update $ticker")
+        println("take decision regarding update $ticker")
+
+        val orders = gdaxApi.getOrders()
+        orders.forEach {
+            println(it)
+        }
     }
 
 }

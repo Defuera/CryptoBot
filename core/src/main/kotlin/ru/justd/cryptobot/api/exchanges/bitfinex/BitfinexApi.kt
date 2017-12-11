@@ -19,7 +19,7 @@ class BitfinexApi(okHttpClient: OkHttpClient) : PollingExchange(okHttpClient) {
     override fun getRateUrl(base: String, target: String) = "$BASE_URL/pubticker/$base$target"
 
     @Throws(RequestFailed::class)
-    override fun parseResponseBody(bodyString: String, base: String, target: String): RateResponse {
+    override fun parseRateResponse(bodyString: String, base: String, target: String): RateResponse {
         val ticker = gson.fromJson<Ticker>(bodyString, Ticker::class.java)
         val errorMessage = ticker.message
         if (errorMessage.isNullOrBlank()){

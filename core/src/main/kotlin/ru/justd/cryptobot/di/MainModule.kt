@@ -4,8 +4,10 @@ import dagger.Module
 import dagger.Provides
 import ru.justd.cryptobot.analytics.Analytics
 import ru.justd.cryptobot.api.blockchain.BlockchainApi
+import ru.justd.cryptobot.api.exchanges.ExchangeApi
 import ru.justd.cryptobot.api.exchanges.ExchangeApiFacade
 import ru.justd.cryptobot.api.exchanges.ExchangeFeedFacade
+import ru.justd.cryptobot.api.exchanges.gdax.GdaxApi
 import ru.justd.cryptobot.handler.CommandHandlerFacade
 import ru.justd.cryptobot.handler.CommandHandlerFacadeImpl
 import ru.justd.cryptobot.handler.feedback.FeedbackHandlerFactory
@@ -41,7 +43,8 @@ class MainModule(val debug: Boolean) {
             uuidGenerator: UuidGenerator,
             feedbackStorage: FeedbackStorage,
             analytics: Analytics,
-            exchangeFeedFacade: ExchangeFeedFacade
+            exchangeFeedFacade: ExchangeFeedFacade,
+            @Named(GdaxApi.NAME) gdaxApi: ExchangeApi
     ): CommandHandlerFacade = CommandHandlerFacadeImpl(
             mutableListOf(
                     PriceCommandHandlerFactory(analytics, exchangeFacade),
@@ -49,7 +52,7 @@ class MainModule(val debug: Boolean) {
                     UnsubscribeHandlerFactory(analytics, storage),
                     AddressInfoHandlerFactory(analytics, blockchainApi),
                     FeedbackHandlerFactory(analytics, feedbackStorage),
-                    TradeHandlerFactory(exchangeFeedFacade)
+                    TradeHandlerFactory(exchangeFeedFacade, gdaxApi as GdaxApi) //todo bad boy
             )
     )
 

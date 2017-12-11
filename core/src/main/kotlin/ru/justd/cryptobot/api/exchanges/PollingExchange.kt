@@ -20,7 +20,7 @@ abstract class PollingExchange(private val okHttpClient: OkHttpClient) : Exchang
 
         val bodyString = response.body()?.string()
         if (bodyString != null && !bodyString.isNullOrBlank()) {
-            return parseResponseBody(bodyString, base, target)
+            return parseRateResponse(bodyString, base, target)
         } else {
             throw RuntimeException("Unexpected error occured")
         }
@@ -35,6 +35,6 @@ abstract class PollingExchange(private val okHttpClient: OkHttpClient) : Exchang
     abstract fun getRateUrl(base: String, target: String): String
 
     @Throws(RequestFailed::class)
-    abstract fun parseResponseBody(bodyString: String, base: String, target: String): RateResponse
+    abstract fun parseRateResponse(bodyString: String, base: String, target: String): RateResponse
 
 }

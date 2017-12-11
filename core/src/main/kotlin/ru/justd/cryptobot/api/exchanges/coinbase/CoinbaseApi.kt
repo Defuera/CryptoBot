@@ -28,7 +28,7 @@ class CoinbaseApi(okHttpClient: OkHttpClient) : PollingExchange(okHttpClient) {
     }
 
     @Throws(RequestFailed::class)
-    override fun parseResponseBody(bodyString: String, base: String, target: String): RateResponse {
+    override fun parseRateResponse(bodyString: String, base: String, target: String): RateResponse {
         val envelope = gson.fromJson<RateResponseEnvelope>(bodyString, RateResponseEnvelope::class.java)
         if (envelope.errors?.isNotEmpty() == true) {
             throw RequestFailed(envelope.errors.first().message)
