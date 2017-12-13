@@ -50,7 +50,7 @@ internal class SubscribeIntegrationTest {
         assertThat(response.text).isEqualTo("Choose exchange")
 
         val dialog = response.dialog!!
-        assertThat(dialog.callbackLabel).isEqualTo("/subscribe")
+        assertThat(dialog.callbackTag).isEqualTo("/subscribe")
         checkOptions(dialog.dialogOptions, "Coinbase", "Gdax", "Cryptonator", "Bitfinex")
     }
 

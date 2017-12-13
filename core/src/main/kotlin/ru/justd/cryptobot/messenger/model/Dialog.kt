@@ -4,7 +4,7 @@ data class Dialog constructor(
         /**
          * should contain most complete dialog request which should be appended by one of the offered options
          */
-        val callbackLabel: String,
+        val callbackTag: String,
         val dialogOptions: List<Option>
 ) {
         constructor(
@@ -16,5 +16,5 @@ data class Dialog constructor(
 
 data class Option(
         val name : String,
-        val callbackLabel: String
+        val callbackTag: String
 )

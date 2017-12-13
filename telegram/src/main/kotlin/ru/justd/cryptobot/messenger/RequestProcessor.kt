@@ -9,6 +9,7 @@ import ru.justd.cryptobot.handler.exceptions.InvalidCommand
 import ru.justd.cryptobot.messenger.model.Reply
 import ru.justd.cryptobot.telegram.BuildConfig
 import ru.justd.cryptobot.toChannelId
+import utils.ShiffrLogger
 
 class RequestProcessor(
         private val cryptoCore: CryptoCore,
@@ -60,6 +61,7 @@ class RequestProcessor(
         val filteredInquiry = inquiry.replace("@${BuildConfig.BOT_NAME}", "")
 
         return try {
+            ShiffrLogger.log("handleBotCommand", filteredInquiry)
             cryptoCore.handle(channelId, filteredInquiry)
         } catch (invalidCommand: InvalidCommand) {
             Reply(channelId, invalidCommand.message)

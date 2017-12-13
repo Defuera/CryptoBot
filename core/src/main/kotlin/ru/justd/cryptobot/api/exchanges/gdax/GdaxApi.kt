@@ -95,8 +95,25 @@ class GdaxApi(val okHttpClient: OkHttpClient) : PollingExchange(okHttpClient) {
             val typeToken = object : TypeToken<List<Order>>(){}.type
             return gson.fromJson(bodyString, typeToken)
         } else {
-            throw RuntimeException("Unexpected error occured")
+            throw RuntimeException("Unexpected error occurred")
         }
+    }
+
+
+    fun cancelOrder(orderId: String) {
+        val endpoint = "/orders/$orderId"
+        val url = "$BASE_URL$endpoint"
+        val method = "DELETE"
+
+        okHttpClient
+                .newCall(
+                        Request.Builder()
+                                .delete()
+                                .headers(securityHeaders(endpoint, method, null))
+                                .url(url)
+                                .build()
+                )
+                .execute()
     }
 
 
@@ -112,7 +129,7 @@ class GdaxApi(val okHttpClient: OkHttpClient) : PollingExchange(okHttpClient) {
      * @param timestamp
      * @return
      */
-    fun signRequest(requestPath: String, method: String, body: String?, timestamp: String): String {
+    private fun signRequest(requestPath: String, method: String, body: String?, timestamp: String): String {
         try {
             val prehash = timestamp + method.toUpperCase() + requestPath + (body ?: "")
             val secretDecoded = Base64.getDecoder().decode(CoreConfig.GDAX_SECRET)
@@ -130,12 +147,8 @@ class GdaxApi(val okHttpClient: OkHttpClient) : PollingExchange(okHttpClient) {
 
     }
 
-
-    fun securityHeaders(endpoint: String, method: String, jsonBody: String?): Headers {
-
-
+    private fun securityHeaders(endpoint: String, method: String, jsonBody: String?): Headers {
         val timestamp = Instant.now().epochSecond.toString() + ""
-//        val resource = endpoint.replace(getBaseUrl(), "")
 
         val headers = Headers.of(
                 "accept", "application/json",
@@ -145,14 +158,6 @@ class GdaxApi(val okHttpClient: OkHttpClient) : PollingExchange(okHttpClient) {
                 CB_ACCESS_TIMESTAMP, timestamp,
                 CB_ACCESS_PASSPHRASE, CoreConfig.GDAX_LICENCE
         )
-//        headers.add("accept", "application/json")
-//        headers.add("content-type", "application/json")
-//        headers.add("CB-ACCESS-KEY", publicKey)
-//        headers.add("CB-ACCESS-SIGN", signature.generate(resource, method, jsonBody, timestamp))
-//        headers.add("CB-ACCESS-TIMESTAMP", timestamp)
-//        headers.add("CB-ACCESS-PASSPHRASE", passphrase)
-
-//        curlRequest(method, jsonBody, headers, resource)
 
         return headers
     }

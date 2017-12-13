@@ -18,6 +18,11 @@ data class Order(
         val fill_fees: String,
         val filled_size: String,
         val executed_value: String,
+        /**
+         * open, done, rejected, active, pending
+         */
         val status: String,
         val settled: Boolean?
-)
+) {
+    fun isFulfilled() = status == "done" || status == "rejected"
+}
