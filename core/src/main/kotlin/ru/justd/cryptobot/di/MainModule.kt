@@ -3,6 +3,7 @@ package ru.justd.cryptobot.di
 import dagger.Module
 import dagger.Provides
 import ru.justd.cryptobot.analytics.Analytics
+import ru.justd.cryptobot.api.PurchaseApi
 import ru.justd.cryptobot.api.blockchain.BlockchainApi
 import ru.justd.cryptobot.api.exchanges.ExchangeApiFacade
 import ru.justd.cryptobot.handler.CommandHandlerFacade
@@ -34,6 +35,7 @@ class MainModule(val debug: Boolean) {
     @Singleton
     fun provideCommandHandlerFacade(
             exchangeFacade: ExchangeApiFacade,
+            purchaseApi: PurchaseApi,
             blockchainApi: BlockchainApi,
             storage: Storage,
             timeManager: TimeManager,
@@ -47,7 +49,7 @@ class MainModule(val debug: Boolean) {
                     UnsubscribeHandlerFactory(analytics, storage),
                     AddressInfoHandlerFactory(analytics, blockchainApi),
                     FeedbackHandlerFactory(analytics, feedbackStorage),
-                    PurchaseHandlerFactory(exchangeFacade)
+                    PurchaseHandlerFactory(purchaseApi)
             )
     )
 

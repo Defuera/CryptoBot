@@ -2,6 +2,7 @@ package ru.justd.cryptobot.api.exchanges.gdax
 
 import com.google.gson.annotations.SerializedName
 import okhttp3.OkHttpClient
+import ru.justd.cryptobot.api.PurchaseApi
 import ru.justd.cryptobot.api.exchanges.PollingExchange
 import ru.justd.cryptobot.api.exchanges.RateResponse
 import ru.justd.cryptobot.api.exchanges.exceptions.RequestFailed
@@ -9,7 +10,7 @@ import ru.justd.cryptobot.api.exchanges.exceptions.RequestFailed
 /**
  * https://docs.gdax.com/
  */
-class GdaxApi(okHttpClient: OkHttpClient) : PollingExchange(okHttpClient) {
+class GdaxApi(okHttpClient: OkHttpClient) : PollingExchange(okHttpClient), PurchaseApi {
 
     companion object { const val NAME = "GDAX" }
 

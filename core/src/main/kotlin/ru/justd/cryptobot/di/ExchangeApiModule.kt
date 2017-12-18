@@ -4,6 +4,7 @@ import dagger.Module
 import dagger.Provides
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
+import ru.justd.cryptobot.api.PurchaseApi
 import ru.justd.cryptobot.api.exchanges.ExchangeApi
 import ru.justd.cryptobot.api.exchanges.ExchangeApiFacade
 import ru.justd.cryptobot.api.exchanges.ExchangeApiFacadeImpl
@@ -58,4 +59,8 @@ class ExchangeApiModule {
             bitfinexApi
     )
 
+
+    @Provides
+    @Singleton
+    fun providePurchaseApi(@Named(GdaxApi.NAME) gdaxApi: ExchangeApi) = gdaxApi as PurchaseApi
 }
