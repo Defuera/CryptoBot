@@ -4,6 +4,7 @@ import com.pengrad.telegrambot.model.CallbackQuery
 import com.pengrad.telegrambot.model.Message
 import com.pengrad.telegrambot.model.MessageEntity
 import com.pengrad.telegrambot.model.Update
+import com.pengrad.telegrambot.request.AnswerPreCheckoutQuery
 import ru.justd.cryptobot.CryptoCore
 import ru.justd.cryptobot.handler.exceptions.InvalidCommand
 import ru.justd.cryptobot.messenger.model.Reply
@@ -23,6 +24,23 @@ class RequestProcessor(
         update.callbackQuery()?.let {
             handleCallback(it)
         }
+
+        update.preCheckoutQuery()?.let {
+//            handleCallback(it)
+
+//            id = "111474017080583177"
+//            from = {User@2522} "User{id=25954567, is_bot=false, first_name='Denis', last_name='null', username='defuera', language_code='en'}"
+//            currency = "USD"
+//            total_amount = {Integer@2524} 10
+//            invoice_payload = "test_payload"
+//            shipping_option_id = null
+//            order_info = null
+
+            val answer = AnswerPreCheckoutQuery(it.id())
+            messageSender.confirmPreCheckout(answer)
+            println("precheckout successful")
+        }
+
     }
 
     private fun handleCallback(callbackQuery: CallbackQuery): Reply {

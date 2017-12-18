@@ -3,9 +3,6 @@ package ru.justd.cryptobot.messenger
 import com.pengrad.telegrambot.TelegramBot
 import com.pengrad.telegrambot.model.request.LabeledPrice
 import com.pengrad.telegrambot.model.request.ParseMode
-import com.pengrad.telegrambot.request.BaseRequest
-import com.pengrad.telegrambot.request.EditMessageReplyMarkup
-import com.pengrad.telegrambot.request.EditMessageText
 import com.pengrad.telegrambot.request.*
 import ru.justd.cryptobot.messenger.model.Reply
 import ru.justd.cryptobot.telegram.BuildConfig
@@ -21,16 +18,16 @@ class MessageSender(
         println("send reply...")
 
         val invoice = reply.invoice
-        if (invoice != null){
+        if (invoice != null) {
             val request = SendInvoice(
                     toChatId(reply.channelId),
                     "Time to pay",
                     reply.text,
                     "test_payload",
-                    "361519591:TEST:c6be759042024139d05cf807d2cecb80",
+                    BuildConfig.PAYMENTWALL_TOKEN,
                     "test_payload",
                     invoice.fiatCode,
-                    LabeledPrice("rur ${invoice.price}",  invoice.price.toInt())
+                    LabeledPrice("rur ${invoice.amount}", invoice.amount)
             )
             executeRequest(request)
         } else {
@@ -62,6 +59,11 @@ class MessageSender(
         executeRequest(request)
 
     }
+
+    fun confirmPreCheckout(answer: AnswerPreCheckoutQuery) {
+        executeRequest(answer)
+    }
+
 
     private fun executeRequest(request: BaseRequest<*, *>) {
         try {
