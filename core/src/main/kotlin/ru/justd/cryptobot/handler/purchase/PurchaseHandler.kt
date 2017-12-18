@@ -26,6 +26,8 @@ class PurchaseHandler constructor(
 
         if (request?.contains(TAG_CREATE_INVOICE) == true) {
             val amountToCharge = retrieveParam(TAG_CREATE_INVOICE).toInt()
+            val base = "BTC" //todo
+            val target = "EUR"
             return Reply(
                     channelId = channelId,
                     text = "You are buying for €$amountToCharge",
@@ -33,7 +35,8 @@ class PurchaseHandler constructor(
                             "BTC/ETH/LTC",
                             "pay and be happy",
                             amountToCharge * 100,
-                            "EUR"
+                            target,
+                            createPayload(base, target, amountToCharge)
                     )
             )
         }
@@ -52,6 +55,10 @@ class PurchaseHandler constructor(
         )
 
 
+    }
+
+    private fun createPayload(base: String, target: String, amountToCharge: Int): String {
+        return "$base $target $amountToCharge"
     }
 
     private fun prepareByeCryptoRequest(channelId: String, crypto: String, target: String): Reply {

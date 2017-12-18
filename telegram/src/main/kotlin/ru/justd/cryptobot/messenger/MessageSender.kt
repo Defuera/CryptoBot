@@ -39,14 +39,13 @@ class MessageSender(
                     toChatId(reply.channelId),
                     invoice.title,
                     reply.text,
-                    "test_payload", //todo
+                    invoice.payload,
                     BuildConfig.PAYMENTWALL_TOKEN,
-                    "test_payload",
+                    null, //start_parameter
                     invoice.fiatCode,
-                        LabeledPrice(invoice.description, invoice.amount)
-//                    LabeledPrice("rur ${invoice.amount}", invoice.amount)
+                    LabeledPrice(invoice.description, invoice.amount)
             )
-
+            request.needName(true)
             executeRequest(request)
         } else {
 

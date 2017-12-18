@@ -54,5 +54,13 @@ class CryptoCore private constructor(
                 .subscribe { listener(it) }
     }
 
+    fun validateAddress(address: String, base: String): Boolean {
+        return address.contains("1EuxvSVf5yWLYtHiDkzbcd7qq5coopPfJD") //todo
+    }
+
+    fun onPaymentSuccessful(address: String, invoicePayload: String) {
+        //todo transfer funds
+    }
+
 
 }

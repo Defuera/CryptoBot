@@ -1,6 +1,9 @@
 package ru.justd.cryptobot.messenger
 
-import com.pengrad.telegrambot.model.*
+import com.pengrad.telegrambot.model.CallbackQuery
+import com.pengrad.telegrambot.model.Message
+import com.pengrad.telegrambot.model.MessageEntity
+import com.pengrad.telegrambot.model.Update
 import com.pengrad.telegrambot.request.AnswerPreCheckoutQuery
 import ru.justd.cryptobot.CryptoCore
 import ru.justd.cryptobot.handler.exceptions.InvalidCommand
@@ -24,9 +27,20 @@ class RequestProcessor(
         }
 
         update.preCheckoutQuery()?.let {
-            val answer = AnswerPreCheckoutQuery(it.id())
-            messageSender.confirmPreCheckout(answer)
+            val address = it.orderInfo().name()
+            val base = it.invoicePayload().substring(0..3)
+            if (cryptoCore.validateAddress(address, base)) {
+                messageSender.confirmPreCheckout(AnswerPreCheckoutQuery(it.id()))
+            } else {
+                messageSender.confirmPreCheckout(AnswerPreCheckoutQuery(it.id(), "Sorry, address you provided looks wrong"))
+            }
             println("precheckout successful")
+        }
+
+        update.message()?.successfulPayment()?.let {
+            val address = it.orderInfo().name()
+            val base = it.invoicePayload().substring(0..3)
+            cryptoCore.onPaymentSuccessful(address, it.invoicePayload())
         }
 
     }
