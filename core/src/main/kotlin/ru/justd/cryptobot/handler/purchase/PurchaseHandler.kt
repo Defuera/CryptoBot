@@ -17,28 +17,28 @@ class PurchaseHandler constructor(
 
     val COEFFICIENT = 1.05
 
-    val TAG_BYE_CRYPTO = "TAG_BYE_CRYPTO"
+    val TAG_BUY_CRYPTO = "TAG_BUY_CRYPTO"
     val TAG_CREATE_INVOICE = "TAG_CREATE_INVOICE"
 
     val storeItemsEuro = listOf(50, 100, 200)
 
     override fun createReply(channelId: String): Reply {
 
-        if (request?.contains(TAG_BYE_CRYPTO) == true) {
-            val crypto = retrieveParam(TAG_BYE_CRYPTO)
+        if (request?.contains(TAG_BUY_CRYPTO) == true) {
+            val crypto = retrieveParam(TAG_BUY_CRYPTO)
             return prepareByeCryptoRequest(channelId, crypto, "EUR") //todo target
         }
 
         if (request?.contains(TAG_CREATE_INVOICE) == true) {
             val payload = deserialize(retrieveParam(TAG_CREATE_INVOICE))
-            val title = "Purchase ${payload.baseAmount}${payload.base}"
+            val title = "Purchase ${payload.baseAmount} ${payload.base}"
 
             return Reply(
                     channelId = channelId,
                     text = title,
                     invoice = Invoice(
                             title,
-                            "pay and be happy",
+                            "Disclaimer: we do not provide any guarantees, please consider purchase on your own risk. Actual delivered amount may differ, cause actual transfer occurs at a moment or receiving money",
                             payload.targetAmount * 100,
                             payload.target,
                             payload.toString()
@@ -50,11 +50,11 @@ class PurchaseHandler constructor(
                 channelId = channelId,
                 text = "What are you interested in?",
                 dialog = Dialog(
-                        "/bye",
+                        "/buy",
                         listOf(
-                                Option("Bitcoin (BTC)", "$TAG_BYE_CRYPTO BTC"),
-                                Option("Ether (ETH)", "$TAG_BYE_CRYPTO ETH"),
-                                Option("Litecoin (LTC)", "$TAG_BYE_CRYPTO LTC")
+                                Option("Bitcoin (BTC)", "$TAG_BUY_CRYPTO BTC"),
+                                Option("Ether (ETH)", "$TAG_BUY_CRYPTO ETH"),
+                                Option("Litecoin (LTC)", "$TAG_BUY_CRYPTO LTC")
                         )
                 )
         )
@@ -69,7 +69,7 @@ class PurchaseHandler constructor(
                 channelId = channelId,
                 text = "Current price is $exchangeRate $target. Offer is valid for 5 minutes, please choose item:",
                 dialog = Dialog(
-                        "/bye",
+                        "/buy",
                         storeItemsEuro.map { targetAmount ->
                             val baseAmount = round(targetAmount * COEFFICIENT / exchangeRate, 8)
                             val encryptedPayload = serialize(Payload(base, baseAmount, target, targetAmount))

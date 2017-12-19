@@ -18,8 +18,6 @@ class MessageSender(
 ) {
 
     fun sendMessage(reply: Reply) {
-        ShiffrLogger.log(TAG, "send reply...")
-
         val request = SendMessage(reply.channelId, formatMessageText(reply.text))
         executeRequest(request)
         if (KeyboardAdapter.hasOptions(reply)) {
@@ -27,11 +25,13 @@ class MessageSender(
         }
 
         request.parseMode(ParseMode.Markdown)
+
+        ShiffrLogger.log(TAG, "reply: $reply")
         executeRequest(request)
     }
 
     fun updateMessage(messageId: Int, reply: Reply) {
-        println("update message...")
+        ShiffrLogger.log(TAG, "update message: $reply")
 
         val invoice = reply.invoice
         if (invoice != null) {
@@ -46,6 +46,7 @@ class MessageSender(
                     LabeledPrice(invoice.description, invoice.amount)
             )
             request.needName(true)
+
             executeRequest(request)
         } else {
 
