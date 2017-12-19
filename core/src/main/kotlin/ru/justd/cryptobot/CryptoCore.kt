@@ -10,6 +10,7 @@ import ru.justd.cryptobot.messenger.model.Reply
 import ru.justd.cryptobot.persistance.FeedbackStorage
 import ru.justd.cryptobot.publisher.Publisher
 import ru.justd.cryptobot.publisher.Update
+import utils.ShiffrLogger
 import javax.inject.Inject
 
 class CryptoCore private constructor(
@@ -59,7 +60,8 @@ class CryptoCore private constructor(
     }
 
     fun onPaymentSuccessful(address: String, invoicePayload: String) {
-        //todo transfer funds
+        ShiffrLogger.log("tag", "$address, $invoicePayload")
+        //todo I need information, how much crypto to send
     }
 
 
