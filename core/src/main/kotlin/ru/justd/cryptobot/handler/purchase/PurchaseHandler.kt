@@ -6,6 +6,7 @@ import ru.justd.cryptobot.messenger.model.Dialog
 import ru.justd.cryptobot.messenger.model.Invoice
 import ru.justd.cryptobot.messenger.model.Option
 import ru.justd.cryptobot.messenger.model.Reply
+import utils.Serializer
 import utils.Serializer.deserialize
 import utils.Serializer.serialize
 import java.math.BigDecimal
@@ -30,7 +31,8 @@ class PurchaseHandler constructor(
         }
 
         if (request?.contains(TAG_CREATE_INVOICE) == true) {
-            val payload = deserialize(retrieveParam(TAG_CREATE_INVOICE))
+            val serializedPayload = retrieveParam(TAG_CREATE_INVOICE)
+            val payload = deserialize(serializedPayload)
             val title = "Purchase ${payload.baseAmount} ${payload.base}"
 
             return Reply(
@@ -41,7 +43,7 @@ class PurchaseHandler constructor(
                             "Disclaimer: we do not provide any guarantees, please consider purchase on your own risk. Actual delivered amount may differ, cause actual transfer occurs at a moment or receiving money",
                             payload.targetAmount * 100,
                             payload.target,
-                            payload.toString()
+                            serializedPayload
                     )
             )
         }

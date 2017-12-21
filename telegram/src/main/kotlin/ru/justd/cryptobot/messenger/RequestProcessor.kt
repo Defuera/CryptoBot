@@ -6,10 +6,12 @@ import com.pengrad.telegrambot.model.MessageEntity
 import com.pengrad.telegrambot.model.Update
 import com.pengrad.telegrambot.request.AnswerPreCheckoutQuery
 import ru.justd.cryptobot.CryptoCore
+import ru.justd.cryptobot.api.exchanges.gdax.model.TransferFailed
 import ru.justd.cryptobot.handler.exceptions.InvalidCommand
 import ru.justd.cryptobot.messenger.model.Reply
 import ru.justd.cryptobot.telegram.BuildConfig
 import ru.justd.cryptobot.toChannelId
+import utils.Serializer
 import utils.ShiffrLogger
 
 class RequestProcessor(
@@ -18,29 +20,46 @@ class RequestProcessor(
 ) {
 
     fun process(update: Update) {
-        update.message()?.let {
-            handleMessage(it)
-        }
+        val message = update.message()
 
-        update.callbackQuery()?.let {
-            handleCallback(it)
-        }
+        message?.let { handleMessage(it) }
+
+        update.callbackQuery()?.let { handleCallback(it) }
 
         update.preCheckoutQuery()?.let {
+            ShiffrLogger.log("RequestProcessor#preCheckoutQuery", "user: ${it.from().id()} ${it.invoicePayload()} ${it.orderInfo()}")
             val address = it.orderInfo().name()
-            val base = it.invoicePayload().substring(0..3)
+            val base = Serializer.deserialize(it.invoicePayload()).base
             if (cryptoCore.validateAddress(address, base)) {
                 messageSender.confirmPreCheckout(AnswerPreCheckoutQuery(it.id()))
             } else {
                 messageSender.confirmPreCheckout(AnswerPreCheckoutQuery(it.id(), "Sorry, address you provided looks wrong"))
             }
-            println("precheckout successful")
         }
 
-        update.message()?.successfulPayment()?.let {
+        message?.successfulPayment()?.let {
+            ShiffrLogger.log("RequestProcessor#successfulPayment", "payment_provider_charge_id: ${it.providerPaymentChargeId()} user: ${message.from().id()}")
             val address = it.orderInfo().name()
-            val base = it.invoicePayload().substring(0..3)
-            cryptoCore.onPaymentSuccessful(address, it.invoicePayload())
+
+            try {
+                val reply = cryptoCore.transferFunds(
+                        toChannelId(message.from().id().toLong()),
+                        address,
+                        Serializer.deserialize(it.invoicePayload())
+                )
+                messageSender.sendMessage(reply)
+            } catch (error: TransferFailed) {
+                messageSender.sendMessage(
+                        Reply(
+                                BuildConfig.FEEDBACK_CHANNEL_ID,
+                                "transfer failed: \n" +
+                                        "address: ${error.address}\n" +
+                                        "base: ${error.base}\n" +
+                                        "amount: ${error.amount}\n" +
+                                        "message: ${error.errorMessage}\n"
+                        )
+                )
+            }
         }
 
     }
@@ -64,7 +83,9 @@ class RequestProcessor(
 
         val reply = if (entity != null) {
             when (entity.type()) {
-                MessageEntity.Type.bot_command -> { handleBotCommand(toChannelId(message.chat().id()), inquiry) }
+                MessageEntity.Type.bot_command -> {
+                    handleBotCommand(toChannelId(message.chat().id()), inquiry)
+                }
                 else -> Reply(channelId, "message type not supported ${entity.type()}")
             }
         } else if (isBotAddedToChannel(message)) {
