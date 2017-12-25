@@ -19,12 +19,11 @@ class MessageSender(
 
     fun sendMessage(reply: Reply) {
         val request = SendMessage(reply.channelId, formatMessageText(reply.text))
-        executeRequest(request)
+
         if (KeyboardAdapter.hasOptions(reply)) {
             request.replyMarkup(KeyboardAdapter.createKeyboard(reply))
+            request.parseMode(ParseMode.Markdown)
         }
-
-        request.parseMode(ParseMode.Markdown)
 
         ShiffrLogger.log(TAG, "reply: $reply")
         executeRequest(request)
@@ -72,6 +71,7 @@ class MessageSender(
 
     private fun executeRequest(request: BaseRequest<*, *>) {
         try {
+            println("executeRequest $request")
             telegramBot.execute(request)
         } catch (io: IOException) {
             println("failure: ${io.message}")
