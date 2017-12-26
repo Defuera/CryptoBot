@@ -11,7 +11,7 @@ object KeyboardAdapter {
         return reply.dialog != null
     }
 
-    fun createKeyboard(reply: Reply): InlineKeyboardMarkup { //todo probably we wand smarter algorithm here, like to
+    fun createKeyboard(reply: Reply): InlineKeyboardMarkup {
         val dialog = reply.dialog ?: throw IllegalArgumentException("Dialog must not be null, use hasOptions check before calling this method.")
         return mapToTelegramKeyboard(dialog)
     }

@@ -22,7 +22,7 @@ class SubscribeFactory (
 ) : CommandHandlerFactory<SubscribeHandler>("/subscribe") {
 
     @Throws(InvalidCommand::class)
-    override fun create(channelId: String, request: String): SubscribeHandler {
+    override fun create(channelId: String, request: String, private: Boolean): SubscribeHandler {
         println("SubscribeHandler#create $request")
 
         return SubscribeHandler(

@@ -1,9 +1,6 @@
 package ru.justd.cryptobot.messenger
 
-import com.pengrad.telegrambot.model.CallbackQuery
-import com.pengrad.telegrambot.model.Message
-import com.pengrad.telegrambot.model.MessageEntity
-import com.pengrad.telegrambot.model.Update
+import com.pengrad.telegrambot.model.*
 import com.pengrad.telegrambot.request.AnswerPreCheckoutQuery
 import ru.justd.cryptobot.CryptoCore
 import ru.justd.cryptobot.api.exchanges.gdax.model.TransferFailed
@@ -68,6 +65,7 @@ class RequestProcessor(
         val message = callbackQuery.message()
         val reply = handleBotCommand(
                 toChannelId(message.chat().id()),
+                message.chat().type() == Chat.Type.Private,
                 callbackQuery.data()
         )
 
@@ -79,18 +77,19 @@ class RequestProcessor(
         val channelId = toChannelId(message.chat().id())
         val entity = message.entities()?.first() //todo what if more than one entity? Should we support it?
         val inquiry = message.text()
+        val isPrivate = message.chat().type() == Chat.Type.Private
         ShiffrLogger.log("RequestProcessor#handleMessage", "inquiry: $inquiry")
 
         val reply = if (entity != null) {
             when (entity.type()) {
                 MessageEntity.Type.bot_command -> {
-                    handleBotCommand(toChannelId(message.chat().id()), inquiry)
+                    handleBotCommand(toChannelId(message.chat().id()), isPrivate, inquiry)
                 }
                 else -> Reply(channelId, "message type not supported ${entity.type()}")
             }
         } else if (isBotAddedToChannel(message)) {
             //greeting message
-            cryptoCore.handle(channelId, "/help")
+            cryptoCore.handle(channelId, isPrivate,"/help")
         } else {
             null
         }
@@ -98,11 +97,11 @@ class RequestProcessor(
         reply?.let { messageSender.sendMessage(it) }
     }
 
-    private fun handleBotCommand(channelId: String, inquiry: String): Reply {
+    private fun handleBotCommand(channelId: String, isPrivate : Boolean = false, inquiry: String): Reply {
         val filteredInquiry = inquiry.replace("@${BuildConfig.BOT_NAME}", "")
 
         return try {
-            cryptoCore.handle(channelId, filteredInquiry)
+            cryptoCore.handle(channelId, isPrivate, filteredInquiry)
         } catch (invalidCommand: InvalidCommand) {
             Reply(channelId, invalidCommand.message)
         }

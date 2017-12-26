@@ -10,7 +10,7 @@ class AddressInfoHandlerFactory(
         private val facade: BlockchainApi
 ) : CommandHandlerFactory<AddressInfoHandler>("/addressinfo") {
 
-    override fun create(channelId: String, request: String): AddressInfoHandler {
+    override fun create(channelId: String, request: String, private: Boolean): AddressInfoHandler {
         val address = retrieveArg(request, 0) ?: throw InvalidCommand("Provide bitcoin or ether ledger address")
         return AddressInfoHandler(analytics, facade, address)
     }

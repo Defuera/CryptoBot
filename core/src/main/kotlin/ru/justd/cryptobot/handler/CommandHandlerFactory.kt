@@ -18,7 +18,7 @@ abstract class CommandHandlerFactory<out T : CommandHandler>(val scheme: String)
     fun canHandle(request: String) = request.split(" ")[0].toLowerCase() == scheme
 
     @Throws(InvalidCommand::class)
-    abstract fun create(channelId: String, request: String): T
+    abstract fun create(channelId: String, request: String, private: Boolean): T
 
     fun retrieveArg(request: String, index: Int): String? {
         val args = trimScheme(request).split(" ")

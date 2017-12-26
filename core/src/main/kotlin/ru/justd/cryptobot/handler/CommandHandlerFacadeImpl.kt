@@ -8,9 +8,9 @@ internal class CommandHandlerFacadeImpl(
 ) : CommandHandlerFacade {
 
     @Throws(InvalidCommand::class)
-    override fun handle(channelId: String, request: String): Reply {
+    override fun handle(channelId: String, request: String, private: Boolean): Reply {
         val factory = factories.find { it.canHandle(request) } ?: throw InvalidCommand("Command `$request` not supported ")
-        val handler = factory.create(channelId, request)
+        val handler = factory.create(channelId, request, private)
 
         return handler.createReply(channelId)
     }

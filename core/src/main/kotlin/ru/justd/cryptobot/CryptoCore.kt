@@ -53,8 +53,8 @@ class CryptoCore private constructor(
         commandHandlerFacade.addCommandHandler(commandHandlerFactory)
     }
 
-    fun handle(channelId: String, request: String): Reply {
-        return commandHandlerFacade.handle(channelId, request)
+    fun handle(channelId: String, isPrivate : Boolean, request: String): Reply {
+        return commandHandlerFacade.handle(channelId, request, isPrivate)
     }
 
     fun setUpdateListener(listener: (update: Update) -> Unit) {

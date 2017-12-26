@@ -11,7 +11,7 @@ class UnsubscribeHandlerFactory(
         val storage: Storage
 ) : CommandHandlerFactory<UnsubscribeHandler>("/unsubscribe") {
 
-    override fun create(channelId: String, request: String): UnsubscribeHandler {
+    override fun create(channelId: String, request: String, private: Boolean): UnsubscribeHandler {
         println("UnsubscribeHandlerFactory#create $request")
 
         return UnsubscribeHandler(

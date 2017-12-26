@@ -18,8 +18,11 @@ class PurchaseHandler constructor(
 
     val COEFFICIENT = 1.05
 
+    val TAG_INFO = "TAG_INFO"
     val TAG_BUY_CRYPTO = "TAG_BUY_CRYPTO"
     val TAG_CREATE_INVOICE = "TAG_CREATE_INVOICE"
+
+    val OPTION_INFO = Option("Info on purchase process", TAG_INFO)
 
     val storeItemsEuro = listOf(50, 100, 200)
 
@@ -48,6 +51,19 @@ class PurchaseHandler constructor(
             )
         }
 
+        if (request?.contains(TAG_INFO) == true) {
+            return Reply(
+                    channelId = channelId,
+                    text = "Pleas notice, final amount of delivered crypto is calculated at a time of purchase.\n" +
+                            "We purchase funds at exchange (Gdax or Bitfinex) and immediately transfer to specified address. Once purchase is complete you can track your funds at blockchain info resource.\n" +
+                            "However take into account that exchange can make transfer with delay. You can always contact our support via `/feedback` to get info on your order status",
+                    dialog = Dialog(
+                            "/buy",
+                            listOf(Option("OK", ""))
+                    )
+            )
+        }
+
         return Reply(
                 channelId = channelId,
                 text = "What are you interested in?",
@@ -56,7 +72,8 @@ class PurchaseHandler constructor(
                         listOf(
                                 Option("Bitcoin (BTC)", "$TAG_BUY_CRYPTO BTC"),
                                 Option("Ether (ETH)", "$TAG_BUY_CRYPTO ETH"),
-                                Option("Litecoin (LTC)", "$TAG_BUY_CRYPTO LTC")
+                                Option("Litecoin (LTC)", "$TAG_BUY_CRYPTO LTC"),
+                                OPTION_INFO
                         )
                 )
         )
@@ -69,7 +86,7 @@ class PurchaseHandler constructor(
 
         return Reply(
                 channelId = channelId,
-                text = "Current price is $exchangeRate $target. Offer is valid for 5 minutes, please choose item:",
+                text = "Exchange price is $exchangeRate $target. To find out more please choose info button.",
                 dialog = Dialog(
                         "/buy",
                         storeItemsEuro.map { targetAmount ->
@@ -80,6 +97,7 @@ class PurchaseHandler constructor(
                                     "$TAG_CREATE_INVOICE $encryptedPayload"
                             )
                         }
+                        + OPTION_INFO
                 )
         )
     }

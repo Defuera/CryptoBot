@@ -13,7 +13,7 @@ internal class PriceCommandHandlerFactory constructor(
         private val exchangeFacade: ExchangeApiFacade
 ) : CommandHandlerFactory<PriceCommandHandler>("/price") {
 
-    override fun create(channelId: String, request: String): PriceCommandHandler {
+    override fun create(channelId: String, request: String, private: Boolean): PriceCommandHandler {
         println("PriceCommandHandlerFactory#create $request")
         return PriceCommandHandler(
                 analytics,

@@ -18,6 +18,8 @@ class MessageSender(
 ) {
 
     fun sendMessage(reply: Reply) {
+        ShiffrLogger.log("$TAG#sendMessage", "reply: $reply")
+
         val request = SendMessage(reply.channelId, formatMessageText(reply.text))
 
         if (KeyboardAdapter.hasOptions(reply)) {
@@ -25,12 +27,11 @@ class MessageSender(
             request.parseMode(ParseMode.Markdown)
         }
 
-        ShiffrLogger.log(TAG, "reply: $reply")
         executeRequest(request)
     }
 
     fun updateMessage(messageId: Int, reply: Reply) {
-        ShiffrLogger.log(TAG, "update message: $reply")
+        ShiffrLogger.log("$TAG#updateMessage", "reply: $reply")
 
         val invoice = reply.invoice
         if (invoice != null) {
@@ -48,9 +49,9 @@ class MessageSender(
 
             executeRequest(request)
         } else {
-
+            //todo because of updating message two times in a row keyboard blinks, it's really annoying
             //update text
-            executeRequest(EditMessageText(reply.channelId, messageId, formatMessageText(reply.text))) //todo why EditMessageReplyMarkup do not update text?!
+            executeRequest(EditMessageText(reply.channelId, messageId, formatMessageText(reply.text)))
 
             //update keyboard
             val request = EditMessageReplyMarkup(reply.channelId, messageId, formatMessageText(reply.text))
@@ -71,10 +72,9 @@ class MessageSender(
 
     private fun executeRequest(request: BaseRequest<*, *>) {
         try {
-            println("executeRequest $request")
             telegramBot.execute(request)
         } catch (io: IOException) {
-            println("failure: ${io.message}")
+            ShiffrLogger.log("MessageSender#execureRequest", "failure: ${io.message}")
         }
     }
 

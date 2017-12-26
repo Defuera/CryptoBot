@@ -10,7 +10,7 @@ class FeedbackHandlerFactory(
         private val feedbackStorage: FeedbackStorage
 ) : CommandHandlerFactory<FeedbackHandler>("/feedback") {
 
-    override fun create(channelId: String, request: String): FeedbackHandler {
+    override fun create(channelId: String, request: String, private: Boolean): FeedbackHandler {
         val feedbackText = trimScheme(request)
 
         if (feedbackText.isBlank()){
