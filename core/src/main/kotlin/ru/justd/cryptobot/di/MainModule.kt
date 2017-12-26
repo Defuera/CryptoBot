@@ -42,16 +42,21 @@ class MainModule(val debug: Boolean) {
             uuidGenerator: UuidGenerator,
             feedbackStorage: FeedbackStorage,
             analytics: Analytics
-    ): CommandHandlerFacade = CommandHandlerFacadeImpl(
-            mutableListOf(
-                    PriceCommandHandlerFactory(analytics, exchangeFacade),
-                    SubscribeFactory(analytics, exchangeFacade, storage, timeManager, uuidGenerator),
-                    UnsubscribeHandlerFactory(analytics, storage),
-                    AddressInfoHandlerFactory(analytics, blockchainApi),
-                    FeedbackHandlerFactory(analytics, feedbackStorage),
-                    PurchaseHandlerFactory(purchaseApi)
-            )
-    )
+    ): CommandHandlerFacade {
+        val factories = mutableListOf(
+                PriceCommandHandlerFactory(analytics, exchangeFacade),
+                SubscribeFactory(analytics, exchangeFacade, storage, timeManager, uuidGenerator),
+                UnsubscribeHandlerFactory(analytics, storage),
+                AddressInfoHandlerFactory(analytics, blockchainApi),
+                FeedbackHandlerFactory(analytics, feedbackStorage)
+        )
+
+        if (debug) {
+            factories += PurchaseHandlerFactory(purchaseApi)
+        }
+
+        return CommandHandlerFacadeImpl(factories)
+    }
 
     @Provides
     @Singleton
