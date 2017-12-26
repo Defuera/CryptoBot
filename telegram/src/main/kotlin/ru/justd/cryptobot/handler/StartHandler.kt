@@ -13,11 +13,11 @@ class StartHandler(private val analytics: Analytics) : CommandHandler {
         analytics.trackStart(channelId)
         return Reply(channelId,
 """
-  ${BuildConfig.BOT_NAME} is your buddy in the cryptocurrencies world.
-It helps you be up to date with popular coins prices. You can fetch prices via `/price` command or `/subscribe` for updates.
-To see full list of commands just start typing `/`.
-
-  ${BuildConfig.BOT_NAME} is an open source software.
+/price - get price of given pair from one of supported exchanges
+/subscribe - receive periodical updates on price for specified pair
+/unsubscribe - remove one of previously created subscriptions
+/addressinfo - get info on given Bitcoin, Litecoin or Ethereum address
+/feedback - send us your thanks, suggestions and questions
 """
                         .trimMargin()
         )
