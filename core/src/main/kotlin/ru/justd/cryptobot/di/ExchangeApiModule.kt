@@ -12,6 +12,7 @@ import ru.justd.cryptobot.api.exchanges.bitfinex.BitfinexApi
 import ru.justd.cryptobot.api.exchanges.coinbase.CoinbaseApi
 import ru.justd.cryptobot.api.exchanges.cryptonator.CryptonatorApi
 import ru.justd.cryptobot.api.exchanges.gdax.GdaxApi
+import ru.justd.cryptobot.handler.purchase.PurchaseFacade
 import javax.inject.Named
 import javax.inject.Singleton
 
@@ -59,8 +60,7 @@ class ExchangeApiModule {
             bitfinexApi
     )
 
-
     @Provides
     @Singleton
-    fun providePurchaseApi(@Named(GdaxApi.NAME) gdaxApi: ExchangeApi) = gdaxApi as PurchaseApi
+    fun providePurchaseFacade(@Named(GdaxApi.NAME) gdaxApi: ExchangeApi) = PurchaseFacade(gdaxApi as PurchaseApi)
 }

@@ -1,7 +1,6 @@
 package ru.justd.cryptobot.handler.purchase
 
 import ru.justd.cryptobot.Coin
-import ru.justd.cryptobot.api.PurchaseApi
 import ru.justd.cryptobot.handler.CommandHandler
 import ru.justd.cryptobot.messenger.model.Dialog
 import ru.justd.cryptobot.messenger.model.Invoice
@@ -12,7 +11,7 @@ import ru.justd.cryptobot.utils.Serializer.serialize
 import java.math.BigDecimal
 
 class PurchaseHandler constructor(
-        private val purchaseApi: PurchaseApi,
+        private val purchaseFacade: PurchaseFacade,
         private val request: String?
 ) : CommandHandler {
 
@@ -41,7 +40,7 @@ class PurchaseHandler constructor(
 
             return Reply(
                     channelId = channelId,
-                    text = "On click pay button you will be redirected to Shipping information page. Please specify ${coin.title} address as Receiver Full Name.",
+                    text = "Please specify ${coin.title} address as Receiver Full name on Shipping info page.",
                     invoice = Invoice(
                             title,
                             "Disclaimer: we do not provide any guarantees, please consider purchase on your own risk. Actual delivered amount may differ, cause actual transfer occurs at a moment or receiving money",
@@ -83,7 +82,7 @@ class PurchaseHandler constructor(
     }
 
     private fun prepareByeCryptoRequest(channelId: String, base: String, target: String): Reply {
-        val exchangeRate = round(purchaseApi.getRate(base, target).amount, 2)
+        val exchangeRate = round(purchaseFacade.getRate(base, target).amount, 2)
 
         return Reply(
                 channelId = channelId,

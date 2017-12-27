@@ -31,7 +31,7 @@ class UnsubscribeHandlerTest {
         whenever(storageMock.getSubscriptions(channelId)).thenReturn(null)
 
         //action
-        val response = testInstance.handle(channelId, "/unsubscribe")
+        val response = testInstance.handle(channelId, false,"/unsubscribe")
 
         //assert
         assertThat(response.text).isEqualTo("You don't have subscriptions yet. To create new subscription use **/subscribe** command")
@@ -44,7 +44,7 @@ class UnsubscribeHandlerTest {
         whenever(storageMock.getSubscriptions(channelId)).thenReturn(listOf(stubSubscription))
 
         //action
-        val response = testInstance.handle(channelId, "/unsubscribe")
+        val response = testInstance.handle(channelId, false, "/unsubscribe")
 
         //assert
         assertThat(response.text).isEqualTo("Choose subscription to delete:")

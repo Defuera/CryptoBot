@@ -5,13 +5,13 @@ import dagger.Module
 import dagger.Provides
 import okhttp3.OkHttpClient
 import org.mockito.Mockito
-import ru.justd.cryptobot.api.PurchaseApi
 import ru.justd.cryptobot.api.exchanges.ExchangeApi
 import ru.justd.cryptobot.api.exchanges.ExchangeApiFacade
 import ru.justd.cryptobot.api.exchanges.bitfinex.BitfinexApi
 import ru.justd.cryptobot.api.exchanges.coinbase.CoinbaseApi
 import ru.justd.cryptobot.api.exchanges.cryptonator.CryptonatorApi
 import ru.justd.cryptobot.api.exchanges.gdax.GdaxApi
+import ru.justd.cryptobot.handler.purchase.PurchaseFacade
 import javax.inject.Named
 import javax.inject.Singleton
 
@@ -59,5 +59,5 @@ class ExchangeApiModule {
 
     @Provides
     @Singleton
-    fun providePurchaseApi(@Named(GdaxApi.NAME) gdaxApi: ExchangeApi) = mock<PurchaseApi>()
+    fun providePurchaseFacade(@Named(GdaxApi.NAME) gdaxApi: ExchangeApi) = mock<PurchaseFacade>()
 }

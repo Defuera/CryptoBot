@@ -43,7 +43,7 @@ class TelegramMessenger(private val uuid: String) {
     fun run() {
         println("TelegramMessenger started, id: $uuid")
 
-        requestProcessor = RequestProcessor(cryptoCore, messageSender)
+        requestProcessor = RequestProcessor(cryptoCore, messageSender, cryptoCore.purchaseFacade)
 
         telegramBot.setUpdatesListener { updates ->
             updates.forEach { handleAsync(it) }

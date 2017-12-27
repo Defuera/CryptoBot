@@ -5,15 +5,17 @@ import com.pengrad.telegrambot.request.AnswerPreCheckoutQuery
 import ru.justd.cryptobot.CryptoCore
 import ru.justd.cryptobot.api.exchanges.gdax.model.TransferFailed
 import ru.justd.cryptobot.handler.exceptions.InvalidCommand
+import ru.justd.cryptobot.handler.purchase.PurchaseFacade
 import ru.justd.cryptobot.messenger.model.Reply
 import ru.justd.cryptobot.telegram.BuildConfig
 import ru.justd.cryptobot.toChannelId
 import ru.justd.cryptobot.utils.Serializer
 import ru.justd.cryptobot.utils.ShiffrLogger
 
-class RequestProcessor(
+class RequestProcessor (
         private val cryptoCore: CryptoCore,
-        private val messageSender: MessageSender
+        private val messageSender: MessageSender,
+        private val purchaseFacade: PurchaseFacade
 ) {
 
     fun process(update: Update) {
@@ -27,7 +29,7 @@ class RequestProcessor(
             ShiffrLogger.log("RequestProcessor#preCheckoutQuery", "user: ${it.from().id()} ${it.invoicePayload()} ${it.orderInfo()}")
             val address = it.orderInfo().name()
             val base = Serializer.deserialize(it.invoicePayload()).base
-            if (cryptoCore.validateAddress(address, base)) {
+            if (purchaseFacade.validateAddress(address, base)) {
                 messageSender.confirmPreCheckout(AnswerPreCheckoutQuery(it.id()))
             } else {
                 messageSender.confirmPreCheckout(AnswerPreCheckoutQuery(it.id(), "Sorry, address you provided looks wrong"))
@@ -39,7 +41,7 @@ class RequestProcessor(
             val address = it.orderInfo().name()
 
             try {
-                val reply = cryptoCore.transferFunds(
+                val reply = purchaseFacade.transferFunds(
                         toChannelId(message.from().id().toLong()),
                         address,
                         Serializer.deserialize(it.invoicePayload())

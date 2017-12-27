@@ -35,7 +35,7 @@ class MessageSender(
 
         val invoice = reply.invoice
         if (invoice != null) {
-            val request = SendInvoice(
+            val sendInvoice = SendInvoice(
                     toChatId(reply.channelId),
                     invoice.title,
                     reply.text,
@@ -45,10 +45,10 @@ class MessageSender(
                     invoice.fiatCode,
                     LabeledPrice(invoice.description, invoice.amount)
             )
-            request.needName(true)
+            sendInvoice.needName(true)
 
             executeRequest(DeleteMessage(reply.channelId, messageId))
-            executeRequest(request)
+            executeRequest(sendInvoice)
         } else {
             //todo because of updating message two times in a row keyboard blinks, it's really annoying
             //update text
