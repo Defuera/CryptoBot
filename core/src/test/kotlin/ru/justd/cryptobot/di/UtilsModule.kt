@@ -3,8 +3,8 @@ package ru.justd.cryptobot.di
 import com.nhaarman.mockito_kotlin.mock
 import dagger.Module
 import dagger.Provides
-import utils.TimeManager
-import utils.UuidGenerator
+import ru.justd.cryptobot.utils.TimeManager
+import ru.justd.cryptobot.utils.UuidGenerator
 import javax.inject.Singleton
 
 @Module

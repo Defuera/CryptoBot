@@ -1,14 +1,14 @@
 package ru.justd.cryptobot.handler.purchase
 
+import ru.justd.cryptobot.Coin
 import ru.justd.cryptobot.api.PurchaseApi
 import ru.justd.cryptobot.handler.CommandHandler
 import ru.justd.cryptobot.messenger.model.Dialog
 import ru.justd.cryptobot.messenger.model.Invoice
 import ru.justd.cryptobot.messenger.model.Option
 import ru.justd.cryptobot.messenger.model.Reply
-import utils.Serializer
-import utils.Serializer.deserialize
-import utils.Serializer.serialize
+import ru.justd.cryptobot.utils.Serializer.deserialize
+import ru.justd.cryptobot.utils.Serializer.serialize
 import java.math.BigDecimal
 
 class PurchaseHandler constructor(
@@ -37,10 +37,11 @@ class PurchaseHandler constructor(
             val serializedPayload = retrieveParam(TAG_CREATE_INVOICE)
             val payload = deserialize(serializedPayload)
             val title = "Purchase ${payload.baseAmount} ${payload.base}"
+            val coin = Coin.valueOf(payload.base)
 
             return Reply(
                     channelId = channelId,
-                    text = title,
+                    text = "On click pay button you will be redirected to Shipping information page. Please specify ${coin.title} address as Receiver Full Name.",
                     invoice = Invoice(
                             title,
                             "Disclaimer: we do not provide any guarantees, please consider purchase on your own risk. Actual delivered amount may differ, cause actual transfer occurs at a moment or receiving money",
@@ -97,7 +98,7 @@ class PurchaseHandler constructor(
                                     "$TAG_CREATE_INVOICE $encryptedPayload"
                             )
                         }
-                        + OPTION_INFO
+                                + OPTION_INFO
                 )
         )
     }

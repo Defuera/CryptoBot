@@ -10,7 +10,7 @@ import ru.justd.cryptobot.api.exchanges.exceptions.ExchangeNotSupported
 import ru.justd.cryptobot.api.exchanges.exceptions.RequestFailed
 import ru.justd.cryptobot.messenger.model.Reply
 import ru.justd.cryptobot.persistance.Storage
-import utils.TimeManager
+import ru.justd.cryptobot.utils.TimeManager
 
 
 internal class PublisherImpl(

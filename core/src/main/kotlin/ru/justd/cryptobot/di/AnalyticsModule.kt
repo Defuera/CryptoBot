@@ -4,7 +4,7 @@ import dagger.Module
 import dagger.Provides
 import ru.justd.cryptobot.analytics.Analytics
 import ru.justd.cryptobot.analytics.KeenAnalytics
-import utils.TimeManager
+import ru.justd.cryptobot.utils.TimeManager
 import javax.inject.Named
 import javax.inject.Singleton
 

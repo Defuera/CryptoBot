@@ -10,7 +10,7 @@ import ru.justd.cryptobot.api.exchanges.exceptions.RequestFailed
 import ru.justd.cryptobot.api.exchanges.gdax.model.PurchaseResult
 import ru.justd.cryptobot.api.exchanges.gdax.model.TransferFailed
 import ru.justd.cryptobot.messenger.model.Reply
-import utils.ShiffrLogger
+import ru.justd.cryptobot.utils.ShiffrLogger
 import java.time.Instant
 import java.util.*
 import javax.crypto.Mac

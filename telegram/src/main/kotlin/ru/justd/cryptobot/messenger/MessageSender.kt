@@ -7,7 +7,7 @@ import com.pengrad.telegrambot.request.*
 import ru.justd.cryptobot.messenger.model.Reply
 import ru.justd.cryptobot.telegram.BuildConfig
 import ru.justd.cryptobot.toChatId
-import utils.ShiffrLogger
+import ru.justd.cryptobot.utils.ShiffrLogger
 import java.io.IOException
 
 private const val TAG = "MessageSender"
@@ -47,6 +47,7 @@ class MessageSender(
             )
             request.needName(true)
 
+            executeRequest(DeleteMessage(reply.channelId, messageId))
             executeRequest(request)
         } else {
             //todo because of updating message two times in a row keyboard blinks, it's really annoying

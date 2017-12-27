@@ -9,7 +9,7 @@ import ru.justd.cryptobot.api.exchanges.ExchangeApiFacade
 import ru.justd.cryptobot.api.exchanges.RateResponse
 import ru.justd.cryptobot.handler.subscribe.Subscription
 import ru.justd.cryptobot.persistance.Storage
-import utils.TimeManager
+import ru.justd.cryptobot.utils.TimeManager
 
 internal class PublisherImplTest {
 

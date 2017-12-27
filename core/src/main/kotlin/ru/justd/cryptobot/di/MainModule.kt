@@ -18,8 +18,8 @@ import ru.justd.cryptobot.persistance.FeedbackStorage
 import ru.justd.cryptobot.persistance.Storage
 import ru.justd.cryptobot.publisher.Publisher
 import ru.justd.cryptobot.publisher.PublisherImpl
-import utils.TimeManager
-import utils.UuidGenerator
+import ru.justd.cryptobot.utils.TimeManager
+import ru.justd.cryptobot.utils.UuidGenerator
 import javax.inject.Named
 import javax.inject.Singleton
 

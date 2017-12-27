@@ -1,4 +1,4 @@
-package utils
+package ru.justd.cryptobot.utils
 
 import ru.justd.cryptobot.handler.purchase.PurchaseHandler
 

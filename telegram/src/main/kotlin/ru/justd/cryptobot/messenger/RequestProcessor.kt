@@ -8,8 +8,8 @@ import ru.justd.cryptobot.handler.exceptions.InvalidCommand
 import ru.justd.cryptobot.messenger.model.Reply
 import ru.justd.cryptobot.telegram.BuildConfig
 import ru.justd.cryptobot.toChannelId
-import utils.Serializer
-import utils.ShiffrLogger
+import ru.justd.cryptobot.utils.Serializer
+import ru.justd.cryptobot.utils.ShiffrLogger
 
 class RequestProcessor(
         private val cryptoCore: CryptoCore,
