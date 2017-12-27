@@ -71,6 +71,15 @@ class GdaxApi(val okHttpClient: OkHttpClient) : PollingExchange(okHttpClient), P
 
     @Throws(TransferFailed::class)
     override fun transferFunds(channelId: String, base: String, amount: Double, address: String): Reply {
+        if (channelId != "25954567") { //todo remove for production
+            return Reply(
+                    channelId,
+                    "$amount $base has been transferred to $address. (not for real, cause this is just test)\n" +
+                            "You can track the transaction here ${getBlockchainInfoUrl(base)}$address. It should appear in next 30 minutes."
+            )
+        }
+
+
         val endpoint = "/withdrawals/crypto"
         val url = "${Companion.BASE_URL}$endpoint"
         val method = "POST"
@@ -104,7 +113,7 @@ class GdaxApi(val okHttpClient: OkHttpClient) : PollingExchange(okHttpClient), P
             return Reply(
                     channelId,
                     "${purchaseResult.amount} ${purchaseResult.currency} has been transferred to $address.\n" +
-                            "You can track the transaction here${getBlockchainInfoUrl(base)}$address. It should appear in next 30 minutes."
+                            "You can track the transaction here ${getBlockchainInfoUrl(base)}/$address. It should appear in next 30 minutes."
             )
         } else {
             val errorMessage = "error: $responseBody"
@@ -116,8 +125,8 @@ class GdaxApi(val okHttpClient: OkHttpClient) : PollingExchange(okHttpClient), P
 
     private fun getBlockchainInfoUrl(base: String) =
             when (base) {
-                "BTC" -> "https://blockchain.info/address/"
-                "ETH" -> "https://www.etherchain.org/account/"
+                "BTC" -> "https://blockchain.info/address"
+                "ETH" -> "https://www.etherchain.org/account"
                 "LTC" -> "https://live.blockcypher.com/btc"
                 else -> "error"
             }

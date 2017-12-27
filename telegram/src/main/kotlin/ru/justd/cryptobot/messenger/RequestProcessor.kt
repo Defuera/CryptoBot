@@ -37,27 +37,29 @@ class RequestProcessor (
         }
 
         message?.successfulPayment()?.let {
-            ShiffrLogger.log("RequestProcessor#successfulPayment", "payment_provider_charge_id: ${it.providerPaymentChargeId()} user: ${message.from().id()}")
+            val channelId = toChannelId(message.from().id().toLong())
+            val paymentChargeId = it.providerPaymentChargeId()
+            ShiffrLogger.log("RequestProcessor#successfulPayment", "payment_provider_charge_id: $paymentChargeId user: $channelId")
             val address = it.orderInfo().name()
 
             try {
                 val reply = purchaseFacade.transferFunds(
-                        toChannelId(message.from().id().toLong()),
+                        channelId,
                         address,
                         Serializer.deserialize(it.invoicePayload())
                 )
                 messageSender.sendMessage(reply)
             } catch (error: TransferFailed) {
-                messageSender.sendMessage(
-                        Reply(
-                                BuildConfig.FEEDBACK_CHANNEL_ID,
-                                "transfer failed: \n" +
-                                        "address: ${error.address}\n" +
-                                        "base: ${error.base}\n" +
-                                        "amount: ${error.amount}\n" +
-                                        "message: ${error.errorMessage}\n"
-                        )
-                )
+                val failReport = "transfer failed: \n" +
+                        "channelId: $channelId\n" +
+                        "address: ${error.address}\n" +
+                        "base: ${error.base}\n" +
+                        "amount: ${error.amount}\n" +
+                        "paymentChargeId: $paymentChargeId\n" +
+                        "message: ${error.errorMessage}\n"
+
+                ShiffrLogger.log("purchase", failReport)
+                messageSender.sendMessage(Reply(BuildConfig.FEEDBACK_CHANNEL_ID, failReport))
             }
         }
 
