@@ -1,16 +1,15 @@
 package ru.justd.cryptobot.api.exchanges.gdax
 
 import com.google.gson.annotations.SerializedName
-import okhttp3.*
+import okhttp3.Headers
+import okhttp3.OkHttpClient
 import ru.justd.cryptobot.CoreConfig
 import ru.justd.cryptobot.api.PurchaseApi
 import ru.justd.cryptobot.api.exchanges.PollingExchange
 import ru.justd.cryptobot.api.exchanges.RateResponse
 import ru.justd.cryptobot.api.exchanges.exceptions.RequestFailed
-import ru.justd.cryptobot.api.exchanges.gdax.model.PurchaseResult
 import ru.justd.cryptobot.api.exchanges.gdax.model.TransferFailed
 import ru.justd.cryptobot.messenger.model.Reply
-import ru.justd.cryptobot.utils.ShiffrLogger
 import java.time.Instant
 import java.util.*
 import javax.crypto.Mac
@@ -71,55 +70,52 @@ class GdaxApi(val okHttpClient: OkHttpClient) : PollingExchange(okHttpClient), P
 
     @Throws(TransferFailed::class)
     override fun transferFunds(channelId: String, base: String, amount: Double, address: String): Reply {
-        if (channelId != "25954567") { //todo remove for production
-            return Reply(
-                    channelId,
-                    "$amount $base has been transferred to $address. (not for real, cause this is just test)\n" +
-                            "You can track the transaction here ${getBlockchainInfoUrl(base)}$address. It should appear in next 30 minutes."
-            )
-        }
+        return Reply(
+                channelId,
+                "$amount $base has been transferred to $address. (not for real, cause this is just test)\n" +
+                        "You can track the transaction here ${getBlockchainInfoUrl(base)}$address. It should appear in next 30 minutes."
+        )
 
-
-        val endpoint = "/withdrawals/crypto"
-        val url = "${Companion.BASE_URL}$endpoint"
-        val method = "POST"
-
-        val jsonBody = "{\n" +
-                "    \"amount\": $amount,\n" +
-                "    \"currency\": \"$base\",\n" +
-                "    \"crypto_address\": \"$address\"\n" +
-                "}"
-
-        val response = okHttpClient
-                .newCall(
-                        Request.Builder()
-                                .post(
-                                        RequestBody.create(
-                                                MediaType.parse("application/json; charset=utf-8"),
-                                                jsonBody
-                                        )
-                                )
-                                .headers(securityHeaders(endpoint, method, jsonBody))
-                                .url(url)
-                                .build()
-                )
-                .execute()
-
-        val responseBody = response.body()?.string()
-        if (response.isSuccessful) {
-            ShiffrLogger.log("GdaxApi#transferFunds", "success")
-            val purchaseResult = gson.fromJson(responseBody, PurchaseResult::class.java)
-
-            return Reply(
-                    channelId,
-                    "${purchaseResult.amount} ${purchaseResult.currency} has been transferred to $address.\n" +
-                            "You can track the transaction here ${getBlockchainInfoUrl(base)}/$address. It should appear in next 30 minutes."
-            )
-        } else {
-            val errorMessage = "error: $responseBody"
-            ShiffrLogger.log("GdaxApi#transferFunds", errorMessage)
-            throw TransferFailed(channelId, base, amount, address, errorMessage)
-        }
+//        val endpoint = "/withdrawals/crypto"
+//        val url = "${Companion.BASE_URL}$endpoint"
+//        val method = "POST"
+//
+//        val jsonBody = "{\n" +
+//                "    \"amount\": $amount,\n" +
+//                "    \"currency\": \"$base\",\n" +
+//                "    \"crypto_address\": \"$address\"\n" +
+//                "}"
+//
+//        val response = okHttpClient
+//                .newCall(
+//                        Request.Builder()
+//                                .post(
+//                                        RequestBody.create(
+//                                                MediaType.parse("application/json; charset=utf-8"),
+//                                                jsonBody
+//                                        )
+//                                )
+//                                .headers(securityHeaders(endpoint, method, jsonBody))
+//                                .url(url)
+//                                .build()
+//                )
+//                .execute()
+//
+//        val responseBody = response.body()?.string()
+//        if (response.isSuccessful) {
+//            ShiffrLogger.log("GdaxApi#transferFunds", "success")
+//            val purchaseResult = gson.fromJson(responseBody, PurchaseResult::class.java)
+//
+//            return Reply(
+//                    channelId,
+//                    "${purchaseResult.amount} ${purchaseResult.currency} has been transferred to $address.\n" +
+//                            "You can track the transaction here ${getBlockchainInfoUrl(base)}/$address. It should appear in next 30 minutes."
+//            )
+//        } else {
+//            val errorMessage = "error: $responseBody"
+//            ShiffrLogger.log("GdaxApi#transferFunds", errorMessage)
+//            throw TransferFailed(channelId, base, amount, address, errorMessage)
+//        }
 
     }
 

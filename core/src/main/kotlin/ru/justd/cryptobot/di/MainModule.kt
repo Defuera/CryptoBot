@@ -48,12 +48,9 @@ class MainModule(val debug: Boolean) {
                 SubscribeFactory(analytics, exchangeFacade, storage, timeManager, uuidGenerator),
                 UnsubscribeHandlerFactory(analytics, storage),
                 AddressInfoHandlerFactory(analytics, blockchainApi),
-                FeedbackHandlerFactory(analytics, feedbackStorage)
+                FeedbackHandlerFactory(analytics, feedbackStorage),
+                PurchaseHandlerFactory(purchaseFacade, debug)
         )
-
-        if (debug) { //todo feature in developement
-            factories += PurchaseHandlerFactory(purchaseFacade)
-        }
 
         return CommandHandlerFacadeImpl(factories)
     }
