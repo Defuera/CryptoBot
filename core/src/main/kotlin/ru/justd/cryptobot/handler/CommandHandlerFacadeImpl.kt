@@ -1,6 +1,7 @@
 package ru.justd.cryptobot.handler
 
 import ru.justd.cryptobot.handler.exceptions.InvalidCommand
+import ru.justd.cryptobot.messenger.model.Inquiry
 import ru.justd.cryptobot.messenger.model.Reply
 
 internal class CommandHandlerFacadeImpl(
@@ -8,11 +9,13 @@ internal class CommandHandlerFacadeImpl(
 ) : CommandHandlerFacade {
 
     @Throws(InvalidCommand::class)
-    override fun handle(channelId: String, request: String, private: Boolean): Reply {
-        val factory = factories.find { it.canHandle(request) } ?: throw InvalidCommand("Command `$request` not supported ")
-        val handler = factory.create(channelId, request, private)
+    override fun handle(inquiry: Inquiry): Reply {
+        val factory = factories
+                .find { it.canHandle(inquiry) }
+                ?: throw InvalidCommand("Command `${inquiry.request}` not supported ")
 
-        return handler.createReply(channelId)
+        val handler = factory.create(inquiry)
+        return handler.createReply(inquiry.channelId)
     }
 
     override fun <T : CommandHandler> addCommandHandler(factory: CommandHandlerFactory<T>) {

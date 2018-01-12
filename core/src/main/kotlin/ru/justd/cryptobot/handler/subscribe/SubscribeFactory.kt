@@ -4,6 +4,7 @@ import ru.justd.cryptobot.analytics.Analytics
 import ru.justd.cryptobot.api.exchanges.ExchangeApiFacade
 import ru.justd.cryptobot.handler.CommandHandlerFactory
 import ru.justd.cryptobot.handler.exceptions.InvalidCommand
+import ru.justd.cryptobot.messenger.model.Inquiry
 import ru.justd.cryptobot.persistance.Storage
 import ru.justd.cryptobot.utils.TimeManager
 import ru.justd.cryptobot.utils.UuidGenerator
@@ -22,7 +23,8 @@ class SubscribeFactory (
 ) : CommandHandlerFactory<SubscribeHandler>("/subscribe") {
 
     @Throws(InvalidCommand::class)
-    override fun create(channelId: String, request: String, private: Boolean): SubscribeHandler {
+    override fun create(inquiry: Inquiry): SubscribeHandler {
+        val request = inquiry.request
         println("SubscribeHandler#create $request")
 
         return SubscribeHandler(

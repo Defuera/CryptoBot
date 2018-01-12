@@ -17,6 +17,7 @@ import ru.justd.cryptobot.di.StorageModule
 import ru.justd.cryptobot.di.UtilsModule.Companion.timeManagerMock
 import ru.justd.cryptobot.di.UtilsModule.Companion.uuidGeneratorMock
 import ru.justd.cryptobot.handler.subscribe.Subscription
+import ru.justd.cryptobot.messenger.model.Inquiry
 import ru.justd.cryptobot.messenger.model.Option
 import ru.justd.cryptobot.persistance.Storage
 import ru.justd.cryptobot.utils.TimeManagerImpl.PERIOD_12_HOURS
@@ -44,7 +45,7 @@ internal class SubscribeIntegrationTest {
 
     @Test
     fun `test command without arguments returns exchanges list`() {
-        val response = testInstance.handle(channelId, false, "/subscribe")
+        val response = testInstance.handle(Inquiry(channelId, false, "/subscribe"))
 
         assertThat(response.channelId).isEqualTo(channelId)
         assertThat(response.text).isEqualTo("Choose exchange")
@@ -70,7 +71,7 @@ internal class SubscribeIntegrationTest {
                 ))
 
         //action
-        val reply = testInstance.handle(channelId, false, "/subscribe $EXCHANGE_CRYPTONATOR $BASE_LTC $TARGET_GBP $PERIOD_12_HOURS")
+        val reply = testInstance.handle(Inquiry(channelId, false, "/subscribe $EXCHANGE_CRYPTONATOR $BASE_LTC $TARGET_GBP $PERIOD_12_HOURS"))
 
         //test
         assertThat(reply.text).isEqualTo("Subscription created successfully!\nLTC price is 300.0 GBP (via CRYPTONATOR)")

@@ -7,6 +7,7 @@ import ru.justd.cryptobot.di.StorageModule
 import ru.justd.cryptobot.handler.CommandHandlerFacade
 import ru.justd.cryptobot.handler.CommandHandlerFactory
 import ru.justd.cryptobot.handler.purchase.PurchaseFacade
+import ru.justd.cryptobot.messenger.model.Inquiry
 import ru.justd.cryptobot.messenger.model.Reply
 import ru.justd.cryptobot.persistance.FeedbackStorage
 import ru.justd.cryptobot.publisher.Publisher
@@ -15,7 +16,7 @@ import javax.inject.Inject
 
 class CryptoCore private constructor(
         clientName: String,
-        val debug: Boolean,
+        debug: Boolean,
         feedbackStorage: FeedbackStorage
 ) {
 
@@ -47,8 +48,8 @@ class CryptoCore private constructor(
         commandHandlerFacade.addCommandHandler(commandHandlerFactory)
     }
 
-    fun handle(channelId: String, isPrivate: Boolean, request: String): Reply {
-        return commandHandlerFacade.handle(channelId, request, isPrivate)
+    fun handle(inquiry: Inquiry): Reply {
+        return commandHandlerFacade.handle(inquiry)
     }
 
     fun setUpdateListener(listener: (update: Update) -> Unit) {

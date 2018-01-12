@@ -3,6 +3,7 @@ package ru.justd.cryptobot.handler.price
 import ru.justd.cryptobot.analytics.Analytics
 import ru.justd.cryptobot.api.exchanges.ExchangeApiFacade
 import ru.justd.cryptobot.handler.CommandHandlerFactory
+import ru.justd.cryptobot.messenger.model.Inquiry
 
 private const val ARG_INDEX_EXCHANGE = 0
 private const val ARG_INDEX_BASE = 1
@@ -13,7 +14,8 @@ internal class PriceCommandHandlerFactory constructor(
         private val exchangeFacade: ExchangeApiFacade
 ) : CommandHandlerFactory<PriceCommandHandler>("/price") {
 
-    override fun create(channelId: String, request: String, private: Boolean): PriceCommandHandler {
+    override fun create(inquiry: Inquiry): PriceCommandHandler {
+        val request = inquiry.request
         println("PriceCommandHandlerFactory#create $request")
         return PriceCommandHandler(
                 analytics,

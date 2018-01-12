@@ -6,13 +6,14 @@ import ru.justd.cryptobot.CryptoCore
 import ru.justd.cryptobot.api.exchanges.gdax.model.TransferFailed
 import ru.justd.cryptobot.handler.exceptions.InvalidCommand
 import ru.justd.cryptobot.handler.purchase.PurchaseFacade
+import ru.justd.cryptobot.messenger.model.Inquiry
 import ru.justd.cryptobot.messenger.model.Reply
 import ru.justd.cryptobot.telegram.BuildConfig
 import ru.justd.cryptobot.toChannelId
 import ru.justd.cryptobot.utils.Serializer
 import ru.justd.cryptobot.utils.ShiffrLogger
 
-class RequestProcessor (
+class RequestProcessor(
         private val cryptoCore: CryptoCore,
         private val messageSender: MessageSender,
         private val purchaseFacade: PurchaseFacade
@@ -93,7 +94,7 @@ class RequestProcessor (
             }
         } else if (isBotAddedToChannel(message)) {
             //greeting message
-            cryptoCore.handle(channelId, isPrivate,"/help")
+            cryptoCore.handle(Inquiry(channelId, isPrivate, "/help"))
         } else {
             null
         }
@@ -101,11 +102,11 @@ class RequestProcessor (
         reply?.let { messageSender.sendMessage(it) }
     }
 
-    private fun handleBotCommand(channelId: String, isPrivate : Boolean = false, inquiry: String): Reply {
+    private fun handleBotCommand(channelId: String, isPrivate: Boolean = false, inquiry: String): Reply {
         val filteredInquiry = inquiry.replace("@${BuildConfig.BOT_NAME}", "")
 
         return try {
-            cryptoCore.handle(channelId, isPrivate, filteredInquiry)
+            cryptoCore.handle(Inquiry(channelId, isPrivate, filteredInquiry))
         } catch (invalidCommand: InvalidCommand) {
             Reply(channelId, invalidCommand.message)
         }
