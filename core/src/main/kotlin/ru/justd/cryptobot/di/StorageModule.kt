@@ -1,7 +1,6 @@
 package ru.justd.cryptobot.di
 
 import com.mongodb.MongoClient
-import com.mongodb.client.MongoDatabase
 import dagger.Module
 import dagger.Provides
 import ru.justd.cryptobot.CoreConfig
@@ -20,15 +19,11 @@ class StorageModule constructor(
 
     @Provides
     @Singleton
-    fun provideMongo(): MongoDatabase = MongoClient(CoreConfig.MONGO_ADDRESS).getDatabase(clientName)
-
-    @Provides
-    @Singleton
-    fun provideUserPreferences(mongo: MongoDatabase, @Named("IsDebug") debug: Boolean): Storage =
+    fun provideUserPreferences(@Named("IsDebug") debug: Boolean): Storage =
             if (debug)
                 StorageImpl()
             else
-                MongoStorageImpl(mongo)
+                MongoStorageImpl(MongoClient(CoreConfig.MONGO_ADDRESS).getDatabase(clientName))
 
     @Provides
     @Singleton

@@ -16,7 +16,7 @@ import ru.justd.cryptobot.messenger.model.Reply
 import ru.justd.cryptobot.persistance.FeedbackStorage
 import ru.justd.cryptobot.publisher.Publisher
 import ru.justd.cryptobot.publisher.Update
-import utils.ShiffrLogger
+import ru.justd.cryptobot.utils.ShiffrLogger
 import javax.inject.Inject
 
 class CryptoCore private constructor(
