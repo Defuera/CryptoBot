@@ -13,6 +13,7 @@ import ru.justd.cryptobot.api.exchanges.coinbase.CoinbaseApi
 import ru.justd.cryptobot.api.exchanges.cryptonator.CryptonatorApi
 import ru.justd.cryptobot.api.exchanges.gdax.GdaxApi
 import ru.justd.cryptobot.handler.purchase.PurchaseFacade
+import ru.justd.cryptobot.handler.purchase.PurchaseFacadeImpl
 import javax.inject.Named
 import javax.inject.Singleton
 
@@ -62,5 +63,5 @@ class ExchangeApiModule {
 
     @Provides
     @Singleton
-    fun providePurchaseFacade(@Named(GdaxApi.NAME) gdaxApi: ExchangeApi) = PurchaseFacade(gdaxApi as PurchaseApi)
+    fun providePurchaseFacade(@Named(GdaxApi.NAME) gdaxApi: ExchangeApi) : PurchaseFacade = PurchaseFacadeImpl(gdaxApi as PurchaseApi) //todo explicit cast
 }
