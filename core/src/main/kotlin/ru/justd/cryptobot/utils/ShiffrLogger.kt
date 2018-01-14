@@ -14,12 +14,12 @@ object ShiffrLogger {
 
     fun log(tag: String, message: String) {
         val logText = "[${TimeManagerImpl.readableDateTime()}] $tag: $message"
-//        println(logText)
+        println(logText)
 
-        val fileHandler = FileHandler(TimeManagerImpl.readableDate())
-        val logger = Logger.getGlobal()
-        logger.addHandler(fileHandler)
-        logger.log(Level.INFO, logText)
+//        val fileHandler = FileHandler(TimeManagerImpl.readableDate())
+//        val logger = Logger.getGlobal()
+//        logger.addHandler(fileHandler)
+//        logger.log(Level.INFO, logText)
     }
 
 }
