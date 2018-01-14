@@ -1,7 +1,8 @@
 package ru.justd.cryptobot.di
 
 import com.mongodb.MongoClient
-import com.mongodb.client.MongoDatabase
+import com.mongodb.MongoCredential
+import com.mongodb.ServerAddress
 import dagger.Module
 import dagger.Provides
 import ru.justd.cryptobot.CoreConfig
@@ -20,15 +21,19 @@ class StorageModule constructor(
 
     @Provides
     @Singleton
-    fun provideMongo(): MongoDatabase = MongoClient(CoreConfig.MONGO_ADDRESS).getDatabase(clientName)
-
-    @Provides
-    @Singleton
-    fun provideUserPreferences(mongo: MongoDatabase, @Named("IsDebug") debug: Boolean): Storage =
-            if (debug)
-                StorageImpl()
-            else
-                MongoStorageImpl(mongo)
+    fun provideUserPreferences(@Named("IsDebug") debug: Boolean): Storage {
+        return if (debug) {
+            StorageImpl()
+        } else {
+            val credential = MongoCredential.createCredential(
+                    CoreConfig.MONGO_USER,
+                    clientName,
+                    CoreConfig.MONGO_PASS.toCharArray()
+            )
+            val mongoClient = MongoClient(ServerAddress(CoreConfig.MONGO_ADDRESS), mutableListOf<MongoCredential>(credential))
+            MongoStorageImpl(mongoClient.getDatabase(clientName))
+        }
+    }
 
     @Provides
     @Singleton

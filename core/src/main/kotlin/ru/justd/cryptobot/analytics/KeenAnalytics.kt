@@ -26,7 +26,7 @@ class KeenAnalytics(
     }
 
     override fun trackStart(channelId: String) {
-        track("/start", channelId)
+        track("start", channelId)
     }
 
     override fun trackPrice(channelId: String, exchange: String, base: String, target: String) {
@@ -35,7 +35,7 @@ class KeenAnalytics(
         properties.put(PROPERTY_BASE, base)
         properties.put(PROPERTY_TARGET, target)
 
-        track("/price", channelId, properties)
+        track("price", channelId, properties)
     }
 
     override fun trackSubscribe(channelId: String, exchange: String, base: String, target: String, period: String) {
@@ -44,19 +44,19 @@ class KeenAnalytics(
         properties.put(PROPERTY_BASE, base)
         properties.put(PROPERTY_TARGET, target)
 
-        track("/subscribe", channelId, properties)
+        track("subscribe", channelId, properties)
     }
 
     override fun trackUnsubscribe(channelId: String) {
-        track("/unsubscribe", channelId)
+        track("unsubscribe", channelId)
     }
 
     override fun trackAddressInfo(channelId: String) {
-        track("/addressinfo", channelId)
+        track("address_info", channelId)
     }
 
     override fun trackFeedback(channelId: String) {
-        track("/feedback", channelId)
+        track("feedback", channelId)
     }
 
     private fun track(
