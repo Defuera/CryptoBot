@@ -3,8 +3,8 @@ package ru.justd.cryptobot
 import khronos.Dates
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Test
-import utils.TimeManagerImpl
-import utils.TimeManagerImpl.MILLIS_IN_MINUTE
+import ru.justd.cryptobot.utils.TimeManagerImpl
+import ru.justd.cryptobot.utils.TimeManagerImpl.MILLIS_IN_MINUTE
 
 
 internal class TimeManagerImplTest {

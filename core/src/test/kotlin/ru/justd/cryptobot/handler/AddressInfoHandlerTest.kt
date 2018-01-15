@@ -9,6 +9,7 @@ import org.mockito.ArgumentMatchers.anyString
 import ru.justd.cryptobot.CryptoCore
 import ru.justd.cryptobot.api.blockchain.bitcoin.BitcoinAddressInfo
 import ru.justd.cryptobot.di.BlockchainModule
+import ru.justd.cryptobot.messenger.model.Inquiry
 
 
 internal class AddressInfoHandlerTest {
@@ -32,7 +33,7 @@ internal class AddressInfoHandlerTest {
         )
 
         //action
-        val reply = testInstance.handle("channelId", "/addressinfo 1EuxvSVf5yWLYtHiDkzbcd7pp5cooqPfJD")
+        val reply = testInstance.handle(Inquiry("channelId", false, "/addressinfo 1EuxvSVf5yWLYtHiDkzbcd7pp5cooqPfJD"))
 
         //test
         assertThat(reply.text).isEqualTo("You have 0.06917027 BTC")

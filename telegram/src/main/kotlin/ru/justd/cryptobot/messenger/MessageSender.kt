@@ -1,14 +1,16 @@
 package ru.justd.cryptobot.messenger
 
 import com.pengrad.telegrambot.TelegramBot
+import com.pengrad.telegrambot.model.request.LabeledPrice
 import com.pengrad.telegrambot.model.request.ParseMode
-import com.pengrad.telegrambot.request.BaseRequest
-import com.pengrad.telegrambot.request.EditMessageReplyMarkup
-import com.pengrad.telegrambot.request.EditMessageText
-import com.pengrad.telegrambot.request.SendMessage
+import com.pengrad.telegrambot.request.*
 import ru.justd.cryptobot.messenger.model.Reply
 import ru.justd.cryptobot.telegram.BuildConfig
+import ru.justd.cryptobot.toChatId
+import ru.justd.cryptobot.utils.ShiffrLogger
 import java.io.IOException
+
+private const val TAG = "MessageSender"
 
 class MessageSender(
         private val uuid: String,
@@ -16,39 +18,64 @@ class MessageSender(
 ) {
 
     fun sendMessage(reply: Reply) {
-        println("send reply...")
+        ShiffrLogger.log("$TAG#sendMessage", "reply: $reply")
 
         val request = SendMessage(reply.channelId, formatMessageText(reply.text))
+
         if (KeyboardAdapter.hasOptions(reply)) {
             request.replyMarkup(KeyboardAdapter.createKeyboard(reply))
+            request.parseMode(ParseMode.Markdown)
         }
 
-        request.parseMode(ParseMode.Markdown)
         executeRequest(request)
     }
 
     fun updateMessage(messageId: Int, reply: Reply) {
-        println("update message...")
+        ShiffrLogger.log("$TAG#updateMessage", "reply: $reply")
 
-        //update text
-        executeRequest(EditMessageText(reply.channelId, messageId, formatMessageText(reply.text))) //todo why EditMessageReplyMarkup do not update text?!
+        val invoice = reply.invoice
+        if (invoice != null) {
+            val sendInvoice = SendInvoice(
+                    toChatId(reply.channelId),
+                    invoice.title,
+                    reply.text,
+                    invoice.payload,
+                    BuildConfig.PAYMENTWALL_TOKEN,
+                    null, //start_parameter
+                    invoice.fiatCode,
+                    LabeledPrice(invoice.description, invoice.amount)
+            )
+            sendInvoice.needName(true)
 
-        //update keyboard
-        val request = EditMessageReplyMarkup(reply.channelId, messageId, formatMessageText(reply.text))
+            executeRequest(DeleteMessage(reply.channelId, messageId))
+            executeRequest(sendInvoice)
+        } else {
+            //todo because of updating message two times in a row keyboard blinks, it's really annoying
+            //update text
+            executeRequest(EditMessageText(reply.channelId, messageId, formatMessageText(reply.text)))
 
-        if (KeyboardAdapter.hasOptions(reply)) {
-            request.replyMarkup(KeyboardAdapter.createKeyboard(reply))
+            //update keyboard
+            val request = EditMessageReplyMarkup(reply.channelId, messageId, formatMessageText(reply.text))
+
+            if (KeyboardAdapter.hasOptions(reply)) {
+                request.replyMarkup(KeyboardAdapter.createKeyboard(reply))
+            }
+
+            executeRequest(request)
         }
 
-        executeRequest(request)
-
     }
+
+    fun confirmPreCheckout(answer: AnswerPreCheckoutQuery) {
+        executeRequest(answer)
+    }
+
 
     private fun executeRequest(request: BaseRequest<*, *>) {
         try {
             telegramBot.execute(request)
         } catch (io: IOException) {
-            println("failure: ${io.message}")
+            ShiffrLogger.log("MessageSender#execureRequest", "failure: ${io.message}")
         }
     }
 

@@ -9,8 +9,8 @@ import ru.justd.cryptobot.handler.price.PriceClarificatorDelegate
 import ru.justd.cryptobot.messenger.model.Dialog
 import ru.justd.cryptobot.messenger.model.Reply
 import ru.justd.cryptobot.persistance.Storage
-import utils.TimeManager
-import utils.UuidGenerator
+import ru.justd.cryptobot.utils.TimeManager
+import ru.justd.cryptobot.utils.UuidGenerator
 
 /**
  *

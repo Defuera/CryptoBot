@@ -1,6 +1,7 @@
 package ru.justd.cryptobot.handler
 
 import ru.justd.cryptobot.handler.exceptions.InvalidCommand
+import ru.justd.cryptobot.messenger.model.Inquiry
 import java.util.*
 
 abstract class CommandHandlerFactory<out T : CommandHandler>(val scheme: String) {
@@ -15,10 +16,10 @@ abstract class CommandHandlerFactory<out T : CommandHandler>(val scheme: String)
         ""
     }
 
-    fun canHandle(request: String) = request.split(" ")[0].toLowerCase() == scheme
+    fun canHandle(inquiry: Inquiry) = inquiry.request.split(" ")[0].toLowerCase() == scheme
 
     @Throws(InvalidCommand::class)
-    abstract fun create(channelId: String, request: String): T
+    abstract fun create(inquiry: Inquiry): T
 
     fun retrieveArg(request: String, index: Int): String? {
         val args = trimScheme(request).split(" ")

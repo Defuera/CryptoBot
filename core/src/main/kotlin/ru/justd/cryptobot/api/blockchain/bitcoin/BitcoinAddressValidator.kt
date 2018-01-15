@@ -9,7 +9,7 @@ object BitcoinAddressValidator {
 
     private val ALPHABET = "123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz"
 
-    fun validateBitcoinAddress(addr: String): Boolean {
+    fun validateAddress(addr: String): Boolean {
         if (addr.length < 26 || addr.length > 35)
             return false
         val decoded = decodeBase58To25Bytes(addr) ?: return false
@@ -64,7 +64,7 @@ object BitcoinAddressValidator {
     }
 
     private fun assertBitcoin(address: String, expected: Boolean) {
-        val actual = validateBitcoinAddress(address)
+        val actual = validateAddress(address)
         if (actual != expected)
             throw AssertionError(String.format("Expected %s for %s, but got %s.", expected, address, actual))
     }

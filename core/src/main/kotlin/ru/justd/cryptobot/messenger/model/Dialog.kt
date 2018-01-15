@@ -8,13 +8,13 @@ data class Dialog constructor(
         val dialogOptions: List<Option>
 ) {
         constructor(
-                callbackLabel: String,
+                callbackTag: String,
                 dialogOptions: Array<String>
-        ) : this(callbackLabel, dialogOptions.map { Option(it, it) })
+        ) : this(callbackTag, dialogOptions.map { Option(it, it) })
 
 }
 
 data class Option(
         val name : String,
-        val callbackLabel: String
+        val callbackTag: String
 )

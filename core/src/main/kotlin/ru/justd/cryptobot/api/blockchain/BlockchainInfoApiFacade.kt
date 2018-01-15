@@ -1,9 +1,10 @@
 package ru.justd.cryptobot.api.blockchain
 
 import ru.justd.cryptobot.api.blockchain.bitcoin.BitcoinAddressValidator
+import ru.justd.cryptobot.api.blockchain.ether.EtherAddressValidator
 import ru.justd.cryptobot.handler.exceptions.InvalidCommand
 
-class BlockchainInfoApiFacade(
+class BlockchainInfoApiFacade constructor(
         private val bitcoinInfoApi: BlockchainApi,
         private val etherInfoApi: BlockchainApi
 ) : BlockchainApi {
@@ -14,12 +15,13 @@ class BlockchainInfoApiFacade(
     }
 
     private fun findDelegate(address: String): BlockchainApi {
-        if (BitcoinAddressValidator.validateBitcoinAddress(address)) {
+        if (BitcoinAddressValidator.validateAddress(address)) {
             return bitcoinInfoApi
-        } else if (true) { //todo validator
+        } else if (EtherAddressValidator.validateAddress(address)) {
             return etherInfoApi
         } else {
             throw InvalidCommand("cannot recognize address")
         }
     }
+
 }

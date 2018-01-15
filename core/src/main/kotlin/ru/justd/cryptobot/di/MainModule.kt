@@ -9,6 +9,8 @@ import ru.justd.cryptobot.handler.CommandHandlerFacade
 import ru.justd.cryptobot.handler.CommandHandlerFacadeImpl
 import ru.justd.cryptobot.handler.feedback.FeedbackHandlerFactory
 import ru.justd.cryptobot.handler.price.PriceCommandHandlerFactory
+import ru.justd.cryptobot.handler.purchase.PurchaseFacade
+import ru.justd.cryptobot.handler.purchase.PurchaseHandlerFactory
 import ru.justd.cryptobot.handler.subscribe.SubscribeFactory
 import ru.justd.cryptobot.handler.unsubscribe.UnsubscribeHandlerFactory
 import ru.justd.cryptobot.handler.wallet.AddressInfoHandlerFactory
@@ -16,8 +18,8 @@ import ru.justd.cryptobot.persistance.FeedbackStorage
 import ru.justd.cryptobot.persistance.Storage
 import ru.justd.cryptobot.publisher.Publisher
 import ru.justd.cryptobot.publisher.PublisherImpl
-import utils.TimeManager
-import utils.UuidGenerator
+import ru.justd.cryptobot.utils.TimeManager
+import ru.justd.cryptobot.utils.UuidGenerator
 import javax.inject.Named
 import javax.inject.Singleton
 
@@ -33,21 +35,25 @@ class MainModule(val debug: Boolean) {
     @Singleton
     fun provideCommandHandlerFacade(
             exchangeFacade: ExchangeApiFacade,
+            purchaseFacade: PurchaseFacade,
             blockchainApi: BlockchainApi,
             storage: Storage,
             timeManager: TimeManager,
             uuidGenerator: UuidGenerator,
             feedbackStorage: FeedbackStorage,
             analytics: Analytics
-    ): CommandHandlerFacade = CommandHandlerFacadeImpl(
-            mutableListOf(
-                    PriceCommandHandlerFactory(analytics, exchangeFacade),
-                    SubscribeFactory(analytics, exchangeFacade, storage, timeManager, uuidGenerator),
-                    UnsubscribeHandlerFactory(analytics, storage),
-                    AddressInfoHandlerFactory(analytics, blockchainApi),
-                    FeedbackHandlerFactory(analytics, feedbackStorage)
-            )
-    )
+    ): CommandHandlerFacade {
+        val factories = mutableListOf(
+                PriceCommandHandlerFactory(analytics, exchangeFacade),
+                SubscribeFactory(analytics, exchangeFacade, storage, timeManager, uuidGenerator),
+                UnsubscribeHandlerFactory(analytics, storage),
+                AddressInfoHandlerFactory(analytics, blockchainApi),
+                FeedbackHandlerFactory(analytics, feedbackStorage),
+                PurchaseHandlerFactory(purchaseFacade, debug)
+        )
+
+        return CommandHandlerFacadeImpl(factories)
+    }
 
     @Provides
     @Singleton

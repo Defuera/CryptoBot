@@ -1,4 +1,4 @@
-package utils
+package ru.justd.cryptobot.utils
 
 import java.util.*
 

@@ -11,7 +11,7 @@ object KeyboardAdapter {
         return reply.dialog != null
     }
 
-    fun createKeyboard(reply: Reply): InlineKeyboardMarkup { //todo probably we wand smarter algorithm here, like to
+    fun createKeyboard(reply: Reply): InlineKeyboardMarkup {
         val dialog = reply.dialog ?: throw IllegalArgumentException("Dialog must not be null, use hasOptions check before calling this method.")
         return mapToTelegramKeyboard(dialog)
     }
@@ -24,7 +24,7 @@ object KeyboardAdapter {
     private fun createButtonsMatrix(dialog: Dialog): Array<Array<InlineKeyboardButton>> {
         return dialog.dialogOptions
                 .map {
-                    arrayOf(InlineKeyboardButton(it.name).callbackData("${dialog.callbackLabel} ${it.callbackLabel}"))
+                    arrayOf(InlineKeyboardButton(it.name).callbackData("${dialog.callbackLabel} ${it.callbackTag}"))
                 }
                 .toTypedArray()
     }

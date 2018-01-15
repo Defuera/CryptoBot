@@ -6,6 +6,8 @@ import ru.justd.cryptobot.di.MainModule
 import ru.justd.cryptobot.di.StorageModule
 import ru.justd.cryptobot.handler.CommandHandlerFacade
 import ru.justd.cryptobot.handler.CommandHandlerFactory
+import ru.justd.cryptobot.handler.purchase.PurchaseFacade
+import ru.justd.cryptobot.messenger.model.Inquiry
 import ru.justd.cryptobot.messenger.model.Reply
 import ru.justd.cryptobot.persistance.FeedbackStorage
 import ru.justd.cryptobot.publisher.Publisher
@@ -31,6 +33,9 @@ class CryptoCore private constructor(
     @Inject
     lateinit var analytics: Analytics
 
+    @Inject
+    lateinit var purchaseFacade: PurchaseFacade
+
     init {
         DaggerCryptoCoreComponent.builder()
                 .mainModule(MainModule(debug))
@@ -41,11 +46,10 @@ class CryptoCore private constructor(
 
     fun addCommandHandler(commandHandlerFactory: CommandHandlerFactory<*>) {
         commandHandlerFacade.addCommandHandler(commandHandlerFactory)
-
     }
 
-    fun handle(channelId: String, request: String): Reply {
-        return commandHandlerFacade.handle(channelId, request)
+    fun handle(inquiry: Inquiry): Reply {
+        return commandHandlerFacade.handle(inquiry)
     }
 
     fun setUpdateListener(listener: (update: Update) -> Unit) {
@@ -53,6 +57,5 @@ class CryptoCore private constructor(
                 .updatesObservable()
                 .subscribe { listener(it) }
     }
-
 
 }
