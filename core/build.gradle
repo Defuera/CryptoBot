@@ -18,6 +18,12 @@ buildConfig {
         //parameters so tests could run on ci
         properties.put("KEEN_PROJECT_ID", "test")
         properties.put("KEEN_WRITE_KEY", "test")
+        properties.put("MONGO_ADDRESS", "test")
+        properties.put("MONGO_USER", "test")
+        properties.put("MONGO_PASS", "test")
+        properties.put("GDAX_KEY", "test")
+        properties.put("GDAX_SECRET", "test")
+        properties.put("GDAX_LICENCE", "test")
     }
 
     properties.each { key, value ->
