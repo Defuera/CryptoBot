@@ -6,10 +6,9 @@ import ru.justd.cryptobot.api.blockchain.ether.EtherAddressValidator
 import ru.justd.cryptobot.api.blockchain.litecoin.LitecoinAddressValidator
 import ru.justd.cryptobot.api.exchanges.gdax.model.TransferFailed
 import ru.justd.cryptobot.messenger.model.Reply
-import ru.justd.cryptobot.utils.ShiffrLogger
 
 /**
- * Agregates PurchaseApi implementations
+ * Aggregates PurchaseApi implementations
  */
 class PurchaseFacadeImpl(
         private val purchaseApi: PurchaseApi
@@ -26,7 +25,6 @@ class PurchaseFacadeImpl(
 
     @Throws(TransferFailed::class)
     override fun transferFunds(channelId: String, address: String, invoicePayload: PurchaseHandler.Payload): Reply {
-        ShiffrLogger.log("tag", "$address, $invoicePayload")
         return purchaseApi.transferFunds(channelId, invoicePayload.base, invoicePayload.baseAmount, address)
     }
 
