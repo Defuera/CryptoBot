@@ -25,7 +25,6 @@ class SubscribeFactory (
     @Throws(InvalidCommand::class)
     override fun create(inquiry: Inquiry): SubscribeHandler {
         val request = inquiry.request
-        println("SubscribeHandler#create $request")
 
         return SubscribeHandler(
                 analytics,

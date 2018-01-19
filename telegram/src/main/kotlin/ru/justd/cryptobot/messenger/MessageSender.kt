@@ -7,10 +7,10 @@ import com.pengrad.telegrambot.request.*
 import ru.justd.cryptobot.messenger.model.Reply
 import ru.justd.cryptobot.telegram.BuildConfig
 import ru.justd.cryptobot.toChatId
-import ru.justd.cryptobot.utils.ShiffrLogger
+import ru.justd.cryptobot.utils.LogFormatter
+import ru.justd.cryptobot.utils.LoggerConfig.LOGGER
 import java.io.IOException
-
-private const val TAG = "MessageSender"
+import java.util.logging.Level
 
 class MessageSender(
         private val uuid: String,
@@ -18,7 +18,7 @@ class MessageSender(
 ) {
 
     fun sendMessage(reply: Reply) {
-        ShiffrLogger.log("$TAG#sendMessage", "reply: $reply")
+        LOGGER.log(Level.INFO, LogFormatter.logReply(reply))
 
         val request = SendMessage(reply.channelId, formatMessageText(reply.text))
 
@@ -31,7 +31,7 @@ class MessageSender(
     }
 
     fun updateMessage(messageId: Int, reply: Reply) {
-        ShiffrLogger.log("$TAG#updateMessage", "reply: $reply")
+        LOGGER.log(Level.INFO, LogFormatter.logReply(reply))
 
         val invoice = reply.invoice
         if (invoice != null) {
@@ -75,7 +75,7 @@ class MessageSender(
         try {
             telegramBot.execute(request)
         } catch (io: IOException) {
-            ShiffrLogger.log("MessageSender#execureRequest", "failure: ${io.message}")
+            LOGGER.log(Level.INFO, "failed to execute request ${io.message}")
         }
     }
 

@@ -12,6 +12,7 @@ import ru.justd.cryptobot.messenger.model.Reply
 import ru.justd.cryptobot.persistance.FeedbackStorage
 import ru.justd.cryptobot.publisher.Publisher
 import ru.justd.cryptobot.publisher.Update
+import ru.justd.cryptobot.utils.LoggerConfig
 import javax.inject.Inject
 
 class CryptoCore private constructor(
@@ -42,6 +43,8 @@ class CryptoCore private constructor(
                 .storageModule(StorageModule(clientName, feedbackStorage))
                 .build()
                 .inject(this)
+
+        LoggerConfig.debug = debug
     }
 
     fun addCommandHandler(commandHandlerFactory: CommandHandlerFactory<*>) {

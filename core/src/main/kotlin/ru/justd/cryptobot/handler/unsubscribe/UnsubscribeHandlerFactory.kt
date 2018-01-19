@@ -14,7 +14,6 @@ class UnsubscribeHandlerFactory(
 
     override fun create(inquiry: Inquiry): UnsubscribeHandler {
         val request = inquiry.request
-        println("UnsubscribeHandlerFactory#create $request")
 
         return UnsubscribeHandler(
                 analytics,

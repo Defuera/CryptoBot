@@ -14,6 +14,8 @@ import ru.justd.cryptobot.messenger.RequestProcessor
 import ru.justd.cryptobot.messenger.model.Reply
 import ru.justd.cryptobot.persistance.FeedbackStorage
 import ru.justd.cryptobot.telegram.BuildConfig
+import ru.justd.cryptobot.utils.LoggerConfig.LOGGER
+import java.util.logging.Level
 
 class TelegramMessenger(private val uuid: String) {
 
@@ -41,9 +43,13 @@ class TelegramMessenger(private val uuid: String) {
     }
 
     fun run() {
-        println("TelegramMessenger started, id: $uuid")
+        LOGGER.log(Level.INFO, "TelegramMessenger started, id: $uuid")
 
-        requestProcessor = RequestProcessor(cryptoCore, messageSender, cryptoCore.purchaseFacade)
+        requestProcessor = RequestProcessor(
+                cryptoCore,
+                messageSender,
+                cryptoCore.purchaseFacade
+        )
 
         telegramBot.setUpdatesListener { updates ->
             updates.forEach { handleAsync(it) }
