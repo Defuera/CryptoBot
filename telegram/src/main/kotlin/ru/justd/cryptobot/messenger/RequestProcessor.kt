@@ -11,7 +11,7 @@ import ru.justd.cryptobot.messenger.model.Reply
 import ru.justd.cryptobot.telegram.BuildConfig
 import ru.justd.cryptobot.toChannelId
 import ru.justd.cryptobot.utils.LogFormatter
-import ru.justd.cryptobot.utils.LogUtils.LOGGER
+import ru.justd.cryptobot.utils.LoggerConfig.LOGGER
 import ru.justd.cryptobot.utils.Serializer
 import java.util.logging.Level
 

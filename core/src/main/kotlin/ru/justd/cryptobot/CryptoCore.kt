@@ -12,7 +12,7 @@ import ru.justd.cryptobot.messenger.model.Reply
 import ru.justd.cryptobot.persistance.FeedbackStorage
 import ru.justd.cryptobot.publisher.Publisher
 import ru.justd.cryptobot.publisher.Update
-import ru.justd.cryptobot.utils.LogUtils
+import ru.justd.cryptobot.utils.LoggerConfig
 import javax.inject.Inject
 
 class CryptoCore private constructor(
@@ -44,7 +44,7 @@ class CryptoCore private constructor(
                 .build()
                 .inject(this)
 
-        LogUtils.debug = debug
+        LoggerConfig.debug = debug
     }
 
     fun addCommandHandler(commandHandlerFactory: CommandHandlerFactory<*>) {

@@ -5,7 +5,7 @@ import java.util.logging.Logger
 import java.util.logging.SimpleFormatter
 
 
-object LogUtils {
+object LoggerConfig {
 
     private const val MAX_FILE_SIZE_BYTES = 1024 * 1024
     private const val FILES_TO_ROTATE_COUNT = 100

@@ -8,7 +8,7 @@ import ru.justd.cryptobot.messenger.model.Reply
 import ru.justd.cryptobot.telegram.BuildConfig
 import ru.justd.cryptobot.toChatId
 import ru.justd.cryptobot.utils.LogFormatter
-import ru.justd.cryptobot.utils.LogUtils.LOGGER
+import ru.justd.cryptobot.utils.LoggerConfig.LOGGER
 import java.io.IOException
 import java.util.logging.Level
 
