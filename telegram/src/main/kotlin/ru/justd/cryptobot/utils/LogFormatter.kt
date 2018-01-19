@@ -2,6 +2,8 @@ package ru.justd.cryptobot.utils
 
 import com.pengrad.telegrambot.model.*
 import ru.justd.cryptobot.api.exchanges.gdax.model.TransferFailed
+import ru.justd.cryptobot.messenger.model.Reply
+import ru.justd.cryptobot.telegram.BuildConfig
 
 object LogFormatter {
 
@@ -31,7 +33,7 @@ object LogFormatter {
         val address = payment.orderInfo().name()
         val paymentChargeId = payment.providerPaymentChargeId()
         val payload = Serializer.deserialize(payment.invoicePayload())
-        
+
         return "onTransferSuccessful: " +
                 "chatId: $chatId " +
                 "address: $address " +
@@ -59,7 +61,22 @@ object LogFormatter {
     }
 
     fun formatText(text: String): String {
-        return text.replace("\n", "\\n")
+        return text
+                .replace("\n", "\\n")
+                .replace("@${BuildConfig.BOT_NAME}", "")
+    }
+
+    fun logReply(reply: Reply): String {
+        var baseInfo = "chat=${reply.channelId} text=\"${reply.text}\""
+        reply.dialog?.let {
+            val optionsText = it.dialogOptions.map { it.name }
+            baseInfo += " dialog=[\"${it.callbackLabel}\", options=$optionsText]"
+        }
+        reply.invoice?.let {
+            baseInfo += " invoice=[${it.payload}]"
+        }
+
+        return baseInfo
     }
 
 }

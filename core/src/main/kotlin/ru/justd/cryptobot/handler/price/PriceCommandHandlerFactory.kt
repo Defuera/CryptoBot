@@ -16,7 +16,6 @@ internal class PriceCommandHandlerFactory constructor(
 
     override fun create(inquiry: Inquiry): PriceCommandHandler {
         val request = inquiry.request
-        println("PriceCommandHandlerFactory#create $request")
         return PriceCommandHandler(
                 analytics,
                 exchangeFacade,

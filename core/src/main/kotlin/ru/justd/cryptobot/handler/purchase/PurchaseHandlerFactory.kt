@@ -9,9 +9,23 @@ internal class PurchaseHandlerFactory(
         private val debug: Boolean
 ) : CommandHandlerFactory<PurchaseHandler>("/buy") {
 
+//    413470 Иван
+//    25954567 Денис (я)
+//    135840403 Тимо
+//    63838729 Вася
+//    246025398 Егор
+//    196718279 Томми
+//    620708 Леша
+
+    val testChannels = arrayOf(
+            "55252078", //Iliya
+            "25954567", //Denis
+            "63838729" //Vasya
+    )
+
     override fun create(inquiry: Inquiry): PurchaseHandler {
         //available for test only
-        if (!debug && inquiry.channelId != "25954567") {
+        if (!testChannels.contains(inquiry.channelId)) {
             throw InvalidCommand("This feature not yet available in production, please contact us via /feedback to get more info")
         }
         if (!inquiry.private) {

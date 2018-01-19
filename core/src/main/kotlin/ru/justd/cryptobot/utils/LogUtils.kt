@@ -10,7 +10,7 @@ object LogUtils {
     private const val MAX_FILE_SIZE_BYTES = 1024 * 1024
     private const val FILES_TO_ROTATE_COUNT = 100
 
-    val LOGGER = Logger.getGlobal()
+    val LOGGER = Logger.getLogger("TelegramBot")
 
     var debug: Boolean = true
         set(value) {

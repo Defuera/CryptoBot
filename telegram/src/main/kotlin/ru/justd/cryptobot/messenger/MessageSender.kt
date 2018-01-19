@@ -7,6 +7,7 @@ import com.pengrad.telegrambot.request.*
 import ru.justd.cryptobot.messenger.model.Reply
 import ru.justd.cryptobot.telegram.BuildConfig
 import ru.justd.cryptobot.toChatId
+import ru.justd.cryptobot.utils.LogFormatter
 import ru.justd.cryptobot.utils.LogUtils.LOGGER
 import java.io.IOException
 import java.util.logging.Level
@@ -17,7 +18,7 @@ class MessageSender(
 ) {
 
     fun sendMessage(reply: Reply) {
-        LOGGER.log(Level.INFO, "reply: $reply")
+        LOGGER.log(Level.INFO, LogFormatter.logReply(reply))
 
         val request = SendMessage(reply.channelId, formatMessageText(reply.text))
 
@@ -30,7 +31,7 @@ class MessageSender(
     }
 
     fun updateMessage(messageId: Int, reply: Reply) {
-        LOGGER.log(Level.INFO, "reply: $reply")
+        LOGGER.log(Level.INFO, LogFormatter.logReply(reply))
 
         val invoice = reply.invoice
         if (invoice != null) {

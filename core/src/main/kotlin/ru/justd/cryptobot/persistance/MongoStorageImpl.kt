@@ -30,8 +30,7 @@ class MongoStorageImpl(private val mongo: MongoDatabase) : Storage {
     }
 
     override fun removeSubscription(channelId: String, subscriptionId: String) {
-        val deleteResult = getSubscriptionsCollection().deleteOne(and(eq(PROPERTY_CHANNEL_ID, channelId), eq(PROPERTY_UUID, subscriptionId)))
-        println("removeSubscription, $deleteResult")
+        getSubscriptionsCollection().deleteOne(and(eq(PROPERTY_CHANNEL_ID, channelId), eq(PROPERTY_UUID, subscriptionId)))
     }
 
     private fun getSubscriptionsCollection(): MongoCollection<Document> = mongo.getCollection(COLLECTION_SUBSCRIPTIONS)
