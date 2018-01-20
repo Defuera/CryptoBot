@@ -17,11 +17,11 @@ class BitfinexApi(val okHttpClient: OkHttpClient) : PollingExchange(okHttpClient
         const val NAME = "BITFINEX"
     }
 
-    override fun getRateUrl(base: String, target: String) = "$BASE_URL/pubticker/$base$target"
-
     @Throws(RequestFailed::class)
-    override fun parseRateResponseBody(bodyString: String, base: String, target: String): RateResponse {
-        val ticker = gson.fromJson<Ticker>(bodyString, Ticker::class.java)
+    override fun getRate(base: String, target: String): RateResponse {
+        val responseJson = executeRequest("$BASE_URL/pubticker/$base$target")
+
+        val ticker = gson.fromJson<Ticker>(responseJson, Ticker::class.java)
         val errorMessage = ticker.message
         if (errorMessage.isNullOrBlank()) {
             return RateResponse(ticker.mid, base, target)
@@ -29,6 +29,16 @@ class BitfinexApi(val okHttpClient: OkHttpClient) : PollingExchange(okHttpClient
             //then error
             throw RequestFailed("Error occurred: $errorMessage")
         }
+    }
+
+    override fun getCryptoAssets(): Array<String> {
+        val responseJson = executeRequest("$BASE_URL/symbols")
+        val typeToken = object : TypeToken<List<String>>() {}.type
+        val symbols = gson.fromJson<List<String>>(responseJson, typeToken)
+        return symbols.map { it.substring(0..2).toUpperCase() }
+                .toSet()
+                .toTypedArray()
+
     }
 
     private data class Ticker(
@@ -42,15 +52,5 @@ class BitfinexApi(val okHttpClient: OkHttpClient) : PollingExchange(okHttpClient
             val timestamp: Double,
             val message: String
     )
-
-    override fun getCryptoAssets(): Array<String> {
-        val responseJson = executeRequest("$BASE_URL/symbols")
-        val typeToken = object : TypeToken<List<String>>() {}.type
-        val symbols = gson.fromJson<List<String>>(responseJson, typeToken)
-        return symbols.map { it.substring(0..2).toUpperCase() }
-                .toSet()
-                .toTypedArray()
-
-    }
 
 }

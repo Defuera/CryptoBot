@@ -16,17 +16,21 @@ class CryptonatorApi(okHttpClient: OkHttpClient) : PollingExchange(okHttpClient)
 
     companion object { const val NAME = "CRYPTONATOR" }
 
-    override fun getRateUrl(base: String, target: String) = "$BASE_URL/ticker/$base-$target"
-
     @Throws(RequestFailed::class)
-    override fun parseRateResponseBody(bodyString: String, base: String, target: String): RateResponse {
-        val envelope = gson.fromJson<TickerEnvelope>(bodyString, TickerEnvelope::class.java)
+    override fun getRate(base: String, target: String): RateResponse {
+        val responseJson = executeRequest("$BASE_URL/ticker/$base-$target")
+
+        val envelope = gson.fromJson<TickerEnvelope>(responseJson, TickerEnvelope::class.java)
         if (envelope.success) {
             val ticker = envelope.ticker!!
             return RateResponse(ticker.price, ticker.base, ticker.target)
         } else {
             throw RequestFailed(envelope.error)
         }
+    }
+
+    override fun getCryptoAssets(): Array<String> {
+        return arrayOf("BTC", "ETH")
     }
 
 }

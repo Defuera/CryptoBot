@@ -1,6 +1,7 @@
 package ru.justd.cryptobot.api.exchanges.gdax
 
 import com.google.gson.annotations.SerializedName
+import com.google.gson.reflect.TypeToken
 import okhttp3.Headers
 import okhttp3.OkHttpClient
 import ru.justd.cryptobot.CoreConfig
@@ -37,20 +38,31 @@ class GdaxApi(val okHttpClient: OkHttpClient) : PollingExchange(okHttpClient), P
 
     private val BASE_URL = "https://api.gdax.com"
 
-    /**
-     * https://docs.gdax.com/#get-product-order-book
-     */
-    override fun getRateUrl(base: String, target: String) = "$BASE_URL/products/$base-$target/book"
+
+    //region PollingExchange
 
     @Throws(RequestFailed::class)
-    override fun parseRateResponseBody(bodyString: String, base: String, target: String): RateResponse {
-        val envelope = gson.fromJson<Envelope>(bodyString, Envelope::class.java)
+    override fun getRate(base: String, target: String): RateResponse {
+        val responseJson = executeRequest("$BASE_URL/products/$base-$target/book")
+
+        val envelope = gson.fromJson<Envelope>(responseJson, Envelope::class.java)
         if (envelope.bids != null) {
             return RateResponse(envelope.bids[0][0].toDouble(), base, target)
         } else {
             throw RequestFailed(envelope.errorMessage!!)
         }
     }
+
+    override fun getCryptoAssets(): Array<String> {
+        val responseJson = executeRequest("$BASE_URL/products")
+
+        val typeToken = object : TypeToken<List<Product>>() {}.type
+        val products = gson.fromJson<List<Product>>(responseJson, typeToken)
+        return products.map { it.baseCurrency }.toSet().toTypedArray()
+    }
+
+    //endregion
+
 
     @Suppress("ArrayInDataClass")
     private data class Envelope(
@@ -66,6 +78,17 @@ class GdaxApi(val okHttpClient: OkHttpClient) : PollingExchange(okHttpClient), P
              * [ price, size, num-orders ]
              */
             val asks: Array<Array<String>>?
+    )
+
+    private data class Product(
+            val id: String,
+            val baseCurrency: String,
+            val quoteCurrency: String,
+            val baseMinSize: String,
+            val baseMaxSize: String,
+            val quoteIncrement: String,
+            val displayName: String,
+            val status: String
     )
 
     @Throws(TransferFailed::class)
@@ -172,4 +195,5 @@ class GdaxApi(val okHttpClient: OkHttpClient) : PollingExchange(okHttpClient), P
 
         return headers
     }
+
 }

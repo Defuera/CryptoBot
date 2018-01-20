@@ -35,7 +35,7 @@ class PriceRetrieverDelegate(
             return Reply(
                     channelId,
                     "Choose fiat",
-                    Dialog("$scheme $exchange $base", arrayOf("USD", "EUR", "GBP"))
+                    Dialog("$scheme $exchange $base", arrayOf("USD", "EUR"))
             )
         }
 
