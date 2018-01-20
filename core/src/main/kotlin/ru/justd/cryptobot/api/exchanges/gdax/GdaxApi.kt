@@ -43,7 +43,7 @@ class GdaxApi(val okHttpClient: OkHttpClient) : PollingExchange(okHttpClient), P
     override fun getRateUrl(base: String, target: String) = "$BASE_URL/products/$base-$target/book"
 
     @Throws(RequestFailed::class)
-    override fun parseResponseBody(bodyString: String, base: String, target: String): RateResponse {
+    override fun parseRateResponseBody(bodyString: String, base: String, target: String): RateResponse {
         val envelope = gson.fromJson<Envelope>(bodyString, Envelope::class.java)
         if (envelope.bids != null) {
             return RateResponse(envelope.bids[0][0].toDouble(), base, target)

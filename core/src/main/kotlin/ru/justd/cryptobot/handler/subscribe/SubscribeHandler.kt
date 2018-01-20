@@ -5,7 +5,7 @@ import ru.justd.cryptobot.api.exchanges.ExchangeApiFacade
 import ru.justd.cryptobot.api.exchanges.exceptions.ExchangeNotSupported
 import ru.justd.cryptobot.api.exchanges.exceptions.RequestFailed
 import ru.justd.cryptobot.handler.CommandHandler
-import ru.justd.cryptobot.handler.price.PriceClarificatorDelegate
+import ru.justd.cryptobot.handler.price.PriceRetrieverDelegate
 import ru.justd.cryptobot.messenger.model.Dialog
 import ru.justd.cryptobot.messenger.model.Reply
 import ru.justd.cryptobot.persistance.Storage
@@ -43,7 +43,7 @@ class SubscribeHandler constructor(
 ) : CommandHandler {
 
     override fun createReply(channelId: String): Reply {
-        val delegate = PriceClarificatorDelegate("/subscribe", exchange, base, target)
+        val delegate = PriceRetrieverDelegate("/subscribe", exchange, base, target, exchangeApiFacade)
         if (base == null || target == null || exchange == null) {
             return delegate.createClarificationRequest(channelId)
         }

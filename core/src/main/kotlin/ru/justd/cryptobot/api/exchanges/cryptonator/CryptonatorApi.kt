@@ -19,7 +19,7 @@ class CryptonatorApi(okHttpClient: OkHttpClient) : PollingExchange(okHttpClient)
     override fun getRateUrl(base: String, target: String) = "$BASE_URL/ticker/$base-$target"
 
     @Throws(RequestFailed::class)
-    override fun parseResponseBody(bodyString: String, base: String, target: String): RateResponse {
+    override fun parseRateResponseBody(bodyString: String, base: String, target: String): RateResponse {
         val envelope = gson.fromJson<TickerEnvelope>(bodyString, TickerEnvelope::class.java)
         if (envelope.success) {
             val ticker = envelope.ticker!!

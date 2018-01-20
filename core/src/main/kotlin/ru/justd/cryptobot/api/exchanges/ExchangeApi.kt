@@ -7,4 +7,6 @@ interface ExchangeApi {
     @Throws(RequestFailed::class)
     fun getRate(base: String, target: String): RateResponse
 
+    @Throws(RequestFailed::class)
+    fun getCryptoAssets(): Array<String> = arrayOf("BTC", "ETH")
 }

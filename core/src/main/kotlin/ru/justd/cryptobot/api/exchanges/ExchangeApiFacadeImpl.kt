@@ -30,6 +30,10 @@ class ExchangeApiFacadeImpl(
         return getApi(exchangeApiCode).getRate(base, target)
     }
 
+    override fun getCryptoAssets(exchange: String): Array<String> {
+        return getApi(exchange).getCryptoAssets()
+    }
+
     @Throws(ExchangeNotSupported::class)
     private fun getApi(exchangeApiCode: String): ExchangeApi {
         return when (exchangeApiCode.toUpperCase()) {
