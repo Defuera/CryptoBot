@@ -22,7 +22,7 @@ import ru.justd.cryptobot.utils.UuidGenerator
  * 1. EXCHANGE_CODE - exchange name (like Gdax or Bitfinex, see list of available exchanges), **optional**
  * 1. FREQUENCY_MIN - how often you want to receive updates in minutes (ex. 10m) or hours (2h). Minimum periodicity is 5 minutes
  *
- * Exchange parameter is optional, however base and target are required.
+ * Exchange parameter is optional, however cryptoAsset and fiatCurrency are required.
  * You can get an update at a specific time (donno how to implement for telegram, so use UCT)
  * You can get an update every x minutes, hours
  * You can get an update when price changes significantly (can specify percent)

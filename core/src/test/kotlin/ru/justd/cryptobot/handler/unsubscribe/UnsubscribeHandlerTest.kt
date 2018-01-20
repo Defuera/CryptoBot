@@ -41,7 +41,7 @@ class UnsubscribeHandlerTest {
     @Test
     fun `remove existing subscription successfully`() {
         //setup
-        val stubSubscription = Subscription("uuid", "channelId", "target", "exchange", 5, "base")
+        val stubSubscription = Subscription("uuid", "channelId", "fiatCurrency", "exchange", 5, "cryptoAsset")
         whenever(storageMock.getSubscriptions(channelId)).thenReturn(listOf(stubSubscription))
 
         //action

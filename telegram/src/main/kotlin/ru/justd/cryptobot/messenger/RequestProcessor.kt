@@ -119,7 +119,7 @@ class RequestProcessor(
             val failReport = "transfer failed: \n" +
                     "channelId: $channelId\n" +
                     "address: ${error.address}\n" +
-                    "base: ${error.base}\n" +
+                    "cryptoAsset: ${error.base}\n" +
                     "amount: ${error.amount}\n" +
                     "paymentChargeId: $paymentChargeId\n" +
                     "message: ${error.errorMessage}\n"

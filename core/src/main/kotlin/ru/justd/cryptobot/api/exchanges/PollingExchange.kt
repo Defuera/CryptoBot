@@ -1,22 +1,15 @@
 package ru.justd.cryptobot.api.exchanges
 
-import com.google.gson.Gson
+import com.google.gson.FieldNamingPolicy
+import com.google.gson.GsonBuilder
 import okhttp3.OkHttpClient
 import okhttp3.Request
-import ru.justd.cryptobot.api.exchanges.exceptions.RequestFailed
 
 abstract class PollingExchange(private val okHttpClient: OkHttpClient) : ExchangeApi {
 
-    val gson = Gson()
-
-    /**
-     * https://docs.gdax.com/#get-product-order-book
-     */
-    @Throws(RequestFailed::class)
-    override fun getRate(base: String, target: String): RateResponse {
-        val responseJson = executeRequest(getRateUrl(base, target))
-        return parseRateResponseBody(responseJson, base, target)
-    }
+    val gson = GsonBuilder()
+            .setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES)
+            .create()
 
     fun executeRequest(url: String): String {
         val response = okHttpClient
@@ -31,20 +24,10 @@ abstract class PollingExchange(private val okHttpClient: OkHttpClient) : Exchang
         }
     }
 
-
-    //region abstract
-
-    abstract fun getRateUrl(base: String, target: String): String
-
-    @Throws(RequestFailed::class)
-    abstract fun parseRateResponseBody(bodyString: String, base: String, target: String): RateResponse
-
-    open fun createRequestBuilder(url : String): Request.Builder {
+    open fun createRequestBuilder(url: String): Request.Builder {
         return Request.Builder()
                 .get()
                 .url(url)
     }
-
-    //endregion
 
 }

@@ -29,7 +29,7 @@ class PurchaseHandler constructor(
 
         if (request?.contains(TAG_BUY_CRYPTO) == true) {
             val crypto = retrieveParam(TAG_BUY_CRYPTO)
-            return prepareByeCryptoRequest(channelId, crypto, "EUR") //todo target
+            return prepareByeCryptoRequest(channelId, crypto, "EUR")
         }
 
         if (request?.contains(TAG_CREATE_INVOICE) == true) {

@@ -10,7 +10,6 @@ import ru.justd.cryptobot.api.exchanges.ExchangeApiFacade
 import ru.justd.cryptobot.api.exchanges.ExchangeApiFacadeImpl
 import ru.justd.cryptobot.api.exchanges.bitfinex.BitfinexApi
 import ru.justd.cryptobot.api.exchanges.coinbase.CoinbaseApi
-import ru.justd.cryptobot.api.exchanges.cryptonator.CryptonatorApi
 import ru.justd.cryptobot.api.exchanges.gdax.GdaxApi
 import ru.justd.cryptobot.handler.purchase.PurchaseFacade
 import ru.justd.cryptobot.handler.purchase.PurchaseFacadeImpl
@@ -39,11 +38,6 @@ class ExchangeApiModule {
 
     @Provides
     @Singleton
-    @Named(CryptonatorApi.NAME)
-    fun provideCryptonator(okHttpClient: OkHttpClient): ExchangeApi = CryptonatorApi(okHttpClient)
-
-    @Provides
-    @Singleton
     @Named(BitfinexApi.NAME)
     fun provideBitfinexApi(okHttpClient: OkHttpClient): ExchangeApi = BitfinexApi(okHttpClient)
 
@@ -52,16 +46,14 @@ class ExchangeApiModule {
     fun provideExchangeFacade(
             @Named(GdaxApi.NAME) gdaxApi: ExchangeApi,
             @Named(CoinbaseApi.NAME) coinbaseApi: ExchangeApi,
-            @Named(CryptonatorApi.NAME) cryptonatorApi: ExchangeApi,
             @Named(BitfinexApi.NAME) bitfinexApi: ExchangeApi
     ): ExchangeApiFacade = ExchangeApiFacadeImpl(
             gdaxApi,
             coinbaseApi,
-            cryptonatorApi,
             bitfinexApi
     )
 
     @Provides
     @Singleton
-    fun providePurchaseFacade(@Named(GdaxApi.NAME) gdaxApi: ExchangeApi) : PurchaseFacade = PurchaseFacadeImpl(gdaxApi as PurchaseApi) //todo explicit cast
+    fun providePurchaseFacade(@Named(GdaxApi.NAME) gdaxApi: ExchangeApi): PurchaseFacade = PurchaseFacadeImpl(gdaxApi as PurchaseApi) //todo explicit cast
 }

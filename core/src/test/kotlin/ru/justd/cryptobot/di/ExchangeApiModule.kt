@@ -9,7 +9,6 @@ import ru.justd.cryptobot.api.exchanges.ExchangeApi
 import ru.justd.cryptobot.api.exchanges.ExchangeApiFacade
 import ru.justd.cryptobot.api.exchanges.bitfinex.BitfinexApi
 import ru.justd.cryptobot.api.exchanges.coinbase.CoinbaseApi
-import ru.justd.cryptobot.api.exchanges.cryptonator.CryptonatorApi
 import ru.justd.cryptobot.api.exchanges.gdax.GdaxApi
 import ru.justd.cryptobot.handler.purchase.PurchaseFacade
 import javax.inject.Named
@@ -40,11 +39,6 @@ class ExchangeApiModule {
 
     @Provides
     @Singleton
-    @Named(CryptonatorApi.NAME)
-    fun provideCryptonator(okHttpClient: OkHttpClient) = mock<ExchangeApi>()
-
-    @Provides
-    @Singleton
     @Named(BitfinexApi.NAME)
     fun provideBitfinexApi(okHttpClient: OkHttpClient) = mock<ExchangeApi>()
 
@@ -53,7 +47,6 @@ class ExchangeApiModule {
     fun provideExchangeFacade(
             @Named(GdaxApi.NAME) gdaxApi: ExchangeApi,
             @Named(CoinbaseApi.NAME) coinbaseApi: ExchangeApi,
-            @Named(CryptonatorApi.NAME) cryptonatorApi: ExchangeApi,
             @Named(BitfinexApi.NAME) bitfinexApi: ExchangeApi
     ) = exchangeFacade
 

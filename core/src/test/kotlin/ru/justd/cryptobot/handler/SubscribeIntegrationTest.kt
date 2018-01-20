@@ -11,7 +11,7 @@ import org.mockito.ArgumentMatchers.anyLong
 import org.mockito.ArgumentMatchers.anyString
 import ru.justd.cryptobot.CryptoCore
 import ru.justd.cryptobot.api.exchanges.RateResponse
-import ru.justd.cryptobot.api.exchanges.cryptonator.CryptonatorApi
+import ru.justd.cryptobot.api.exchanges.bitfinex.BitfinexApi
 import ru.justd.cryptobot.di.ExchangeApiModule
 import ru.justd.cryptobot.di.StorageModule
 import ru.justd.cryptobot.di.UtilsModule.Companion.timeManagerMock
@@ -31,7 +31,7 @@ internal class SubscribeIntegrationTest {
     private val channelId = "channelId"
     private val BASE_LTC = "LTC"
     private val TARGET_GBP = "GBP"
-    private val EXCHANGE_CRYPTONATOR = CryptonatorApi.NAME
+    private val EXCHANGE_BITFINEX = BitfinexApi.NAME
 
     @Before
     fun setup() {
@@ -52,7 +52,7 @@ internal class SubscribeIntegrationTest {
 
         val dialog = response.dialog!!
         assertThat(dialog.callbackLabel).isEqualTo("/subscribe")
-        checkOptions(dialog.dialogOptions, "Coinbase", "Gdax", "Cryptonator", "Bitfinex")
+        checkOptions(dialog.dialogOptions, "Gdax", "Coinbase", "Bitfinex")
     }
 
     /**
@@ -71,17 +71,17 @@ internal class SubscribeIntegrationTest {
                 ))
 
         //action
-        val reply = testInstance.handle(Inquiry(channelId, false, "/subscribe $EXCHANGE_CRYPTONATOR $BASE_LTC $TARGET_GBP $PERIOD_12_HOURS"))
+        val reply = testInstance.handle(Inquiry(channelId, false, "/subscribe $EXCHANGE_BITFINEX $BASE_LTC $TARGET_GBP $PERIOD_12_HOURS"))
 
         //test
-        assertThat(reply.text).isEqualTo("Subscription created successfully!\nLTC price is 300.0 GBP (via CRYPTONATOR)")
+        assertThat(reply.text).isEqualTo("Subscription created successfully!\nLTC price is 300.0 GBP (via BITFINEX)")
         verify(storageMock, times(1)).addSubscription(
                 Subscription(
                         "uuid",
                         "channelId",
                         BASE_LTC,
                         TARGET_GBP,
-                        EXCHANGE_CRYPTONATOR,
+                        EXCHANGE_BITFINEX,
                         listOf("12:00")
                 )
         )

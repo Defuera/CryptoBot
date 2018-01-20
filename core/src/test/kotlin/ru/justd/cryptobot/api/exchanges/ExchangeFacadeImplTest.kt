@@ -8,10 +8,8 @@ import org.mockito.Mockito.times
 import org.mockito.Mockito.verify
 import org.mockito.MockitoAnnotations
 import ru.justd.cryptobot.api.exchanges.coinbase.CoinbaseApi
-import ru.justd.cryptobot.api.exchanges.cryptonator.CryptonatorApi
 import ru.justd.cryptobot.api.exchanges.exceptions.ExchangeNotSupported
 import ru.justd.cryptobot.api.exchanges.gdax.GdaxApi
-import ru.justd.cryptobot.persistance.Storage
 
 internal class ExchangeFacadeImplTest {
 
@@ -24,15 +22,12 @@ internal class ExchangeFacadeImplTest {
     lateinit var coinbaseApi: ExchangeApi
 
     @Mock
-    lateinit var cryptonatorApi: ExchangeApi
-
-    @Mock
     lateinit var bitfinexApi: ExchangeApi
 
     @Before
     fun setup() {
         MockitoAnnotations.initMocks(this)
-        testInstance = ExchangeApiFacadeImpl(gdaxApi, coinbaseApi, cryptonatorApi, bitfinexApi)
+        testInstance = ExchangeApiFacadeImpl(gdaxApi, coinbaseApi, bitfinexApi)
     }
 
     @Test
@@ -51,15 +46,6 @@ internal class ExchangeFacadeImplTest {
         testInstance.getRate(base, target, CoinbaseApi.NAME)
 
         verify(coinbaseApi, times(1)).getRate(base, target)
-    }
-
-    @Test
-    fun testCryptonatorApiCalled() {
-        val base = "BASE"
-        val target = "TARGET"
-        testInstance.getRate(base, target, CryptonatorApi.NAME)
-
-        verify(cryptonatorApi, times(1)).getRate(base, target)
     }
 
     @Test

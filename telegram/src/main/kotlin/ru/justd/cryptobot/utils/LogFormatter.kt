@@ -45,7 +45,7 @@ object LogFormatter {
         return "onTransferFailed: " +
                 "chatId: $chatId " +
                 "address: ${error.address} " +
-                "base: ${error.base} " +
+                "cryptoAsset: ${error.base} " +
                 "amount: ${error.amount} " +
                 "paymentChargeId: ${payment.providerPaymentChargeId()}" +
                 "message: ${error.errorMessage} "
