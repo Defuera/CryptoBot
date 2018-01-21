@@ -2,8 +2,7 @@ package ru.justd.cryptobot.persistance
 
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Test
-import ru.justd.cryptobot.api.exchanges.bitfinex.BitfinexApi
-import ru.justd.cryptobot.api.exchanges.gdax.GdaxApi
+import ru.justd.cryptobot.api.exchanges.Exchange
 import ru.justd.cryptobot.handler.subscribe.Subscription
 
 
@@ -15,8 +14,8 @@ internal class StorageImplTest {
     private val BASE_BCC = "BCC"
     private val TARGET_GBP = "GBP"
     private val TARGET_EUR = "EUR"
-    private val EXCHANGE_GDAX = GdaxApi.NAME
-    private val EXCHANGE_BITFINEX = BitfinexApi.NAME
+    private val EXCHANGE_GDAX = Exchange.GDAX.name
+    private val EXCHANGE_BITFINEX = Exchange.BITFINEX.name
 
     val testInstance = StorageImpl()
 

@@ -4,7 +4,7 @@ import khronos.Dates
 import khronos.toString
 import okhttp3.OkHttpClient
 import okhttp3.Request
-import ru.justd.cryptobot.api.exchanges.PollingExchange
+import ru.justd.cryptobot.api.exchanges.PollingExchangeApi
 import ru.justd.cryptobot.api.exchanges.RateResponse
 import ru.justd.cryptobot.api.exchanges.exceptions.RequestFailed
 
@@ -15,9 +15,7 @@ private const val FORMAT_API_DATE = "yyyy-MM-dd"
 /**
  * https://developers.coinbase.com/api/
  */
-class CoinbaseApi(okHttpClient: OkHttpClient) : PollingExchange(okHttpClient) {
-
-    companion object { const val NAME = "COINBASE" }
+class CoinbaseApi(okHttpClient: OkHttpClient) : PollingExchangeApi(okHttpClient) {
 
     @Throws(RequestFailed::class)
     override fun getRate(cryptoAsset: String, fiatCurrency: String): RateResponse {

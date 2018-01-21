@@ -5,7 +5,7 @@ import com.google.gson.GsonBuilder
 import okhttp3.OkHttpClient
 import okhttp3.Request
 
-abstract class PollingExchange(private val okHttpClient: OkHttpClient) : ExchangeApi {
+abstract class PollingExchangeApi(private val okHttpClient: OkHttpClient) : ExchangeApi {
 
     val gson = GsonBuilder()
             .setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES)

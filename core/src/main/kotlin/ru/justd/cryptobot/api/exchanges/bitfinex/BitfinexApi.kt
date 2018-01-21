@@ -2,7 +2,7 @@ package ru.justd.cryptobot.api.exchanges.bitfinex
 
 import com.google.gson.reflect.TypeToken
 import okhttp3.OkHttpClient
-import ru.justd.cryptobot.api.exchanges.PollingExchange
+import ru.justd.cryptobot.api.exchanges.PollingExchangeApi
 import ru.justd.cryptobot.api.exchanges.RateResponse
 import ru.justd.cryptobot.api.exchanges.exceptions.RequestFailed
 
@@ -11,11 +11,7 @@ private const val BASE_URL = "https://api.bitfinex.com/v1"
 /**
  * https://docs.bitfinex.com/v1/reference
  */
-class BitfinexApi(val okHttpClient: OkHttpClient) : PollingExchange(okHttpClient) {
-
-    companion object {
-        const val NAME = "BITFINEX"
-    }
+class BitfinexApi(val okHttpClient: OkHttpClient) : PollingExchangeApi(okHttpClient) {
 
     @Throws(RequestFailed::class)
     override fun getRate(cryptoAsset: String, fiatCurrency: String): RateResponse {

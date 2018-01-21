@@ -6,7 +6,7 @@ import okhttp3.Headers
 import okhttp3.OkHttpClient
 import ru.justd.cryptobot.CoreConfig
 import ru.justd.cryptobot.api.PurchaseApi
-import ru.justd.cryptobot.api.exchanges.PollingExchange
+import ru.justd.cryptobot.api.exchanges.PollingExchangeApi
 import ru.justd.cryptobot.api.exchanges.RateResponse
 import ru.justd.cryptobot.api.exchanges.exceptions.RequestFailed
 import ru.justd.cryptobot.api.exchanges.gdax.model.TransferFailed
@@ -21,11 +21,9 @@ import javax.management.RuntimeErrorException
 /**
  * https://docs.gdax.com/
  */
-class GdaxApi(val okHttpClient: OkHttpClient) : PollingExchange(okHttpClient), PurchaseApi {
+class GdaxApi(val okHttpClient: OkHttpClient) : PollingExchangeApi(okHttpClient), PurchaseApi {
 
     companion object {
-        const val NAME = "GDAX"
-
         private const val BASE_URL = "https://api.gdax.com"
 
         private const val CB_ACCESS_KEY = "CB-ACCESS-KEY" // The api key as a string.
@@ -36,10 +34,8 @@ class GdaxApi(val okHttpClient: OkHttpClient) : PollingExchange(okHttpClient), P
         private val SHARED_MAC = Mac.getInstance("HmacSHA256")
     }
 
-    private val BASE_URL = "https://api.gdax.com"
 
-
-    //region PollingExchange
+    //region PollingExchangeApi
 
     @Throws(RequestFailed::class)
     override fun getRate(cryptoAsset: String, fiatCurrency: String): RateResponse {

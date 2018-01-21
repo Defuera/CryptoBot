@@ -1,6 +1,5 @@
 package ru.justd.cryptobot.handler.price
 
-import ru.justd.cryptobot.api.exchanges.Exchange
 import ru.justd.cryptobot.api.exchanges.ExchangeApiFacade
 import ru.justd.cryptobot.messenger.model.Dialog
 import ru.justd.cryptobot.messenger.model.Reply
@@ -15,7 +14,7 @@ class PriceRetrieverDelegate(
     fun createClarificationRequest(channelId: String): Reply {
 
         if (exchange == null || exchange.isBlank()) {
-            val dialogOptions = arrayOf("Gdax", "Coinbase", "Bitfinex")//Exchange.values().map { it.displayName }.toTypedArray()
+            val dialogOptions = exchangeFacade.listExchanges()
             return Reply(
                     channelId,
                     "Choose exchange",

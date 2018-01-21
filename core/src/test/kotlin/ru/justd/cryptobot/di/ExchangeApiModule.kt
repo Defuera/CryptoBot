@@ -4,14 +4,8 @@ import com.nhaarman.mockito_kotlin.mock
 import dagger.Module
 import dagger.Provides
 import okhttp3.OkHttpClient
-import org.mockito.Mockito
-import ru.justd.cryptobot.api.exchanges.ExchangeApi
 import ru.justd.cryptobot.api.exchanges.ExchangeApiFacade
-import ru.justd.cryptobot.api.exchanges.bitfinex.BitfinexApi
-import ru.justd.cryptobot.api.exchanges.coinbase.CoinbaseApi
-import ru.justd.cryptobot.api.exchanges.gdax.GdaxApi
 import ru.justd.cryptobot.handler.purchase.PurchaseFacade
-import javax.inject.Named
 import javax.inject.Singleton
 
 @Module
@@ -19,7 +13,7 @@ class ExchangeApiModule {
 
     companion object {
 
-        val exchangeFacade = Mockito.mock(ExchangeApiFacade::class.java)
+        val exchangeFacade = mock<ExchangeApiFacade>()
 
     }
 
@@ -29,28 +23,9 @@ class ExchangeApiModule {
 
     @Provides
     @Singleton
-    @Named(GdaxApi.NAME)
-    fun provideGdaxApi(okHttpClient: OkHttpClient) = mock<ExchangeApi>()
+    fun provideExchangeFacade(okHttpClient: OkHttpClient) = exchangeFacade
 
     @Provides
     @Singleton
-    @Named(CoinbaseApi.NAME)
-    fun provideCoinbaseApi(okHttpClient: OkHttpClient) = mock<ExchangeApi>()
-
-    @Provides
-    @Singleton
-    @Named(BitfinexApi.NAME)
-    fun provideBitfinexApi(okHttpClient: OkHttpClient) = mock<ExchangeApi>()
-
-    @Provides
-    @Singleton
-    fun provideExchangeFacade(
-            @Named(GdaxApi.NAME) gdaxApi: ExchangeApi,
-            @Named(CoinbaseApi.NAME) coinbaseApi: ExchangeApi,
-            @Named(BitfinexApi.NAME) bitfinexApi: ExchangeApi
-    ) = exchangeFacade
-
-    @Provides
-    @Singleton
-    fun providePurchaseFacade(@Named(GdaxApi.NAME) gdaxApi: ExchangeApi) = mock<PurchaseFacade>()
+    fun providePurchaseFacade(okHttpClient: OkHttpClient) = mock<PurchaseFacade>()
 }

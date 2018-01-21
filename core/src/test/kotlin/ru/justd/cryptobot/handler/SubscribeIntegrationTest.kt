@@ -10,8 +10,8 @@ import org.junit.Test
 import org.mockito.ArgumentMatchers.anyLong
 import org.mockito.ArgumentMatchers.anyString
 import ru.justd.cryptobot.CryptoCore
+import ru.justd.cryptobot.api.exchanges.Exchange
 import ru.justd.cryptobot.api.exchanges.RateResponse
-import ru.justd.cryptobot.api.exchanges.bitfinex.BitfinexApi
 import ru.justd.cryptobot.di.ExchangeApiModule
 import ru.justd.cryptobot.di.StorageModule
 import ru.justd.cryptobot.di.UtilsModule.Companion.timeManagerMock
@@ -31,7 +31,7 @@ internal class SubscribeIntegrationTest {
     private val channelId = "channelId"
     private val BASE_LTC = "LTC"
     private val TARGET_GBP = "GBP"
-    private val EXCHANGE_BITFINEX = BitfinexApi.NAME
+    private val EXCHANGE_BITFINEX = Exchange.BITFINEX.name
 
     @Before
     fun setup() {
@@ -40,6 +40,7 @@ internal class SubscribeIntegrationTest {
         whenever(timeManagerMock.createPublishTimes(anyLong(), anyString())).thenReturn(listOf("12:00"))
         whenever(uuidGeneratorMock.random()).thenReturn("uuid")
 
+        whenever(ExchangeApiModule.exchangeFacade.listExchanges()).thenReturn(arrayOf("Gdax", "Coinbase", "Bitfinex"))
         testInstance = CryptoCore.start("", true, mock())
     }
 
