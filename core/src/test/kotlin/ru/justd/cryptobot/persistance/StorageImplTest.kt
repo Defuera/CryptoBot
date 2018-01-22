@@ -2,8 +2,7 @@ package ru.justd.cryptobot.persistance
 
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Test
-import ru.justd.cryptobot.api.exchanges.cryptonator.CryptonatorApi
-import ru.justd.cryptobot.api.exchanges.gdax.GdaxApi
+import ru.justd.cryptobot.api.exchanges.Exchange
 import ru.justd.cryptobot.handler.subscribe.Subscription
 
 
@@ -15,8 +14,8 @@ internal class StorageImplTest {
     private val BASE_BCC = "BCC"
     private val TARGET_GBP = "GBP"
     private val TARGET_EUR = "EUR"
-    private val EXCHANGE_GDAX = GdaxApi.NAME
-    private val EXCHANGE_CRYPTONATOR = CryptonatorApi.NAME
+    private val EXCHANGE_GDAX = Exchange.GDAX.name
+    private val EXCHANGE_BITFINEX = Exchange.BITFINEX.name
 
     val testInstance = StorageImpl()
 
@@ -24,7 +23,7 @@ internal class StorageImplTest {
     fun `test multiple subscriptions`() {
         //setup
         val subscription1 = Subscription("uuid1", "channelId", TARGET_GBP, EXCHANGE_GDAX, 5, BASE_LTC)
-        val subscription2 = Subscription("uuid2", "channelId", TARGET_EUR, EXCHANGE_CRYPTONATOR, 15, BASE_BCC)
+        val subscription2 = Subscription("uuid2", "channelId", TARGET_EUR, EXCHANGE_BITFINEX, 15, BASE_BCC)
 
         //action
         testInstance.addSubscription(subscription1)

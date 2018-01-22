@@ -5,7 +5,7 @@ import ru.justd.cryptobot.api.exchanges.ExchangeApiFacade
 import ru.justd.cryptobot.api.exchanges.exceptions.ExchangeNotSupported
 import ru.justd.cryptobot.api.exchanges.exceptions.RequestFailed
 import ru.justd.cryptobot.handler.CommandHandler
-import ru.justd.cryptobot.handler.price.PriceClarificatorDelegate
+import ru.justd.cryptobot.handler.price.PriceRetrieverDelegate
 import ru.justd.cryptobot.messenger.model.Dialog
 import ru.justd.cryptobot.messenger.model.Reply
 import ru.justd.cryptobot.persistance.Storage
@@ -22,7 +22,7 @@ import ru.justd.cryptobot.utils.UuidGenerator
  * 1. EXCHANGE_CODE - exchange name (like Gdax or Bitfinex, see list of available exchanges), **optional**
  * 1. FREQUENCY_MIN - how often you want to receive updates in minutes (ex. 10m) or hours (2h). Minimum periodicity is 5 minutes
  *
- * Exchange parameter is optional, however base and target are required.
+ * Exchange parameter is optional, however cryptoAsset and fiatCurrency are required.
  * You can get an update at a specific time (donno how to implement for telegram, so use UCT)
  * You can get an update every x minutes, hours
  * You can get an update when price changes significantly (can specify percent)
@@ -43,7 +43,7 @@ class SubscribeHandler constructor(
 ) : CommandHandler {
 
     override fun createReply(channelId: String): Reply {
-        val delegate = PriceClarificatorDelegate("/subscribe", exchange, base, target)
+        val delegate = PriceRetrieverDelegate("/subscribe", exchange, base, target, exchangeApiFacade)
         if (base == null || target == null || exchange == null) {
             return delegate.createClarificationRequest(channelId)
         }

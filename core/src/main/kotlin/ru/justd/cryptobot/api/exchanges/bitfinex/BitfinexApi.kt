@@ -1,7 +1,8 @@
 package ru.justd.cryptobot.api.exchanges.bitfinex
 
+import com.google.gson.reflect.TypeToken
 import okhttp3.OkHttpClient
-import ru.justd.cryptobot.api.exchanges.PollingExchange
+import ru.justd.cryptobot.api.exchanges.PollingExchangeApi
 import ru.justd.cryptobot.api.exchanges.RateResponse
 import ru.justd.cryptobot.api.exchanges.exceptions.RequestFailed
 
@@ -10,24 +11,30 @@ private const val BASE_URL = "https://api.bitfinex.com/v1"
 /**
  * https://docs.bitfinex.com/v1/reference
  */
-class BitfinexApi(okHttpClient: OkHttpClient) : PollingExchange(okHttpClient) {
-
-    companion object {
-        const val NAME = "BITFINEX"
-    }
-
-    override fun getRateUrl(base: String, target: String) = "$BASE_URL/pubticker/$base$target"
+class BitfinexApi(val okHttpClient: OkHttpClient) : PollingExchangeApi(okHttpClient) {
 
     @Throws(RequestFailed::class)
-    override fun parseResponseBody(bodyString: String, base: String, target: String): RateResponse {
-        val ticker = gson.fromJson<Ticker>(bodyString, Ticker::class.java)
+    override fun getRate(cryptoAsset: String, fiatCurrency: String): RateResponse {
+        val responseJson = executeRequest("$BASE_URL/pubticker/$cryptoAsset$fiatCurrency")
+
+        val ticker = gson.fromJson<Ticker>(responseJson, Ticker::class.java)
         val errorMessage = ticker.message
-        if (errorMessage.isNullOrBlank()){
-            return RateResponse(ticker.mid, base, target)
+        if (errorMessage.isNullOrBlank()) {
+            return RateResponse(ticker.mid, cryptoAsset, fiatCurrency)
         } else {
             //then error
             throw RequestFailed("Error occurred: $errorMessage")
         }
+    }
+
+    override fun getCryptoAssets(): Array<String> {
+        val responseJson = executeRequest("$BASE_URL/symbols")
+        val typeToken = object : TypeToken<List<String>>() {}.type
+        val symbols = gson.fromJson<List<String>>(responseJson, typeToken)
+        return symbols.map { it.substring(0..2).toUpperCase() }
+                .toSet()
+                .toTypedArray()
+
     }
 
     private data class Ticker(
@@ -39,7 +46,7 @@ class BitfinexApi(okHttpClient: OkHttpClient) : PollingExchange(okHttpClient) {
             val high: Double,
             val volume: Double,
             val timestamp: Double,
-            val message : String
+            val message: String
     )
 
 }

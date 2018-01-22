@@ -1,11 +1,12 @@
 package ru.justd.cryptobot.api.exchanges.gdax
 
 import com.google.gson.annotations.SerializedName
+import com.google.gson.reflect.TypeToken
 import okhttp3.Headers
 import okhttp3.OkHttpClient
 import ru.justd.cryptobot.CoreConfig
 import ru.justd.cryptobot.api.PurchaseApi
-import ru.justd.cryptobot.api.exchanges.PollingExchange
+import ru.justd.cryptobot.api.exchanges.PollingExchangeApi
 import ru.justd.cryptobot.api.exchanges.RateResponse
 import ru.justd.cryptobot.api.exchanges.exceptions.RequestFailed
 import ru.justd.cryptobot.api.exchanges.gdax.model.TransferFailed
@@ -20,11 +21,9 @@ import javax.management.RuntimeErrorException
 /**
  * https://docs.gdax.com/
  */
-class GdaxApi(val okHttpClient: OkHttpClient) : PollingExchange(okHttpClient), PurchaseApi {
+class GdaxApi(val okHttpClient: OkHttpClient) : PollingExchangeApi(okHttpClient), PurchaseApi {
 
     companion object {
-        const val NAME = "GDAX"
-
         private const val BASE_URL = "https://api.gdax.com"
 
         private const val CB_ACCESS_KEY = "CB-ACCESS-KEY" // The api key as a string.
@@ -35,22 +34,31 @@ class GdaxApi(val okHttpClient: OkHttpClient) : PollingExchange(okHttpClient), P
         private val SHARED_MAC = Mac.getInstance("HmacSHA256")
     }
 
-    private val BASE_URL = "https://api.gdax.com"
 
-    /**
-     * https://docs.gdax.com/#get-product-order-book
-     */
-    override fun getRateUrl(base: String, target: String) = "$BASE_URL/products/$base-$target/book"
+    //region PollingExchangeApi
 
     @Throws(RequestFailed::class)
-    override fun parseResponseBody(bodyString: String, base: String, target: String): RateResponse {
-        val envelope = gson.fromJson<Envelope>(bodyString, Envelope::class.java)
+    override fun getRate(cryptoAsset: String, fiatCurrency: String): RateResponse {
+        val responseJson = executeRequest("$BASE_URL/products/$cryptoAsset-$fiatCurrency/book")
+
+        val envelope = gson.fromJson<Envelope>(responseJson, Envelope::class.java)
         if (envelope.bids != null) {
-            return RateResponse(envelope.bids[0][0].toDouble(), base, target)
+            return RateResponse(envelope.bids[0][0].toDouble(), cryptoAsset, fiatCurrency)
         } else {
             throw RequestFailed(envelope.errorMessage!!)
         }
     }
+
+    override fun getCryptoAssets(): Array<String> {
+        val responseJson = executeRequest("$BASE_URL/products")
+
+        val typeToken = object : TypeToken<List<Product>>() {}.type
+        val products = gson.fromJson<List<Product>>(responseJson, typeToken)
+        return products.map { it.baseCurrency }.toSet().toTypedArray()
+    }
+
+    //endregion
+
 
     @Suppress("ArrayInDataClass")
     private data class Envelope(
@@ -68,6 +76,17 @@ class GdaxApi(val okHttpClient: OkHttpClient) : PollingExchange(okHttpClient), P
             val asks: Array<Array<String>>?
     )
 
+    private data class Product(
+            val id: String,
+            val baseCurrency: String,
+            val quoteCurrency: String,
+            val baseMinSize: String,
+            val baseMaxSize: String,
+            val quoteIncrement: String,
+            val displayName: String,
+            val status: String
+    )
+
     @Throws(TransferFailed::class)
     override fun transferFunds(channelId: String, base: String, amount: Double, address: String): Reply {
         return Reply(
@@ -82,7 +101,7 @@ class GdaxApi(val okHttpClient: OkHttpClient) : PollingExchange(okHttpClient), P
 //
 //        val jsonBody = "{\n" +
 //                "    \"amount\": $amount,\n" +
-//                "    \"currency\": \"$base\",\n" +
+//                "    \"currency\": \"$cryptoAsset\",\n" +
 //                "    \"crypto_address\": \"$address\"\n" +
 //                "}"
 //
@@ -109,12 +128,12 @@ class GdaxApi(val okHttpClient: OkHttpClient) : PollingExchange(okHttpClient), P
 //            return Reply(
 //                    channelId,
 //                    "${purchaseResult.amount} ${purchaseResult.currency} has been transferred to $address.\n" +
-//                            "You can track the transaction here ${getBlockchainInfoUrl(base)}/$address. It should appear in next 30 minutes."
+//                            "You can track the transaction here ${getBlockchainInfoUrl(cryptoAsset)}/$address. It should appear in next 30 minutes."
 //            )
 //        } else {
 //            val errorMessage = "error: $responseBody"
 //            ShiffrLogger.log("GdaxApi#transferFunds", errorMessage)
-//            throw TransferFailed(channelId, base, amount, address, errorMessage)
+//            throw TransferFailed(channelId, cryptoAsset, amount, address, errorMessage)
 //        }
 
     }
@@ -172,4 +191,5 @@ class GdaxApi(val okHttpClient: OkHttpClient) : PollingExchange(okHttpClient), P
 
         return headers
     }
+
 }
