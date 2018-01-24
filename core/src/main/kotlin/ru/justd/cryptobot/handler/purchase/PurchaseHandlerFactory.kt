@@ -16,11 +16,13 @@ internal class PurchaseHandlerFactory(
 //    246025398 Егор
 //    196718279 Томми
 //    620708 Леша
+//    72639188 Max
 
     val testChannels = arrayOf(
             "55252078", //Iliya
             "25954567", //Denis
-            "63838729" //Vasya
+            "63838729", //Vasya
+            "72639188"  //Max
     )
 
     override fun create(inquiry: Inquiry): PurchaseHandler {

@@ -6,6 +6,6 @@ interface ExchangeApiFacade {
 
     fun getCryptoAssets(exchange: String): Array<String>
 
-    fun listExchanges(): Array<String>
+    fun listExchanges(): Array<String> //todo add cache
 
 }
