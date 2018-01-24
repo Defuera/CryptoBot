@@ -14,7 +14,7 @@ class UpdateNotesManager(private val messageSender: MessageSender) {
         launch {
             val version = BuildConfig.VERSION
             val channelsToUpdate = getChannelsToUpdate(version)
-            val updateText = getUpdateText(version)
+            val updateText = readUpdateTextFromFile(version)
             channelsToUpdate.forEach {
                 sendUpdate(it, updateText)
                 markAsUpdated(it)
@@ -23,7 +23,7 @@ class UpdateNotesManager(private val messageSender: MessageSender) {
         }
     }
 
-    fun getUpdateText(version: String): String {
+    fun readUpdateTextFromFile(version: String): String {
         val file = File(UPDATE_NOTES_FILE_NAME)
         var read = false
         var updateText = ""

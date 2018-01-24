@@ -10,6 +10,7 @@ import org.junit.Test
 import org.mockito.ArgumentMatchers.anyLong
 import org.mockito.ArgumentMatchers.anyString
 import ru.justd.cryptobot.CryptoCore
+import ru.justd.cryptobot.CryptoCoreImpl
 import ru.justd.cryptobot.api.exchanges.Exchange
 import ru.justd.cryptobot.api.exchanges.RateResponse
 import ru.justd.cryptobot.di.ExchangeApiModule
@@ -41,7 +42,7 @@ internal class SubscribeIntegrationTest {
         whenever(uuidGeneratorMock.random()).thenReturn("uuid")
 
         whenever(ExchangeApiModule.exchangeFacade.listExchanges()).thenReturn(arrayOf("Gdax", "Coinbase", "Bitfinex"))
-        testInstance = CryptoCore.start("", true, mock())
+        testInstance = CryptoCoreImpl.start("", true, mock())
     }
 
     @Test

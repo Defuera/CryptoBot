@@ -7,6 +7,7 @@ import org.junit.Before
 import org.junit.Test
 import org.mockito.ArgumentMatchers.anyString
 import ru.justd.cryptobot.CryptoCore
+import ru.justd.cryptobot.CryptoCoreImpl
 import ru.justd.cryptobot.api.blockchain.bitcoin.BitcoinAddressInfo
 import ru.justd.cryptobot.di.BlockchainModule
 import ru.justd.cryptobot.messenger.model.Inquiry
@@ -19,7 +20,7 @@ internal class AddressInfoHandlerTest {
 
     @Before
     fun setup() {
-        testInstance = CryptoCore.start("", true, mock())
+        testInstance = CryptoCoreImpl.start("", true, mock())
     }
 
 

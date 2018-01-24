@@ -24,7 +24,7 @@ class TelegramMessenger(private val uuid: String) {
     private val telegramBot: TelegramBot = TelegramBotAdapter.build(BuildConfig.BOT_TOKEN)
     private val messageSender = MessageSenderImpl(uuid, telegramBot)
 
-    private val cryptoCore = CryptoCore.start(
+    private val cryptoCore = CryptoCoreImpl.start(
             BuildConfig.NAME,
             BuildConfig.IS_DEBUG,
             object : FeedbackStorage {
@@ -45,11 +45,7 @@ class TelegramMessenger(private val uuid: String) {
         cryptoCore.addCommandHandler(InstantFactory("/start", StartHandler(cryptoCore.analytics)))
         cryptoCore.setUpdateListener { sendMessage(Reply(it.channelId, it.message)) }
 
-        requestProcessor = RequestProcessor(
-                cryptoCore,
-                messageSender,
-                cryptoCore.purchaseFacade
-        )
+        requestProcessor = RequestProcessor(cryptoCore, messageSender)
 
         telegramBot.setUpdatesListener { updates ->
             updates.forEach { handleAsync(it) }

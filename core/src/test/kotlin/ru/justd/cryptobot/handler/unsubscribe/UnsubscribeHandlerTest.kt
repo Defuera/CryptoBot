@@ -7,6 +7,7 @@ import org.junit.Before
 import org.junit.Test
 import org.mockito.ArgumentMatchers.anyString
 import ru.justd.cryptobot.CryptoCore
+import ru.justd.cryptobot.CryptoCoreImpl
 import ru.justd.cryptobot.di.StorageModule
 import ru.justd.cryptobot.handler.subscribe.Subscription
 import ru.justd.cryptobot.messenger.model.Inquiry
@@ -24,7 +25,7 @@ class UnsubscribeHandlerTest {
     @Before
     fun setup() {
         storageMock = StorageModule.storageMock
-        testInstance = CryptoCore.start("", true, mock())
+        testInstance = CryptoCoreImpl.start("", true, mock())
     }
 
     @Test

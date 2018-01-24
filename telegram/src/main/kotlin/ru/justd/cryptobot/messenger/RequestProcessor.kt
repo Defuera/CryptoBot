@@ -5,11 +5,11 @@ import com.pengrad.telegrambot.request.AnswerPreCheckoutQuery
 import ru.justd.cryptobot.CryptoCore
 import ru.justd.cryptobot.api.exchanges.gdax.model.TransferFailed
 import ru.justd.cryptobot.handler.exceptions.InvalidCommand
-import ru.justd.cryptobot.handler.purchase.PurchaseFacade
 import ru.justd.cryptobot.messenger.model.Inquiry
 import ru.justd.cryptobot.messenger.model.Reply
 import ru.justd.cryptobot.telegram.BuildConfig
 import ru.justd.cryptobot.toChannelId
+import ru.justd.cryptobot.utils.AddressUtils
 import ru.justd.cryptobot.utils.LogFormatter
 import ru.justd.cryptobot.utils.LoggerConfig.LOGGER
 import ru.justd.cryptobot.utils.Serializer
@@ -17,8 +17,7 @@ import java.util.logging.Level
 
 class RequestProcessor(
         private val core: CryptoCore,
-        private val messageSender: MessageSender,
-        private val purchaseFacade: PurchaseFacade
+        private val messageSender: MessageSender
 ) {
 
     fun process(update: Update) {
@@ -94,7 +93,7 @@ class RequestProcessor(
     private fun handlePreCheckoutQuery(query: PreCheckoutQuery) {
         val address = query.orderInfo().name()
         val base = Serializer.deserialize(query.invoicePayload()).base
-        if (purchaseFacade.validateAddress(address, base)) {
+        if (AddressUtils.validateAddress(address, base)) {
             messageSender.confirmPreCheckout(AnswerPreCheckoutQuery(query.id()))
         } else {
             messageSender.confirmPreCheckout(AnswerPreCheckoutQuery(query.id(), "Sorry, address you provided looks wrong"))
@@ -107,7 +106,7 @@ class RequestProcessor(
         val paymentChargeId = payment.providerPaymentChargeId()
 
         try {
-            val reply = purchaseFacade.transferFunds(
+            val reply = core.transferFunds(
                     channelId,
                     address,
                     Serializer.deserialize(payment.invoicePayload())

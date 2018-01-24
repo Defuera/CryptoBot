@@ -12,8 +12,7 @@ internal class UpdateNotesManagerTest {
 
     @Test
     fun getUpdateText() {
-
-        val updateText = testInstance.getUpdateText("0.0.2")
+        val updateText = testInstance.readUpdateTextFromFile("0.0.2")
         assertThat(updateText)
                 .isEqualTo("This is a super test text\nYou better believe it!")
     }
