@@ -23,7 +23,7 @@ class PurchaseHandler constructor(
 
     val OPTION_INFO = Option("Info on purchase process", TAG_INFO)
 
-    val storeItemsEuro = listOf(50, 100, 200)
+    val storeItemsEuro = listOf(2, 5, 10, 50, 100, 200)
 
     override fun createReply(channelId: String): Reply {
 
@@ -66,7 +66,7 @@ class PurchaseHandler constructor(
 
         return Reply(
                 channelId = channelId,
-                text = "What are you interested in?",
+                text = "What are you interested in? By continuing you agree to out [terms of use](https://defuera.github.io/CryptoBot/)",
                 dialog = Dialog(
                         "/buy",
                         listOf(
