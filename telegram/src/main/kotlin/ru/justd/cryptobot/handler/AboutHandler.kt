@@ -7,7 +7,13 @@ class AboutHandler  : CommandHandler {
 
         return Reply(channelId,
 """
-Our privacy policy and legal information can be found here https://defuera.github.io/CryptoBot/
+For legal information please refer to our website https://defuera.github.io/CryptoBot
+Or jump to:
+[Privacy policy](https://defuera.github.io/CryptoBot#privacy_policy)
+[Terms of service](https://defuera.github.io/CryptoBot#terms_of_service)
+[Payments and Refund Policy](https://defuera.github.io/CryptoBot#payment_and_refund_policy)
+[Contact information](https://defuera.github.io/CryptoBot#contact_us)
+
 """
                         .trimMargin()
         )

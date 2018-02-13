@@ -24,9 +24,9 @@ class MessageSender(
 
         if (KeyboardAdapter.hasOptions(reply)) {
             request.replyMarkup(KeyboardAdapter.createKeyboard(reply))
-            request.parseMode(ParseMode.Markdown)
         }
 
+        request.parseMode(ParseMode.Markdown)
         executeRequest(request)
     }
 
