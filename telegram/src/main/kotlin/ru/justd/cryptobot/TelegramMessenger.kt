@@ -5,10 +5,7 @@ import com.pengrad.telegrambot.TelegramBotAdapter
 import com.pengrad.telegrambot.UpdatesListener
 import com.pengrad.telegrambot.model.Update
 import kotlinx.coroutines.experimental.launch
-import ru.justd.cryptobot.handler.InstantFactory
-import ru.justd.cryptobot.handler.KillCommandHandlerFactory
-import ru.justd.cryptobot.handler.ShutdownException
-import ru.justd.cryptobot.handler.StartHandler
+import ru.justd.cryptobot.handler.*
 import ru.justd.cryptobot.messenger.MessageSender
 import ru.justd.cryptobot.messenger.RequestProcessor
 import ru.justd.cryptobot.messenger.model.Reply
@@ -39,6 +36,8 @@ class TelegramMessenger(private val uuid: String) {
             cryptoCore.addCommandHandler(KillCommandHandlerFactory(uuid))
         }
         cryptoCore.addCommandHandler(InstantFactory("/start", StartHandler(cryptoCore.analytics)))
+        cryptoCore.addCommandHandler(InstantFactory("/about", AboutHandler()))
+//        cryptoCore.addCommandHandler(InstantFactory("/donate", DonateHandler()))
         cryptoCore.setUpdateListener { sendMessage(Reply(it.channelId, it.message)) }
     }
 
