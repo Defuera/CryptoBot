@@ -15,25 +15,25 @@ class PurchaseHandler constructor(
         private val request: String?
 ) : CommandHandler {
 
-    val COEFFICIENT = 1.05
+    private val COEFFICIENT = 1.05
 
-    val TAG_INFO = "TAG_INFO"
-    val TAG_BUY_CRYPTO = "TAG_BUY_CRYPTO"
-    val TAG_CREATE_INVOICE = "TAG_CREATE_INVOICE"
+    private val TAG_INFO = "TAG_INFO"
+    private val TAG_BUY_CRYPTO = "TAG_BUY_CRYPTO"
+    private val TAG_CREATE_INVOICE = "TAG_CREATE_INVOICE"
 
-    val OPTION_INFO = Option("Info on purchase process", TAG_INFO)
+    private val OPTION_INFO = Option("Info on purchase process", TAG_INFO)
 
-    val storeItemsEuro = listOf(2, 5, 10, 50, 100, 200)
+    private val storeItemsEuro = listOf(2, 5, 10, 50, 100, 200)
 
     override fun createReply(channelId: String): Reply {
 
         if (request?.contains(TAG_BUY_CRYPTO) == true) {
-            val crypto = retrieveParam(TAG_BUY_CRYPTO)
+            val crypto = retrieveParam(request, TAG_BUY_CRYPTO)
             return prepareByeCryptoRequest(channelId, crypto, "EUR")
         }
 
         if (request?.contains(TAG_CREATE_INVOICE) == true) {
-            val serializedPayload = retrieveParam(TAG_CREATE_INVOICE)
+            val serializedPayload = retrieveParam(request, TAG_CREATE_INVOICE)
             val payload = deserialize(serializedPayload)
             val title = "Purchase ${payload.baseAmount} ${payload.base}"
             val coin = Coin.valueOf(payload.base)
@@ -104,11 +104,6 @@ class PurchaseHandler constructor(
 
     private fun round(num: Double, decimalPlaces: Int) =
             BigDecimal(num).setScale(decimalPlaces, BigDecimal.ROUND_HALF_DOWN).toDouble()
-
-
-    private fun retrieveParam(tag: String): String {
-        return request!!.replace(tag, "").trim()
-    }
 
     data class Payload(
             val base: String,
