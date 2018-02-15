@@ -37,7 +37,6 @@ class TelegramMessenger(private val uuid: String) {
         }
         cryptoCore.addCommandHandler(InstantFactory("/start", StartHandler(cryptoCore.analytics)))
         cryptoCore.addCommandHandler(InstantFactory("/about", AboutHandler()))
-//        cryptoCore.addCommandHandler(InstantFactory("/donate", DonateHandler()))
         cryptoCore.setUpdateListener { sendMessage(Reply(it.channelId, it.message)) }
     }
 

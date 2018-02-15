@@ -8,5 +8,6 @@ data class Invoice(
          */
         val amount: Int,
         val fiatCode: String,
-        val payload: String
+        val payload: String,
+        val needName: Boolean = true
 )

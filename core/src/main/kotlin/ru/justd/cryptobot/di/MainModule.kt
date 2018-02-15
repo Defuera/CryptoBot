@@ -7,6 +7,9 @@ import ru.justd.cryptobot.api.blockchain.BlockchainApi
 import ru.justd.cryptobot.api.exchanges.ExchangeApiFacade
 import ru.justd.cryptobot.handler.CommandHandlerFacade
 import ru.justd.cryptobot.handler.CommandHandlerFacadeImpl
+import ru.justd.cryptobot.handler.InstantFactory
+import ru.justd.cryptobot.handler.donate.DonateHandler
+import ru.justd.cryptobot.handler.donate.DonateHandlerFactory
 import ru.justd.cryptobot.handler.feedback.FeedbackHandlerFactory
 import ru.justd.cryptobot.handler.price.PriceCommandHandlerFactory
 import ru.justd.cryptobot.handler.purchase.PurchaseFacade
@@ -49,7 +52,8 @@ class MainModule(val debug: Boolean) {
                 UnsubscribeHandlerFactory(analytics, storage),
                 AddressInfoHandlerFactory(analytics, blockchainApi),
                 FeedbackHandlerFactory(analytics, feedbackStorage),
-                PurchaseHandlerFactory(purchaseFacade, debug)
+                PurchaseHandlerFactory(purchaseFacade, debug),
+                DonateHandlerFactory()
         )
 
         return CommandHandlerFacadeImpl(factories)

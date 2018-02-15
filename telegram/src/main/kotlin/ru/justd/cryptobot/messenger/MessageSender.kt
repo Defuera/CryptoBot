@@ -45,7 +45,9 @@ class MessageSender(
                     invoice.fiatCode,
                     LabeledPrice(invoice.description, invoice.amount)
             )
-            sendInvoice.needName(true)
+            if (invoice.needName){
+                sendInvoice.needName(true)
+            }
 
             executeRequest(DeleteMessage(reply.channelId, messageId))
             executeRequest(sendInvoice)
